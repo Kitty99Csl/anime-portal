@@ -1,9 +1,43 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="lo">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>AniWatch TH — anime.bj88l.net</title>
+
+<!-- ═══ SEO META TAGS ═══ -->
+<title>AniWatch-BJ88LAO - ແຫຼ່ງລວມອານິເມ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ</title>
+<meta name="description" content="ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ພ້ອມຂໍ້ມູນອານິເມ ອັບເດດເນື້ອຫາໃໝ່ ແລະ ຊ່ວຍນຳທາງໄປຫາການຮັບຊົມທີ່ສະດວກຂຶ້ນ."/>
+<meta name="keywords" content="ອານິເມ,anime,AniWatch-BJ88,BJ88,ອານິເມລາວ,ດູອານິເມ"/>
+<meta name="robots" content="index, follow"/>
+<meta name="author" content="AniWatch-BJ88"/>
+<link rel="canonical" href="https://anime.bj88la.net/"/>
+
+<!-- ═══ OPEN GRAPH — Facebook / LINE / Telegram preview ═══ -->
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="AniWatch-BJ88"/>
+<meta property="og:title" content="AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ"/>
+<meta property="og:description" content="ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ພ້ອມຂໍ້ມູນອານິເມ ອັບເດດເນື້ອຫາໃໝ່ ແລະ ຊ່ວຍນຳທາງໄປຫາການຮັບຊົມທີ່ສະດວກຂຶ້ນ."/>
+<meta property="og:url" content="https://anime.bj88la.net/"/>
+<meta property="og:image" content="https://anime-th.com/wp-content/uploads/2026/01/jqkDWnBDltFCjAdhxCqUWg9GXFB.jpg"/>
+<meta property="og:image:width" content="300"/>
+<meta property="og:image:height" content="400"/>
+<meta property="og:locale" content="lo_LA"/>
+
+<!-- ═══ TWITTER / X CARD ═══ -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ"/>
+<meta name="twitter:description" content="ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ອັບເດດເນື້ອຫາໃໝ່ສະເໝີ"/>
+<meta name="twitter:image" content="https://anime-th.com/wp-content/uploads/2026/01/jqkDWnBDltFCjAdhxCqUWg9GXFB.jpg"/>
+
+<!-- ═══ GOOGLE ANALYTICS GA4 ═══ -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D2H8CHS41Z"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D2H8CHS41Z');
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Sarabun:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -945,8 +979,52 @@ footer::before{
 .page.active{display:block}
 
 /* ═══════════════════════════════════════════════
-   RESPONSIVE
+   VIDEO SKELETON LOADER
 ═══════════════════════════════════════════════ */
+@keyframes shimmer{
+  0%{background-position:-600px 0}
+  100%{background-position:600px 0}
+}
+.player-skeleton{
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,#111 25%,#1e1e1e 50%,#111 75%);
+  background-size:600px 100%;
+  animation:shimmer 1.6s infinite linear;
+  display:flex;align-items:center;justify-content:center;
+  z-index:5;
+  transition:opacity 0.4s;
+}
+.player-skeleton.hidden{opacity:0;pointer-events:none}
+.skeleton-play{
+  width:56px;height:56px;border-radius:50%;
+  border:2px solid rgba(201,168,76,0.2);
+  display:flex;align-items:center;justify-content:center;
+  animation:none;
+}
+.skeleton-play svg{opacity:0.2}
+
+/* ═══ 404 PAGE ═══ */
+.page-404{
+  min-height:60vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1.5rem;
+  padding:3rem 1.5rem;text-align:center;
+}
+.e404-code{
+  font-family:var(--f-display);font-size:6rem;font-weight:900;
+  background:linear-gradient(135deg,var(--red),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  line-height:1;
+}
+.e404-title{font-family:var(--f-display);font-size:1.2rem;font-weight:700;color:var(--text);letter-spacing:0.1em}
+.e404-desc{font-size:0.88rem;color:var(--text2);max-width:360px;line-height:1.7}
+.e404-btn{
+  background:var(--red);color:white;border:none;cursor:pointer;
+  font-family:var(--f-body);font-size:0.85rem;font-weight:700;
+  padding:0.65rem 2rem;border-radius:1px;letter-spacing:0.06em;
+  box-shadow:0 4px 20px var(--red-glow);
+  transition:background 0.2s,transform 0.15s;text-decoration:none;
+}
+.e404-btn:hover{background:var(--red-h);transform:translateY(-1px)}
 @media(max-width:768px){
   .hero-content{padding:1.5rem;max-width:100%}
   .hero-poster-zone{opacity:0.3}
@@ -978,8 +1056,8 @@ footer::before{
     <a class="logo" href="#" onclick="showPage('listing');return false">
       <div class="logo-emblem">A</div>
       <div class="logo-text">
-        <span class="logo-en">Ani<span>Watch</span></span>
-        <span class="logo-sub">anime.bj88l.net</span>
+        <span class="logo-en">Ani<span>Watch</span>-BJ88</span>
+        <span class="logo-sub">anime.bj88la.net</span>
       </div>
     </a>
 
@@ -1259,6 +1337,18 @@ footer::before{
 </div>
 
 <!-- ══════════════════════════════════════
+     PAGE: 404
+══════════════════════════════════════ -->
+<div class="page" id="page-404">
+  <div class="page-404">
+    <div class="e404-code">404</div>
+    <div class="e404-title">PAGE NOT FOUND</div>
+    <p class="e404-desc">ບໍ່ພົບໜ້ານີ້ ອາດຖືກລຶບໄປແລ້ວ ຫຼື URL ບໍ່ຖືກຕ້ອງ</p>
+    <a class="e404-btn" href="#" onclick="showPage('listing');return false">← ກັບໄປໜ້າຫຼັກ</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
      FOOTER
 ══════════════════════════════════════ -->
 <footer>
@@ -1275,8 +1365,8 @@ footer::before{
         <a class="logo" href="#" onclick="showPage('listing');return false">
           <div class="logo-emblem">A</div>
           <div class="logo-text">
-            <span class="logo-en">Ani<span>Watch</span></span>
-            <span class="logo-sub">anime.bj88l.net</span>
+            <span class="logo-en">Ani<span>Watch</span>-BJ88</span>
+            <span class="logo-sub">anime.bj88la.net</span>
           </div>
         </a>
         <p>พอร์ทัลดูอนิเมะภาษาไทย รวบรวมซีรีส์และภาพยนตร์อนิเมะ พร้อมซับไทยและพากย์ไทย อัปเดตทุกสัปดาห์โดยอัตโนมัติ</p>
@@ -1292,17 +1382,18 @@ footer::before{
       </div>
 
       <div class="footer-col">
-        <h4>เกี่ยวกับ</h4>
-        <a href="#">นโยบายความเป็นส่วนตัว</a>
-        <a href="#">เงื่อนไขการใช้งาน</a>
-        <a href="#">DMCA / แจ้งปัญหา</a>
-        <a href="#">ติดต่อเรา</a>
+        <h4>ເກີ່ຍວກັບ</h4>
+        <a href="#">ນະໂຍບາຍຄວາມເປັນສ່ວນຕົວ</a>
+        <a href="#">ເງື່ອນໄຂການນໍາໃຊ້</a>
+        <a href="#">DMCA / ລາຍງານ</a>
+        <a href="#">ຕິດຕໍ່ເຮົາ</a>
+        <a href="/admin.html" style="color:var(--text3);margin-top:8px;font-size:0.72rem">⚙ Admin Panel</a>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <span>© 2026 ANIWATCH TH · anime.bj88l.net</span>
-      <span style="margin-left:auto">PHASE 1 · STATIC DEMO · GitHub + Cloudflare Pages</span>
+      <span>© 2026 ANIWATCH-BJ88 · anime.bj88la.net</span>
+      <span style="margin-left:auto">PHASE 1 · STATIC DEMO · GitHub + Cloudflare Workers</span>
     </div>
   </div>
 </footer>
@@ -1650,25 +1741,31 @@ function loadEpisode(idx) {
   if (ep.url) {
     setText('playerSrc', 'anime.tonytonychopper.net');
     setHTML('playerRatio', `
+      <div class="player-skeleton" id="playerSkeleton">
+        <div class="skeleton-play">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="rgba(201,168,76,0.4)"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
       <iframe src="${ep.url}"
         allowfullscreen
         allow="autoplay; encrypted-media; picture-in-picture"
         referrerpolicy="origin"
         sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
         loading="lazy"
-        title="${label}">
+        title="${label}"
+        onload="const s=document.getElementById('playerSkeleton');if(s)s.classList.add('hidden')">
       </iframe>`);
   } else {
-    setText('playerSrc', 'ต้องดึงจาก API');
+    setText('playerSrc', 'ຕ້ອງດຶງຈາກ API');
     setHTML('playerRatio', `
       <div class="no-video">
         <div class="no-video-ring">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="1.5"><polygon points="5,3 19,12 5,21"/></svg>
         </div>
-        <p>Demo — ต้องดึง URL จาก API<br>
+        <p>Demo — ຕ້ອງດຶງ URL ຈາກ API<br>
           <span style="font-size:0.58rem;color:var(--text3)">POST admin-ajax.php<br>action=mix_get_player&amp;post_id=${ep.id || '—'}</span>
         </p>
-        <a href="${(ANIME[activeAnimeId]||{}).source_url||'#'}" target="_blank" rel="noopener">▶ ดูที่ต้นฉบับ ↗</a>
+        <a href="${(ANIME[activeAnimeId]||{}).source_url||'#'}" target="_blank" rel="noopener">▶ ເບິ່ງທີ່ຕົ້ນສະບັບ ↗</a>
       </div>`);
   }
 }
