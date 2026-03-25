@@ -1,0 +1,19 @@
+[
+  {
+    "anime_slug": "kirei-ni-shitemoraemasu-ka",
+    "episodes": [
+      {"id":117953,"number":"01","title":"EP 01","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":"https://anime.tonytonychopper.net/v/9jluilWP"},
+      {"id":118091,"number":"02","title":"EP 02","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":118181,"number":"03","title":"EP 03","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":119064,"number":"04","title":"EP 04","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":119066,"number":"05","title":"EP 05","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":119299,"number":"06","title":"EP 06","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":119489,"number":"07","title":"EP 07","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":120302,"number":"08","title":"EP 08","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":120299,"number":"09","title":"EP 09","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":120474,"number":"10","title":"EP 10","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":120846,"number":"11","title":"EP 11","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
+      {"id":121147,"number":"12","title":"EP 12","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null}
+    ]
+  }
+]
