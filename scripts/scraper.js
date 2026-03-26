@@ -63,7 +63,7 @@ function extractIframeSrc(html = '') {
 }
 
 // GET listing pages and extract anime slugs
-async function getAnimeSlugs(maxPages = 5) {
+async function getAnimeSlugs(maxPages = 100) {
   console.log('📋 Scanning anime listing pages...');
   const slugSet = new Set();
 
@@ -82,7 +82,7 @@ async function getAnimeSlugs(maxPages = 5) {
 
       found.forEach(s => slugSet.add(s));
       console.log(`  Page ${page}: ${found.length} anime (running total: ${slugSet.size})`);
-      await sleep(1500 + Math.random() * 500);
+      await sleep(2000 + Math.random() * 1000); // gentler at 100 pages
 
     } catch (err) {
       console.error(`  ❌ Page ${page} error: ${err.message}`);
