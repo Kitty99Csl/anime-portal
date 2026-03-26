@@ -66,29 +66,60 @@ function extractIframeSrc(html = '') {
 async function getAnimeSlugs(maxPages = 100) {
   console.log('📋 Scanning anime listing pages...');
   const slugSet = new Set();
+  let emptyCount = 0;
 
   for (let page = 1; page <= maxPages; page++) {
     const url = page === 1 ? `${BASE_URL}/` : `${BASE_URL}/page/${page}/`;
     try {
       const res  = await fetch(url, { headers: HEADERS });
-      if (!res.ok) break;
+      // 404 = no more pages
+      if (res.status === 404) { console.log(`  Page ${page}: 404 — end of pages`); break; }
+      if (!res.ok) { console.log(`  Page ${page}: HTTP ${res.status} — skipping`); continue; }
       const html = await res.text();
 
-      // Match anime page links
-      const matches = [...html.matchAll(/href="https:\/\/anime-th\.com\/anime\/([^/"]+)\/"/g)];
-      const found   = matches.map(m => m[1]).filter(Boolean);
+      // Debug: show HTML sample on first page to diagnose URL patterns
+      if (page === 1) {
+        const animeLinks = (html.match(/href="[^"]*anime[^"]*"/g) || []).slice(0, 5);
+        console.log('  🔍 Sample anime links found:', animeLinks.length ? animeLinks : 'NONE');
+        console.log('  🔍 HTML length:', html.length, 'chars');
+      }
+      const patterns = [
+        /href="https?:\/\/anime-th\.com\/anime\/([^/"]+)\/?"/g,  // absolute
+        /href="\/anime\/([^/"]+)\/?"/g,                           // relative /anime/
+        /href="([^"]+)" [^>]*class="[^"]*post-thumbnail[^"]*"/g, // thumbnail links
+        /"url":"https?:\\\/\\\/anime-th\.com\\\/anime\\\/([^\\/"]+)/g, // JSON-LD
+      ];
 
-      if (found.length === 0) { console.log(`  Page ${page}: no anime found, stopping`); break; }
+      let found = [];
+      for (const pattern of patterns) {
+        const m = [...html.matchAll(pattern)].map(m => m[1]).filter(s =>
+          s && !s.includes('page') && !s.includes('category') &&
+          !s.includes('tag') && !s.includes('http') && s.length > 2
+        );
+        found.push(...m);
+      }
+      found = [...new Set(found)];
 
-      found.forEach(s => slugSet.add(s));
-      console.log(`  Page ${page}: ${found.length} anime (running total: ${slugSet.size})`);
-      await sleep(2000 + Math.random() * 1000); // gentler at 100 pages
+      if (found.length === 0) {
+        emptyCount++;
+        console.log(`  Page ${page}: 0 anime found (${emptyCount} empty in a row)`);
+        if (emptyCount >= 3) { console.log('  3 empty pages — stopping'); break; }
+      } else {
+        emptyCount = 0;
+        found.forEach(s => slugSet.add(s));
+        console.log(`  Page ${page}: ${found.length} anime (total: ${slugSet.size})`);
+      }
+
+      await sleep(1500 + Math.random() * 1000);
 
     } catch (err) {
       console.error(`  ❌ Page ${page} error: ${err.message}`);
-      break;
+      emptyCount++;
+      if (emptyCount >= 3) break;
     }
   }
+
+  console.log(`\n📋 Total unique slugs found: ${slugSet.size}`);
   return [...slugSet];
 }
 
