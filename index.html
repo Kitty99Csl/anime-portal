@@ -28,10 +28,8 @@
 <meta name="twitter:title" content="AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ"/>
 <meta name="twitter:description" content="ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ອັບເດດເນື້ອຫາໃໝ່ສະເໝີ"/>
 <meta name="twitter:image" content="https://anime-th.com/wp-content/uploads/2026/01/jqkDWnBDltFCjAdhxCqUWg9GXFB.jpg"/>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6565202571679235"
-     crossorigin="anonymous"></script>
+
 <!-- ═══ GOOGLE ANALYTICS GA4 ═══ -->
-  
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-D2H8CHS41Z"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -1465,7 +1463,7 @@ footer::before{
 
       <div class="footer-col">
         <h4 data-i18n="footer_about">ກ່ຽວກັບ</h4>
-        <a href="/policy.html"">ນະໂຍບາຍຄວາມເປັນສ່ວນຕົວ</a>
+        <a href="/policy.html">ນະໂຍບາຍຄວາມເປັນສ່ວນຕົວ</a>
         <a href="#">ເງື່ອນໄຂການນໍາໃຊ້</a>
         <a href="#">DMCA / ລາຍງານ</a>
         <a href="#">ຕິດຕໍ່ເຮົາ</a>
@@ -1525,44 +1523,121 @@ const REAL_EPS = [
 ];
 
 const EMOJIS = ['🎌','⚔️','🌸','🔥','🗡️','✨','🏯','🌙','💥','🎭','🦊','👁️','🌊','🐉','🎋','🌺','🗺️','⛩️','🧿','🎆'];
-const TH_NAMES = ["คิมเมะคลีนนิ่ง","จูจุสสึ ไคเซ็น","มายฮีโร่","โอชิ โนะ โคะ","วันพีซ","บลีช","นารูโตะ","โซโลเลเวลลิ่ง","ดันจอน เมชิ","บลูล็อค","วินด์เบรกเกอร์","เดมอน สเลเยอร์","อิชิบัน","ซอมบี้ 100","มาชเล่","โทเกียวกูล","อะโอะ เอ็กซอร์ซิสต์","ฮันเตอร์ x ฮันเตอร์","แฟรี่เทล","บอดี้การ์ด"];
-const EN_NAMES = ["Kirei ni Shitemoraemasu ka","Jujutsu Kaisen","My Hero Academia","Oshi no Ko","One Piece","Bleach","Naruto","Solo Leveling","Dungeon Meshi","Blue Lock","Wind Breaker","Demon Slayer","Ichiban","Zom 100","Mashle","Tokyo Ghoul","Blue Exorcist","HxH","Fairy Tail","Bodyguard"];
-const GENRE_POOL = [["โรแมนติก","สไลซ์ออฟไลฟ์"],["แอ็กชัน","ต่อสู้"],["ซุปเปอร์ฮีโร่","แอ็กชัน"],["ดราม่า","ลึกลับ"],["ผจญภัย","ตลก"]];
-const DESCS = [
-  "นักทำความสะอาดมืออาชีพผู้มากความสามารถ กับลูกค้าที่บ้านยุ่งเหยิงที่สุดในชีวิต เรื่องราวความรักที่เริ่มต้นจากการทำความสะอาด",
-  "นักเรียนมัธยมที่กลืนนิ้วของราชาภูต กลายเป็นที่อยู่อาศัยของสิ่งชั่วร้ายที่ทรงพลังที่สุด",
-  "ในโลกที่ 80% ของประชากรมีพลังพิเศษ อิสึกุ มิโดริยะ เด็กชายไร้พลัง แต่ฝันอยากเป็นฮีโร่",
-  "เรื่องราวของดาราเด็กที่ถูกแม่ฆ่าตาย ก่อนจะเกิดใหม่เป็นลูกของไอดอลชื่อดัง",
-  "มังกี้ ดี. ลัฟฟี่ ออกเดินทางค้นหาสมบัติวันพีซ เพื่อเป็นราชาโจรสลัด",
-];
 
-// Build ANIME list (48 items)
-const ANIME = Array.from({length:48},(_, i) => ({
-  id: i,
-  title_th: TH_NAMES[i%20] + (i>=20 ? (i>=40?" Part 3":" Part 2") : ""),
-  title_en: EN_NAMES[i%20],
-  status: i%5===0 ? 'upcoming' : i%3===0 ? 'complete' : 'airing',
-  episodes: [12,24,13,36,1100,366,720,12,25,24][i%10],
-  year: i%3===0 ? 2026 : i%3===1 ? 2025 : 2024,
-  genres: GENRE_POOL[i%5],
-  img: REAL_IMGS[i % REAL_IMGS.length],
-  emoji: EMOJIS[i % EMOJIS.length],
-  desc: DESCS[i%5],
-  source_url: "https://anime-th.com/anime/kirei-ni-shitemoraemasu-ka/",
-  video_url: i===0 ? "https://anime.tonytonychopper.net/v/9jluilWP" : null,
-  episodes_list: i===0 ? REAL_EPS : Array.from({length:[12,24,13,36][i%4]},(_, j)=>({n:`${String(j+1).padStart(2,'0')}`,sub:true,th:false,url:null})),
-}));
+// ANIME is populated from anime.json — starts empty, filled by loadData()
+let ANIME = [];
+let EPISODES_MAP = {}; // slug → episodes array
 
-
+// Convert scraped anime.json entry to the format the UI expects
+function normalizeAnime(raw, idx) {
+  return {
+    id:           idx,
+    slug:         raw.slug         || '',
+    title_th:     raw.title_th     || raw.title || raw.slug || 'Unknown',
+    title_en:     raw.title_en     || raw.slug?.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || '',
+    status:       raw.status       || 'airing',
+    episodes:     raw.episode_count|| 0,
+    year:         raw.year         || 2025,
+    genres:       raw.genres       || [],
+    img:          raw.cover_url    || REAL_IMGS[idx % REAL_IMGS.length],
+    emoji:        EMOJIS[idx % EMOJIS.length],
+    desc:         raw.desc         || '',
+    source_url:   raw.source_url   || `https://anime-th.com/anime/${raw.slug}/`,
+    video_url:    null,
+    episodes_list: [], // filled after episodes.json loads
+  };
+}
 
 /* ═══════════════════════════════════════════════
    STATE — single source of truth
 ═══════════════════════════════════════════════ */
 const state = { page:1, perPage:24, filter:'all', search:'', genre:'', year:'', heroIdx:0, heroTimer:null };
 
-// Episode store — avoids JSON-in-onclick (the bug that caused all console errors)
-let activeAnimeId   = 0;
-let activeEpisodes  = [];   // array of {id, n, sub, th, url}
+let activeAnimeId  = 0;
+let activeEpisodes = [];
+
+/* ═══════════════════════════════════════════════
+   INIT — fetch real data then render
+═══════════════════════════════════════════════ */
+async function loadData() {
+  // Show loading skeletons
+  setHTML('airingGrid',   '<p style="color:var(--text3);padding:1rem;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em">ກຳລັງໂຫລດ...</p>');
+  setHTML('completeGrid', '');
+
+  try {
+    // Fetch anime list
+    const animeRes = await fetch('/src/data/anime.json');
+    if (!animeRes.ok) throw new Error('anime.json not found');
+    const animeRaw = await animeRes.json();
+
+    // Fetch episode data
+    let episodesRaw = [];
+    try {
+      const epRes = await fetch('/src/data/episodes.json');
+      if (epRes.ok) episodesRaw = await epRes.json();
+    } catch(e) {}
+
+    // Build episodes map: slug → episodes array
+    episodesRaw.forEach(entry => {
+      EPISODES_MAP[entry.anime_slug] = (entry.episodes || []).map((ep, i) => ({
+        id:  ep.id,
+        n:   String(ep.number || i+1).padStart(2,'0'),
+        sub: ep.has_sub !== false,
+        th:  ep.has_dub || false,
+        url: ep.video_url || null,
+      }));
+    });
+
+    // Normalize into UI format
+    ANIME = animeRaw.map((raw, idx) => {
+      const a = normalizeAnime(raw, idx);
+      a.episodes_list = EPISODES_MAP[raw.slug] || [{n:'01',sub:true,th:false,url:null}];
+      // Set video_url from first episode if available
+      if (a.episodes_list[0]?.url) a.video_url = a.episodes_list[0].url;
+      a.episodes = a.episodes_list.length || raw.episode_count || 0;
+      return a;
+    });
+
+    console.log(`✅ Loaded ${ANIME.length} anime from anime.json`);
+
+  } catch(err) {
+    // Fallback to built-in demo data if JSON not found
+    console.warn('⚠️ Could not load anime.json — using demo data:', err.message);
+    ANIME = buildDemoAnime();
+  }
+
+  // Now render everything
+  const savedLang = localStorage.getItem('bj88_lang') || 'lo';
+  if (savedLang !== 'lo') { currentLang = savedLang; }
+
+  renderHero(0);
+  initHeroCycle();
+  renderListing();
+  renderSidebars();
+  renderAdSlots();
+  applyI18N();
+}
+
+// Demo fallback (only used if anime.json missing)
+function buildDemoAnime() {
+  const TH = ["คิมเมะคลีนนิ่ง","จูจุสสึ ไคเซ็น","มายฮีโร่","โอชิ โนะ โคะ","วันพีซ","บลีช","นารูโตะ","โซโลเลเวลลิ่ง","ดันจอน เมชิ","บลูล็อค"];
+  const EN = ["Kirei ni Shitemoraemasu ka","Jujutsu Kaisen","My Hero Academia","Oshi no Ko","One Piece","Bleach","Naruto","Solo Leveling","Dungeon Meshi","Blue Lock"];
+  const G  = [["โรแมนติก","สไลซ์ออฟไลฟ์"],["แอ็กชัน","ต่อสู้"],["ซุปเปอร์ฮีโร่"],["ดราม่า"],["ผจญภัย","ตลก"]];
+  return Array.from({length:20},(_,i) => ({
+    id:i, slug:EN[i%10].toLowerCase().replace(/ /g,'-'),
+    title_th: TH[i%10], title_en: EN[i%10],
+    status: i%5===0?'upcoming':i%3===0?'complete':'airing',
+    episodes:12, year:2025, genres:G[i%5],
+    img: REAL_IMGS[i%REAL_IMGS.length], emoji:EMOJIS[i%EMOJIS.length],
+    desc:'', source_url:'https://anime-th.com',
+    video_url: i===0?'https://anime.tonytonychopper.net/v/9jluilWP':null,
+    episodes_list: i===0 ? REAL_EPS : [{n:'01',sub:true,th:false,url:null}],
+  }));
+}
+
+// Start loading
+loadData();
+
 
 /* ═══════════════════════════════════════════════
    HELPERS — safe DOM access, no null crashes
@@ -2108,23 +2183,8 @@ function renderAdSlots() {
   });
 }
 
-/* ═══════════════════════════════════════════════
-   INIT — runs once on page load
-═══════════════════════════════════════════════ */
-// Apply saved language
-const savedLang = localStorage.getItem('bj88_lang') || 'lo';
-if (savedLang !== 'lo') {
-  currentLang = savedLang;
-  // Sync button state after render
-  document.addEventListener('DOMContentLoaded', () => applyI18N());
-}
-
-renderHero(0);
-initHeroCycle();
-renderListing();
-renderSidebars();
-renderAdSlots();
-applyI18N();
+// Start loading
+loadData();
 </script>
 </body>
 </html>
