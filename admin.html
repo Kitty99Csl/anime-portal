@@ -13,734 +13,787 @@
   --border:#2a2a2a;--border2:#3a3020;
   --red:#c0392b;--red-h:#e74c3c;--red-dim:rgba(192,57,43,0.12);--red-glow:rgba(192,57,43,0.3);
   --gold:#c9a84c;--gold-dim:rgba(201,168,76,0.1);--gold-line:#6b5a2a;
-  --green:#27ae60;--green-dim:rgba(39,174,96,0.1);
-  --blue-dim:rgba(41,128,185,0.1);
+  --green:#27ae60;--green-dim:rgba(39,174,96,0.12);--green-b:rgba(39,174,96,0.3);
+  --blue-dim:rgba(41,128,185,0.12);
   --text:#f0ece0;--text2:#a09070;--text3:#60584a;
-  --f-d:'Cinzel',serif;--f-b:'Sarabun',sans-serif;--f-m:'Share Tech Mono',monospace;
+  --fh:'Cinzel',serif;--fb:'Sarabun',sans-serif;--fm:'Share Tech Mono',monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:var(--f-b);background:var(--bg);color:var(--text);min-height:100vh}
-::-webkit-scrollbar{width:3px;height:3px}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:var(--gold-line);border-radius:2px}
+input,select,textarea,button{font-family:var(--fb)}
+
 /* LOGIN */
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a0808,var(--bg))}
-.lbox{background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:2.5rem;width:100%;max-width:360px;position:relative;overflow:hidden}
+#lw{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a0808,var(--bg))}
+.lbox{background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:2.5rem;width:100%;max-width:360px;position:relative}
 .lbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--gold),var(--red))}
-.l-logo{font-family:var(--f-d);font-size:1.3rem;font-weight:900;color:var(--gold);text-align:center;margin-bottom:3px;letter-spacing:0.06em}
-.l-sub{font-family:var(--f-m);font-size:0.58rem;color:var(--text3);text-align:center;letter-spacing:0.2em;margin-bottom:2rem}
-.fl{font-family:var(--f-m);font-size:0.6rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:5px}
-.fi{width:100%;background:var(--card);border:1px solid var(--border);border-radius:2px;padding:0.6rem 0.9rem;color:var(--text);font-family:var(--f-m);font-size:0.82rem;outline:none;margin-bottom:1.1rem;transition:border-color 0.2s}
-.fi:focus{border-color:var(--gold-line)}
-.l-btn{width:100%;background:var(--red);color:white;border:none;cursor:pointer;font-family:var(--f-b);font-size:0.9rem;font-weight:700;padding:0.7rem;border-radius:2px;box-shadow:0 4px 20px var(--red-glow);transition:background 0.2s}
-.l-btn:hover{background:var(--red-h)}
-.l-err{font-family:var(--f-m);font-size:0.68rem;color:var(--red-h);text-align:center;margin-top:0.75rem;display:none}
+.llogo{font-family:var(--fh);font-size:1.3rem;font-weight:900;color:var(--gold);text-align:center;margin-bottom:4px;letter-spacing:0.08em}
+.lsub{font-family:var(--fm);font-size:0.56rem;color:var(--text3);text-align:center;letter-spacing:0.2em;margin-bottom:2rem}
+.ll{font-family:var(--fm);font-size:0.58rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:5px}
+.li{width:100%;background:var(--card);border:1px solid var(--border);border-radius:2px;padding:0.6rem 0.9rem;color:var(--text);font-size:0.85rem;outline:none;margin-bottom:1rem;transition:border-color 0.2s}
+.li:focus{border-color:var(--gold-line)}
+.lbtn{width:100%;background:var(--red);color:white;border:none;cursor:pointer;font-size:0.9rem;font-weight:700;padding:0.72rem;border-radius:2px;letter-spacing:0.06em;transition:background 0.2s;box-shadow:0 4px 20px var(--red-glow)}
+.lbtn:hover{background:var(--red-h)}
+.lerr{font-family:var(--fm);font-size:0.66rem;color:var(--red-h);text-align:center;margin-top:0.7rem;display:none}
+
 /* LAYOUT */
-#adminApp{display:none;min-height:100vh;flex-direction:column}
-#adminApp.show{display:flex}
-/* TOPBAR */
-.tb{background:var(--surface);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;padding:0 1.25rem;gap:0.75rem;position:sticky;top:0;z-index:100;flex-shrink:0}
-.tb::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
-.tb-logo{font-family:var(--f-d);font-size:0.85rem;font-weight:900;color:var(--gold);letter-spacing:0.08em;white-space:nowrap;flex-shrink:0}
-.tb-logo span{color:var(--text2);font-weight:400;font-size:0.62rem;font-family:var(--f-m);margin-left:6px}
-.tb-tabs{display:flex;gap:1px;flex:1;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
-.tb-tabs::-webkit-scrollbar{height:0}
-.ttab{font-family:var(--f-b);font-size:0.78rem;font-weight:600;background:none;border:none;color:var(--text2);padding:0.3rem 0.85rem;border-radius:2px;cursor:pointer;white-space:nowrap;transition:all 0.15s;border-bottom:2px solid transparent;flex-shrink:0}
-.ttab:hover{color:var(--text);background:rgba(255,255,255,0.04)}
-.ttab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.tb-r{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
-.bo-lang{display:flex;gap:2px;background:var(--card);border:1px solid var(--border);border-radius:2px;padding:2px}
-.bl-btn{font-family:var(--f-m);font-size:0.58rem;background:none;border:none;color:var(--text3);padding:2px 7px;border-radius:1px;cursor:pointer;transition:all 0.15s}
-.bl-btn.active{background:var(--gold-dim);color:var(--gold)}
-.slink{font-family:var(--f-m);font-size:0.6rem;color:var(--text3);text-decoration:none;padding:0.3rem 0.6rem;border:1px solid var(--border);border-radius:2px;transition:all 0.15s}
-.slink:hover{color:var(--gold);border-color:var(--gold-line)}
-.out-btn{font-family:var(--f-m);font-size:0.6rem;background:none;color:var(--text3);border:1px solid var(--border);border-radius:2px;padding:0.3rem 0.6rem;cursor:pointer;transition:all 0.15s}
-.out-btn:hover{color:var(--red-h);border-color:var(--red)}
-/* MAIN */
-.main{flex:1;overflow-y:auto}
-.tsec{display:none;padding:1.5rem}
-.tsec.active{display:block}
-/* PANELS */
-.pn{background:var(--card);border:1px solid var(--border);border-radius:2px;margin-bottom:1.25rem;overflow:hidden}
-.pn::before{content:'';display:block;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
-.ph{padding:0.7rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
-.ph h2{font-family:var(--f-d);font-size:0.78rem;font-weight:700;color:var(--text);letter-spacing:0.08em;text-transform:uppercase;flex:1}
-.ph-note{font-family:var(--f-m);font-size:0.56rem;color:var(--text3)}
-.pb{padding:1.1rem 1.25rem}
+#aw{display:none;min-height:100vh}
+#aw.show{display:flex}
+.sb{width:214px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sblogo{padding:1.1rem 1rem;border-bottom:1px solid var(--border)}
+.sbmain{font-family:var(--fh);font-size:0.82rem;font-weight:900;color:var(--gold);letter-spacing:0.08em}
+.sbsub{font-family:var(--fm);font-size:0.48rem;color:var(--text3);letter-spacing:0.15em;margin-top:2px}
+.sbbadge{display:inline-block;font-family:var(--fm);font-size:0.46rem;background:var(--red-dim);color:var(--red-h);border:1px solid rgba(192,57,43,0.3);padding:1px 5px;border-radius:1px;margin-top:3px;letter-spacing:0.1em}
+.nvsec{font-family:var(--fm);font-size:0.48rem;color:var(--text3);letter-spacing:0.18em;text-transform:uppercase;padding:1rem 1rem 0.3rem}
+.nv{display:flex;align-items:center;gap:7px;padding:0.5rem 1rem;cursor:pointer;font-size:0.78rem;font-weight:600;color:var(--text2);border-left:2px solid transparent;transition:all 0.15s;user-select:none}
+.nv:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+.nv.on{color:var(--gold);border-left-color:var(--gold);background:var(--gold-dim)}
+.nv svg{opacity:0.6;flex-shrink:0}.nv.on svg{opacity:1}
+.sbfoot{margin-top:auto;padding:0.85rem 1rem;border-top:1px solid var(--border)}
+.slang{display:flex;gap:3px;margin-bottom:8px}
+.slbtn{flex:1;font-family:var(--fm);font-size:0.56rem;background:none;border:1px solid var(--border);border-radius:1px;color:var(--text3);padding:3px 0;cursor:pointer;transition:all 0.15s;text-align:center}
+.slbtn.on{background:var(--gold-dim);border-color:var(--gold-line);color:var(--gold)}
+.lout{width:100%;background:none;border:1px solid var(--border);border-radius:2px;color:var(--text3);font-family:var(--fm);font-size:0.58rem;padding:0.38rem;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.15s}
+.lout:hover{border-color:var(--red);color:var(--red-h)}
+.main{flex:1;min-width:0;overflow-y:auto}
+.sec{display:none;padding:1.75rem}
+.sec.on{display:block}
+.ph{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:0.6rem;border-bottom:1px solid var(--border);position:relative}
+.ph::after{content:'';position:absolute;bottom:-1px;left:0;width:48px;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+.ph h1{font-family:var(--fh);font-size:0.88rem;font-weight:700;color:var(--text);letter-spacing:0.08em;text-transform:uppercase}
+.phsub{font-family:var(--fm);font-size:0.58rem;color:var(--text3);margin-left:auto}
+
 /* STATS */
-.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.9rem;margin-bottom:1.25rem}
-.sc{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:0.9rem 1.1rem;position:relative;overflow:hidden}
-.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
-.sc-l{font-family:var(--f-m);font-size:0.56rem;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px}
-.sc-v{font-family:var(--f-d);font-size:1.5rem;font-weight:700;color:var(--text);line-height:1}
-.sc-s{font-family:var(--f-m);font-size:0.54rem;color:var(--text3);margin-top:3px}
-/* BTNS */
-.btn{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-b);font-size:0.8rem;font-weight:600;padding:0.45rem 1.1rem;border-radius:2px;border:none;cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;text-decoration:none}
-.btn-p{background:var(--red);color:white;box-shadow:0 2px 10px var(--red-glow)}
-.btn-p:hover{background:var(--red-h)}
-.btn-g{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-line)}
-.btn-g:hover{background:rgba(201,168,76,0.18)}
-.btn-ghost{background:none;color:var(--text2);border:1px solid var(--border)}
-.btn-ghost:hover{border-color:var(--border2);color:var(--text)}
-.btn-d{background:var(--red-dim);color:var(--red-h);border:1px solid rgba(192,57,43,0.3)}
-.btn-d:hover{background:rgba(192,57,43,0.2)}
-.btn-sm{padding:0.28rem 0.7rem;font-size:0.72rem}
-.btn-xs{padding:0.18rem 0.48rem;font-size:0.64rem}
-/* FORMS */
-.fg{margin-bottom:0.85rem}
-.fl2{font-family:var(--f-m);font-size:0.58rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:5px}
-.fi2,.ft2,.fs2{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:2px;padding:0.5rem 0.8rem;color:var(--text);font-family:var(--f-b);font-size:0.82rem;outline:none;transition:border-color 0.2s}
-.ft2{resize:vertical;min-height:65px;font-family:var(--f-m);font-size:0.72rem}
-.fi2:focus,.ft2:focus,.fs2:focus{border-color:var(--gold-line)}
-.fhint{font-family:var(--f-m);font-size:0.55rem;color:var(--text3);margin-top:3px;line-height:1.6}
-.frow{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
-@media(max-width:600px){.frow{grid-template-columns:1fr}}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:0.75rem;margin-bottom:1.5rem}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:0.9rem 1.1rem;position:relative;overflow:hidden}
+.stat::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
+.slbl{font-family:var(--fm);font-size:0.56rem;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px}
+.sval{font-family:var(--fh);font-size:1.5rem;font-weight:700;color:var(--text);line-height:1}
+.snote{font-family:var(--fm);font-size:0.54rem;color:var(--text3);margin-top:3px}
+
+/* PANEL */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:2px;margin-bottom:1.25rem;overflow:hidden}
+.panel::before{content:'';display:block;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
+.phead{padding:0.6rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.phead h2{font-family:var(--fh);font-size:0.75rem;font-weight:700;color:var(--text);letter-spacing:0.08em;text-transform:uppercase;flex:1}
+.pbody{padding:1rem}
+
+/* FORM */
+.fg{margin-bottom:0.9rem}.fg:last-child{margin-bottom:0}
+.fl{font-family:var(--fm);font-size:0.58rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+.fi,.ft{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:2px;padding:0.5rem 0.8rem;color:var(--text);font-size:0.82rem;outline:none;transition:border-color 0.2s}
+.ft{resize:vertical;min-height:60px;font-family:var(--fm);font-size:0.7rem}
+.fi:focus,.ft:focus{border-color:var(--gold-line)}
+.fh{font-family:var(--fm);font-size:0.54rem;color:var(--text3);margin-top:3px;line-height:1.5}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;font-size:0.78rem;font-weight:600;padding:0.42rem 1rem;border-radius:2px;border:none;cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;white-space:nowrap}
+.bp{background:var(--red);color:white;box-shadow:0 2px 10px var(--red-glow)}.bp:hover{background:var(--red-h)}
+.bg{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-line)}.bg:hover{background:rgba(201,168,76,0.18)}
+.bq{background:none;color:var(--text2);border:1px solid var(--border)}.bq:hover{border-color:var(--border2);color:var(--text)}
+.bd{background:var(--red-dim);color:var(--red-h);border:1px solid rgba(192,57,43,0.3)}.bd:hover{background:rgba(192,57,43,0.2)}
+.bsm{padding:0.26rem 0.7rem;font-size:0.7rem}.bxs{padding:0.18rem 0.45rem;font-size:0.62rem}
+
 /* TOGGLE */
-.tog{position:relative;width:38px;height:20px;flex-shrink:0}
-.tog input{opacity:0;width:0;height:0;position:absolute}
-.tog-s{position:absolute;inset:0;background:var(--border2);border-radius:10px;cursor:pointer;transition:background 0.2s}
-.tog-s::before{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:var(--text3);left:3px;top:3px;transition:all 0.2s}
-.tog input:checked+.tog-s{background:var(--green)}
-.tog input:checked+.tog-s::before{transform:translateX(18px);background:white}
+.tog{display:flex;align-items:center;gap:8px}
+.ttrack{position:relative;width:34px;height:18px;flex-shrink:0}
+.ttrack input{opacity:0;width:0;height:0;position:absolute}
+.tsl{position:absolute;inset:0;background:var(--border2);border-radius:9px;cursor:pointer;transition:background 0.2s}
+.tsl::before{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:var(--text3);left:3px;top:3px;transition:all 0.2s}
+.ttrack input:checked+.tsl{background:var(--green)}
+.ttrack input:checked+.tsl::before{transform:translateX(16px);background:white}
+
 /* ALERT */
-.alert{padding:0.6rem 0.9rem;border-radius:2px;font-family:var(--f-m);font-size:0.68rem;margin-bottom:1rem;border:1px solid;display:none;line-height:1.6}
-.alert.show{display:block}
-.al-ok{background:var(--green-dim);color:var(--green);border-color:rgba(39,174,96,0.3)}
-.al-err{background:var(--red-dim);color:var(--red-h);border-color:rgba(192,57,43,0.3)}
-.al-info{background:var(--blue-dim);color:#5dade2;border-color:rgba(41,128,185,0.3)}
-/* DOT */
-.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:inline-block}
-.dot-g{background:var(--green)}
-.dot-y{background:var(--gold);animation:blink 2s ease-in-out infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
-/* COUNTDOWN */
-.cd{font-family:var(--f-m);font-size:0.95rem;color:var(--gold);letter-spacing:0.1em}
-/* INFO GRID */
-.ig{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:0.78rem;line-height:1.8}
-.il{color:var(--text3);font-family:var(--f-m);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;align-self:center}
-.iv{color:var(--text2)}
-/* STEP LIST */
-.step{display:grid;grid-template-columns:18px 1fr;gap:5px 9px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:0.78rem}
-.step:last-child{border-bottom:none}
-.sn{font-family:var(--f-d);font-size:0.68rem;font-weight:700;color:var(--gold)}
-.st{color:var(--text2);line-height:1.6}
-.st code{font-family:var(--f-m);font-size:0.68rem;color:var(--gold);background:var(--gold-dim);padding:1px 4px;border-radius:1px}
-/* QUICK LINKS */
-.ql{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-@media(max-width:480px){.ql{grid-template-columns:1fr}}
+.alert{padding:0.55rem 0.9rem;border-radius:2px;font-family:var(--fm);font-size:0.68rem;margin-bottom:0.85rem;display:none;border:1px solid;line-height:1.6}
+.alert.on{display:block}
+.aok{background:var(--green-dim);color:var(--green);border-color:var(--green-b)}
+.aerr{background:var(--red-dim);color:var(--red-h);border-color:rgba(192,57,43,0.3)}
+.ainf{background:var(--blue-dim);color:#5dade2;border-color:rgba(41,128,185,0.3)}
 
-/* ═══════════════════════
-   SKELETON SITE PREVIEW
-═══════════════════════ */
-.skwrap{background:var(--card2);border:1px solid var(--border);border-radius:2px;padding:0.85rem;overflow-x:auto}
-.sksite{width:680px;margin:0 auto;font-size:0;position:relative}
-.sk-h{height:32px;background:#141414;border:1px solid #2a2a2a;border-radius:1px;margin-bottom:3px;display:flex;align-items:center;padding:0 8px;gap:8px}
-.sk-lb{width:55px;height:14px;background:#2a2a2a;border-radius:1px}
-.sk-nd{width:26px;height:7px;background:#1e1e1e;border-radius:1px}
-.sk-nd.a{background:#6b5a2a}
-.sk-sb{width:70px;height:13px;background:#1e1e1e;border-radius:1px}
-.sk-hero{width:100%;height:72px;background:#141414;border:1px solid #2a2a2a;border-radius:1px;margin-bottom:3px;overflow:hidden;position:relative}
-.sk-hero-t{position:absolute;left:8px;top:10px;width:100px}
-.sk-line{height:5px;border-radius:1px;background:#2a2a2a;margin-bottom:4px}
-.sk-body{display:flex;gap:5px;width:100%}
-.sk-main{flex:1;min-width:0}
-.sk-sidebar{width:120px;flex-shrink:0}
-.sk-gl{height:7px;background:#1e1e1e;border-radius:1px;width:70px;margin-bottom:3px}
-.sk-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-bottom:3px}
-.sk-card{height:48px;background:#141414;border:1px solid #2a2a2a;border-radius:1px}
-/* Ad zones */
-.az{border:1.5px solid;border-radius:1px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;overflow:hidden;position:relative}
-.az:hover{filter:brightness(1.2)}
-.az.empty{border-style:dashed;border-color:var(--border2);background:rgba(255,255,255,0.01)}
-.az.active{border-color:var(--green);background:rgba(39,174,96,0.07)}
-.az.full{border-color:var(--gold);background:rgba(201,168,76,0.07)}
-.az-lbl{font-family:var(--f-m);font-size:7px;color:var(--text3);text-align:center;line-height:1.3;pointer-events:none}
-.az-cnt{font-family:var(--f-m);font-size:8px;font-weight:bold;text-align:center;pointer-events:none}
-.az.active .az-cnt{color:var(--green)}
-.az.full .az-cnt{color:var(--gold)}
-.az.empty .az-cnt{color:var(--text3)}
+/* DOTS */
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;display:inline-block}
+.dg{background:var(--green)}.dr{background:var(--red-h)}.dy{background:var(--gold);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* ═══════════════════════
-   AD SLOT CARDS
-═══════════════════════ */
-.asg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
-.asc{background:var(--card2);border:1px solid var(--border);border-radius:2px;overflow:hidden;transition:border-color 0.2s}
-.asc.highlight{border-color:var(--gold-line);box-shadow:0 0 0 2px var(--gold-dim)}
-.asc-h{padding:0.65rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
-.asc-n{font-family:var(--f-d);font-size:0.7rem;font-weight:700;color:var(--text);letter-spacing:0.06em;flex:1}
-.asc-sz{font-family:var(--f-m);font-size:0.54rem;color:var(--text3)}
-.asc-b{padding:0.8rem 0.9rem}
-.asc-zone{font-family:var(--f-m);font-size:0.54rem;color:var(--text3);margin-bottom:0.6rem}
-.asc-lim{font-family:var(--f-m);font-size:0.56rem;margin-bottom:0.7rem}
-.lbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:3px}
-.lfill{height:100%;border-radius:2px;transition:width 0.3s}
-/* Banner list */
-.blist{display:flex;flex-direction:column;gap:4px;margin-bottom:7px;min-height:4px}
-.bi{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:1px;padding:4px 7px}
-.bprev{width:38px;height:20px;border-radius:1px;overflow:hidden;background:#111;flex-shrink:0;border:1px solid var(--border)}
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:0.76rem}
+.tbl th{font-family:var(--fm);font-size:0.54rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;text-align:left;border-bottom:1px solid var(--border)}
+.tbl td{padding:7px 10px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text2);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(201,168,76,0.02)}
+
+/* ── AD SLOT MANAGER ── */
+.slot-list{display:flex;flex-direction:column;gap:1rem}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:2px;overflow:hidden}
+.scard.active-slot{border-color:var(--gold-line)}
+.shead{padding:0.65rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--card2)}
+.sname{font-family:var(--fh);font-size:0.72rem;font-weight:700;color:var(--text);letter-spacing:0.06em;flex:1}
+.smeta{font-family:var(--fm);font-size:0.56rem;color:var(--text3)}
+.sbody{padding:0.9rem 1rem}
+
+/* capacity bar */
+.capbar{display:flex;align-items:center;gap:8px;margin-bottom:0.65rem}
+.captrack{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.capfill{height:100%;border-radius:2px;background:var(--green);transition:width 0.3s}
+.capfill.w{background:var(--gold)}.capfill.f{background:var(--red-h)}
+.captxt{font-family:var(--fm);font-size:0.56rem;color:var(--text3);white-space:nowrap}
+
+/* banner items */
+.blist{display:flex;flex-direction:column;gap:6px;margin-bottom:0.65rem}
+.bitem{background:var(--card2);border:1px solid var(--border);border-radius:1px;padding:0.5rem 0.8rem;display:flex;align-items:center;gap:8px}
+.bprev{width:44px;height:28px;border-radius:1px;overflow:hidden;background:#0a0a0a;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:0.48rem;color:var(--text3)}
 .bprev img{width:100%;height:100%;object-fit:cover}
-.bprev-code{width:38px;height:20px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-family:var(--f-m);font-size:6px;color:#5dade2;flex-shrink:0;border-radius:1px}
 .binfo{flex:1;min-width:0}
-.btype{font-family:var(--f-m);font-size:0.52rem;color:var(--text3)}
-.burl{font-size:0.6rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bact{display:flex;gap:3px;flex-shrink:0}
-/* Add banner form */
-.abform{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:0.7rem;margin-top:5px;display:none}
-.abform.open{display:block}
-.abt{display:flex;gap:3px;margin-bottom:0.6rem}
-.ab-tab{font-family:var(--f-m);font-size:0.56rem;background:none;border:1px solid var(--border);border-radius:1px;color:var(--text3);padding:2px 7px;cursor:pointer;transition:all 0.15s}
-.ab-tab.active{background:var(--gold-dim);border-color:var(--gold-line);color:var(--gold)}
+.btype{font-family:var(--fm);font-size:0.54rem;color:var(--gold);letter-spacing:0.06em;margin-bottom:1px}
+.burl{font-size:0.7rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* add form */
+.aform{background:var(--bg);border:1px dashed var(--border2);border-radius:1px;padding:0.8rem;margin-top:0.5rem}
+.atabs{display:flex;gap:3px;margin-bottom:0.65rem}
+.atab{font-family:var(--fm);font-size:0.56rem;background:none;border:1px solid var(--border);border-radius:1px;color:var(--text3);padding:3px 8px;cursor:pointer;transition:all 0.15s;letter-spacing:0.06em}
+.atab.on{background:var(--gold-dim);border-color:var(--gold-line);color:var(--gold)}
+
+/* ── WIREFRAME ── */
+.wfwrap{background:var(--bg);border:1px solid var(--border);border-radius:2px;overflow:hidden;margin-bottom:1.25rem}
+.wfhdr{padding:0.55rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:0.6rem;color:var(--text3)}
+.wfbody{padding:1rem;overflow-x:auto}
+.wf{width:100%;max-width:640px;margin:0 auto}
+
+/* wireframe zones */
+.wz{border:1px dashed;border-radius:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;transition:opacity 0.2s;position:relative}
+.wz:hover{opacity:0.75}
+.wz-lbl{font-family:var(--fm);font-size:0.5rem;letter-spacing:0.08em;text-transform:uppercase;text-align:center;line-height:1.4}
+.wz-cnt{font-family:var(--fm);font-size:0.58rem;font-weight:600}
+.wz.e{border-color:#2a2a2a;background:rgba(255,255,255,0.01);color:var(--text3)}
+.wz.p{border-color:var(--gold-line);background:var(--gold-dim);color:var(--gold)}
+.wz.f{border-color:rgba(39,174,96,0.4);background:var(--green-dim);color:var(--green)}
+
+/* site chrome */
+.wf-hdr{background:#111;padding:5px 7px;display:flex;align-items:center;gap:5px;margin-bottom:3px;border-radius:1px}
+.wf-logo{width:24px;height:14px;background:#2a1a08;border:1px solid var(--gold-line);border-radius:1px;flex-shrink:0}
+.wf-nav{display:flex;gap:2px;flex:1}
+.wf-np{height:7px;background:#1e1e1e;border-radius:1px;flex:1}
+.wf-hero{background:#1a0808;padding:7px;display:flex;gap:6px;margin-bottom:3px;border-radius:1px}
+.wf-htxt{flex:1;display:flex;flex-direction:column;gap:2px}
+.wf-hl{height:5px;background:#2a1a1a;border-radius:1px}.wf-hl.t{height:9px;background:#3a2020;width:65%}
+.wf-himg{width:50px;height:44px;background:#2a1a1a;border-radius:1px;flex-shrink:0}
+.wf-row{display:flex;gap:5px;margin-top:3px}
+.wf-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.wf-side{width:80px;flex-shrink:0;display:flex;flex-direction:column;gap:3px}
+.wf-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+.wf-card{background:#141414;border-radius:1px;aspect-ratio:2/3;border:1px solid #1e1e1e}
+.wf-widget{background:#111;border:1px solid #1e1e1e;border-radius:1px;padding:3px;display:flex;flex-direction:column;gap:2px}
+.wf-wl{height:3px;background:#1a1a1a;border-radius:1px}
+.wf-player{background:#050505;border:1px solid #222;border-radius:1px;padding-top:22%;position:relative;margin-bottom:3px}
+.wf-pi{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+
+/* legend */
+.wfleg{display:flex;gap:10px;padding:0.45rem 1rem;border-top:1px solid var(--border);flex-wrap:wrap}
+.wfleg-i{display:flex;align-items:center;gap:4px;font-family:var(--fm);font-size:0.54rem;color:var(--text3)}
+.wfleg-d{width:9px;height:9px;border-radius:1px;flex-shrink:0}
+
+/* COUNTDOWN */
+.cd{font-family:var(--fm);font-size:1rem;color:var(--gold);letter-spacing:0.1em}
+
+/* MOBILE */
+.mob-bar{display:none;align-items:center;gap:10px;background:var(--surface);border-bottom:1px solid var(--border);padding:0 1rem;height:50px;position:sticky;top:0;z-index:50}
+.mob-menu{background:none;border:none;color:var(--text2);cursor:pointer;padding:4px;display:flex}
+@media(max-width:768px){
+  .sb{position:fixed;top:0;left:-220px;height:100vh;z-index:100;transition:left 0.25s}
+  .sb.open{left:0}
+  .mob-bar{display:flex}
+  .sec{padding:1rem}
+  .f2{grid-template-columns:1fr}
+  .sgrid{grid-template-columns:repeat(2,1fr)}
+  #aw.show{flex-direction:column}
+}
+@media(min-width:769px){.mob-bar{display:none!important}}
 </style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div id="loginScreen">
+<div id="lw">
   <div class="lbox">
-    <div class="l-logo">AniWatch-BJ88</div>
-    <div class="l-sub">BACK OFFICE · ADMIN PANEL</div>
-    <label class="fl">Password</label>
-    <input class="fi" type="password" id="loginPw" placeholder="Enter password"/>
-    <button class="l-btn" onclick="doLogin()">Login →</button>
-    <div class="l-err" id="loginErr">❌ Incorrect password</div>
+    <div class="llogo">AniWatch-BJ88</div>
+    <div class="lsub">BACK OFFICE · ADMIN PANEL</div>
+    <label class="ll">Password</label>
+    <input class="li" type="password" id="lpw" placeholder="Enter password"/>
+    <button class="lbtn" onclick="doLogin()">Login →</button>
+    <div class="lerr" id="lerr">❌ Incorrect password</div>
   </div>
 </div>
 
-<!-- ADMIN APP -->
-<div id="adminApp">
-  <!-- TOPBAR -->
-  <div class="tb">
-    <div class="tb-logo">AniWatch<span id="tbTime">-BJ88 Admin</span></div>
-    <div class="tb-tabs">
-      <button class="ttab active" onclick="switchTab('dashboard',this)">Dashboard</button>
-      <button class="ttab" onclick="switchTab('ads',this)">Ad Manager</button>
-      <button class="ttab" onclick="switchTab('crawl',this)">Crawl</button>
-      <button class="ttab" onclick="switchTab('settings',this)">Settings</button>
+<!-- MOBILE BAR -->
+<div class="mob-bar" id="mbar">
+  <button class="mob-menu" onclick="toggleSb()">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+  </button>
+  <span style="font-family:var(--fh);font-size:0.78rem;font-weight:900;color:var(--gold);letter-spacing:0.06em">ANIWATCH-BJ88</span>
+</div>
+
+<!-- ADMIN -->
+<div id="aw">
+
+  <!-- SIDEBAR -->
+  <div class="sb" id="sb">
+    <div class="sblogo">
+      <div class="sbmain">AniWatch-BJ88</div>
+      <div class="sbsub">anime.bj88la.net</div>
+      <div class="sbbadge">ADMIN PANEL</div>
     </div>
-    <div class="tb-r">
-      <div class="bo-lang">
-        <button class="bl-btn active" onclick="setBoLang('lo',this)">ລາວ</button>
-        <button class="bl-btn" onclick="setBoLang('th',this)">ไทย</button>
-        <button class="bl-btn" onclick="setBoLang('en',this)">EN</button>
+    <div class="nvsec">Main</div>
+    <div class="nv on" onclick="gSec('dash',this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      <span id="n-dash">Dashboard</span>
+    </div>
+    <div class="nv" onclick="gSec('preview',this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      <span id="n-preview">Ad Preview</span>
+    </div>
+    <div class="nv" onclick="gSec('ads',this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <span id="n-ads">Ad Slots</span>
+    </div>
+    <div class="nvsec">Content</div>
+    <div class="nv" onclick="gSec('crawl',this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      <span id="n-crawl">Crawl</span>
+    </div>
+    <div class="nvsec">System</div>
+    <div class="nv" onclick="gSec('settings',this)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+      <span id="n-settings">Settings</span>
+    </div>
+    <div class="sbfoot">
+      <div class="slang" id="slang">
+        <button class="slbtn on" onclick="setLang('lo',this)">ລາວ</button>
+        <button class="slbtn" onclick="setLang('th',this)">ไทย</button>
+        <button class="slbtn" onclick="setLang('en',this)">EN</button>
       </div>
-      <a href="/" target="_blank" class="slink">↗ Site</a>
-      <button class="out-btn" onclick="doLogout()">Logout</button>
+      <a href="/" target="_blank" style="display:block;font-family:var(--fm);font-size:0.54rem;color:var(--text3);text-decoration:none;margin-bottom:7px;letter-spacing:0.08em" id="lbl-back">← Back to site</a>
+      <button class="lout" onclick="doLogout()" id="lbl-logout">Logout</button>
     </div>
   </div>
 
+  <!-- MAIN CONTENT -->
   <div class="main">
 
-    <!-- DASHBOARD -->
-    <div class="tsec active" id="tab-dashboard">
-      <div id="dashAlert" class="alert"></div>
-      <div class="sg">
-        <div class="sc"><div class="sc-l">Total Anime</div><div class="sc-v" id="sAnime">1</div><div class="sc-s">in database</div></div>
-        <div class="sc"><div class="sc-l">Episodes</div><div class="sc-v" id="sEps">12</div><div class="sc-s">across all titles</div></div>
-        <div class="sc"><div class="sc-l">Active Slots</div><div class="sc-v" id="sActive">0</div><div class="sc-s">of 9 slot groups</div></div>
-        <div class="sc"><div class="sc-l">Total Banners</div><div class="sc-v" id="sBanners">0</div><div class="sc-s">across all slots</div></div>
-        <div class="sc"><div class="sc-l">Next Crawl</div><div class="cd" id="sCd" style="margin-top:4px">—</div><div class="sc-s">Sun 3AM Bangkok</div></div>
+    <!-- ── DASHBOARD ── -->
+    <div class="sec on" id="sec-dash">
+      <div class="ph"><h1 id="lbl-dashboard">Dashboard</h1><span class="phsub" id="dashclock"></span></div>
+      <div id="d-alert" class="alert"></div>
+      <div class="sgrid">
+        <div class="stat"><div class="slbl" id="lbl-anime">Total Anime</div><div class="sval" id="sv-anime">1</div><div class="snote">in database</div></div>
+        <div class="stat"><div class="slbl" id="lbl-eps">Episodes</div><div class="sval" id="sv-eps">12</div><div class="snote">all titles</div></div>
+        <div class="stat"><div class="slbl" id="lbl-slots">Active Slots</div><div class="sval" id="sv-slots">0</div><div class="snote">of 9 configured</div></div>
+        <div class="stat"><div class="slbl" id="lbl-banners">Banners</div><div class="sval" id="sv-banners">0</div><div class="snote">total active</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-        <div class="pn">
-          <div class="ph"><div class="dot dot-y" style="margin-right:2px"></div><h2>Crawl Status</h2></div>
-          <div class="pb">
-            <div class="ig" style="margin-bottom:1rem">
-              <span class="il">Last run</span><span class="iv" id="lastCrawl">Never</span>
-              <span class="il">Schedule</span><span class="iv">Sunday 3:00 AM</span>
-              <span class="il">Platform</span><span class="iv">GitHub Actions</span>
-              <span class="il">Status</span>
-              <span><span class="dot dot-g" style="margin-right:4px"></span><span style="color:var(--green);font-size:0.78rem">Ready</span></span>
+        <div class="panel">
+          <div class="phead"><div class="dot dy"></div><h2 id="lbl-cstatus">Crawl Status</h2></div>
+          <div class="pbody">
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:0.76rem;margin-bottom:0.9rem">
+              <span style="color:var(--text3);font-family:var(--fm);font-size:0.56rem" id="lbl-lastrun">Last run</span><span id="lastrun" style="color:var(--text2)">Never</span>
+              <span style="color:var(--text3);font-family:var(--fm);font-size:0.56rem" id="lbl-next">Next</span><span style="color:var(--gold)">Sunday 3:00 AM</span>
+              <span style="color:var(--text3);font-family:var(--fm);font-size:0.56rem" id="lbl-cd">Countdown</span><span class="cd" id="cd">—</span>
+              <span style="color:var(--text3);font-family:var(--fm);font-size:0.56rem">Status</span>
+              <span><span class="dot dg" style="margin-right:5px"></span><span style="color:var(--green);font-size:0.72rem">GitHub Actions ready</span></span>
             </div>
-            <button class="btn btn-g btn-sm" onclick="triggerCrawl()">↺ Run Now</button>
+            <button class="btn bg bsm" onclick="triggerCrawl()">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/></svg>
+              <span id="lbl-trigger">Trigger Crawl Now</span>
+            </button>
           </div>
         </div>
-        <div class="pn">
-          <div class="ph"><h2>Quick Actions</h2></div>
-          <div class="pb ql">
-            <a href="/" target="_blank" class="btn btn-ghost btn-sm" style="justify-content:center">↗ Live Site</a>
-            <a href="https://github.com/Kitty99CsI/anime-portal/actions" target="_blank" class="btn btn-ghost btn-sm" style="justify-content:center">⏱ Actions</a>
-            <a href="https://analytics.google.com" target="_blank" class="btn btn-ghost btn-sm" style="justify-content:center">📊 Analytics</a>
-            <a href="https://dash.cloudflare.com" target="_blank" class="btn btn-ghost btn-sm" style="justify-content:center">☁ Cloudflare</a>
+        <div class="panel">
+          <div class="phead"><h2 id="lbl-quick">Quick Links</h2></div>
+          <div class="pbody" style="display:flex;flex-direction:column;gap:6px">
+            <a href="https://anime.bj88la.net" target="_blank" class="btn bq bsm" style="text-decoration:none;justify-content:center">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 0 2 2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              <span id="lbl-viewsite">View Live Site</span>
+            </a>
+            <a href="https://github.com/Kitty99CsI/anime-portal/actions" target="_blank" class="btn bq bsm" style="text-decoration:none;justify-content:center">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              GitHub Actions
+            </a>
+            <a href="https://analytics.google.com" target="_blank" class="btn bq bsm" style="text-decoration:none;justify-content:center">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Analytics
+            </a>
+            <a href="https://dash.cloudflare.com" target="_blank" class="btn bq bsm" style="text-decoration:none;justify-content:center">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+              Cloudflare
+            </a>
           </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="phead"><h2 id="lbl-chist">Crawl History</h2></div>
+        <div style="overflow-x:auto">
+          <table class="tbl">
+            <thead><tr><th>Date</th><th>New Anime</th><th>Episodes</th><th>Duration</th><th>Status</th></tr></thead>
+            <tbody id="chist"><tr><td colspan="5" style="text-align:center;padding:1.5rem;font-family:var(--fm);font-size:0.62rem;color:var(--text3)">No crawl runs yet</td></tr></tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- AD MANAGER -->
-    <div class="tsec" id="tab-ads">
-      <div id="adAlert" class="alert"></div>
-
-      <!-- SKELETON MAP -->
-      <div class="pn">
-        <div class="ph"><h2>Ad Slot Map</h2><span class="ph-note">Click zone to jump to slot · Green = active · Gold = full</span></div>
-        <div class="pb" style="padding:0.75rem">
-          <div class="skwrap">
-            <div class="sksite" id="skSite">
-
-              <!-- Leaderboard top -->
-              <div class="az empty" id="skz-leaderboard-top" style="width:100%;height:26px;margin-bottom:3px" onclick="jumpToSlot('leaderboard-top')">
-                <span class="az-lbl">Top Leaderboard</span><span class="az-cnt" id="skc-leaderboard-top">0/10</span>
-              </div>
-
-              <!-- Header bar -->
-              <div class="sk-h" style="margin-bottom:3px">
-                <div class="sk-lb"></div>
-                <div style="display:flex;gap:3px;flex:1"><div class="sk-nd a"></div><div class="sk-nd"></div><div class="sk-nd"></div><div class="sk-nd"></div><div class="sk-nd"></div></div>
-                <div class="sk-sb"></div>
-              </div>
-
-              <!-- Hero -->
-              <div class="sk-hero" style="margin-bottom:3px">
-                <div class="sk-hero-t"><div class="sk-line" style="width:100px"></div><div class="sk-line" style="width:70px"></div><div class="sk-line" style="width:85px"></div></div>
-              </div>
-
-              <!-- Body -->
-              <div class="sk-body">
-                <div class="sk-main">
-                  <div class="sk-gl"></div>
-                  <div class="sk-grid" style="margin-bottom:3px">
-                    <div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div>
-                  </div>
-                  <div class="az empty" id="skz-infeed" style="width:100%;height:18px;margin-bottom:3px" onclick="jumpToSlot('infeed')">
-                    <span class="az-lbl">In-Feed</span><span class="az-cnt" id="skc-infeed">0/5</span>
-                  </div>
-                  <div class="sk-gl"></div>
-                  <div class="sk-grid">
-                    <div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div>
-                  </div>
-                </div>
-                <div class="sk-sidebar">
-                  <div class="az empty" id="skz-sidebar-1" style="width:100%;height:65px;margin-bottom:3px" onclick="jumpToSlot('sidebar-1')">
-                    <span class="az-lbl">Sidebar 1</span><span class="az-cnt" id="skc-sidebar-1">0/5</span>
-                  </div>
-                  <div style="height:32px;background:#141414;border:1px solid #2a2a2a;border-radius:1px;margin-bottom:3px"></div>
-                  <div class="az empty" id="skz-sidebar-2" style="width:100%;height:65px" onclick="jumpToSlot('sidebar-2')">
-                    <span class="az-lbl">Sidebar 2</span><span class="az-cnt" id="skc-sidebar-2">0/5</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Watch page divider -->
-              <div style="font-family:var(--f-m);font-size:7px;color:var(--text3);margin:8px 0 3px;letter-spacing:0.1em;text-transform:uppercase">WATCH PAGE</div>
-
-              <div class="az empty" id="skz-watch-header" style="width:100%;height:16px;margin-bottom:3px" onclick="jumpToSlot('watch-header')">
-                <span class="az-lbl">Watch Header</span><span class="az-cnt" id="skc-watch-header">0/5</span>
-              </div>
-
-              <div class="sk-body">
-                <div class="sk-main">
-                  <div style="width:100%;height:82px;background:#0a0a0a;border:1px solid #222;border-radius:1px;margin-bottom:3px;display:flex;align-items:center;justify-content:center">
-                    <span style="font-family:var(--f-m);font-size:7px;color:#333">▶ PLAYER</span>
-                  </div>
-                  <div class="az empty" id="skz-below-player" style="width:100%;height:16px;margin-bottom:3px" onclick="jumpToSlot('below-player')">
-                    <span class="az-lbl">⭐ Below Player</span><span class="az-cnt" id="skc-below-player">0/5</span>
-                  </div>
-                  <div style="height:36px;background:#141414;border:1px solid #2a2a2a;border-radius:1px"></div>
-                </div>
-                <div class="sk-sidebar">
-                  <div class="az empty" id="skz-watch-sidebar" style="width:100%;height:65px;margin-bottom:3px" onclick="jumpToSlot('watch-sidebar')">
-                    <span class="az-lbl">Watch Sidebar</span><span class="az-cnt" id="skc-watch-sidebar">0/5</span>
-                  </div>
-                  <div class="az empty" id="skz-halfpage" style="width:100%;height:95px" onclick="jumpToSlot('halfpage')">
-                    <span class="az-lbl">⭐ Half Page</span><span class="az-cnt" id="skc-halfpage">0/5</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="az empty" id="skz-leaderboard-footer" style="width:100%;height:26px;margin-top:8px" onclick="jumpToSlot('leaderboard-footer')">
-                <span class="az-lbl">Footer Leaderboard</span><span class="az-cnt" id="skc-leaderboard-footer">0/10</span>
-              </div>
-
-            </div>
-          </div>
-          <div style="display:flex;gap:1.5rem;margin-top:0.65rem;font-family:var(--f-m);font-size:0.58rem;color:var(--text3)">
-            <span><span class="dot" style="background:var(--border2);margin-right:4px;width:8px;height:8px"></span>Empty</span>
-            <span><span class="dot dot-g" style="margin-right:4px;width:8px;height:8px"></span>Active</span>
-            <span><span class="dot" style="background:var(--gold);margin-right:4px;width:8px;height:8px"></span>Full</span>
-          </div>
+    <!-- ── AD PREVIEW ── -->
+    <div class="sec" id="sec-preview">
+      <div class="ph"><h1>Ad Slot Preview</h1><span class="phsub">Click any zone to manage that slot</span></div>
+      <div class="wfwrap">
+        <div class="wfhdr"><span class="dot dg"></span>anime.bj88la.net — live slot status · click a zone to edit</div>
+        <div class="wfbody"><div class="wf" id="wf"></div></div>
+        <div class="wfleg">
+          <div class="wfleg-i"><div class="wfleg-d" style="background:#1a1a1a;border:1px dashed #2a2a2a"></div>Empty</div>
+          <div class="wfleg-i"><div class="wfleg-d" style="background:var(--gold-dim);border:1px dashed var(--gold-line)"></div>Active</div>
+          <div class="wfleg-i"><div class="wfleg-d" style="background:var(--green-dim);border:1px dashed rgba(39,174,96,0.4)"></div>Full</div>
         </div>
       </div>
-
-      <!-- SLOT CARDS -->
-      <div class="asg" id="adSlotsGrid"></div>
+      <div id="prev-alert" class="alert"></div>
     </div>
 
-    <!-- CRAWL -->
-    <div class="tsec" id="tab-crawl">
+    <!-- ── AD SLOTS ── -->
+    <div class="sec" id="sec-ads">
+      <div class="ph"><h1 id="lbl-adslots">Ad Slot Manager</h1><span class="phsub">Leaderboard max 10 · others max 5</span></div>
+      <div id="ads-alert" class="alert"></div>
+      <div class="slot-list" id="slotlist"></div>
+    </div>
+
+    <!-- ── CRAWL ── -->
+    <div class="sec" id="sec-crawl">
+      <div class="ph"><h1>Crawl Schedule</h1><span class="phsub">weekly-sync.yml</span></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-        <div class="pn">
-          <div class="ph"><h2>Schedule</h2></div>
-          <div class="pb">
-            <div class="ig" style="margin-bottom:1rem">
-              <span class="il">Cron</span><span style="font-family:var(--f-m);color:var(--gold);font-size:0.72rem">0 20 * * 6</span>
-              <span class="il">Bangkok</span><span class="iv">Sunday 3:00 AM</span>
-              <span class="il">Branch</span><span style="font-family:var(--f-m);color:var(--gold);font-size:0.72rem">main</span>
-              <span class="il">Countdown</span><span class="cd" id="crawlCd">—</span>
-            </div>
-            <button class="btn btn-p btn-sm" onclick="triggerCrawl()">↺ Run Now</button>
+        <div class="panel">
+          <div class="phead"><h2>Schedule</h2></div>
+          <div class="pbody" style="font-family:var(--fm);font-size:0.7rem;color:var(--text2);line-height:2.2">
+            <div>Cron: <span style="color:var(--gold)">0 20 * * 6</span></div>
+            <div>Bangkok: <span style="color:var(--gold)">Sunday 3:00 AM</span></div>
+            <div>UTC: <span style="color:var(--text3)">Saturday 20:00</span></div>
           </div>
         </div>
-        <div class="pn">
-          <div class="ph"><h2>What it does</h2></div>
-          <div class="pb">
-            <div class="step"><span class="sn">1</span><span class="st">Fetch listing pages → find new anime slugs</span></div>
-            <div class="step"><span class="sn">2</span><span class="st">Call <code>get_episode_list</code> per anime</span></div>
-            <div class="step"><span class="sn">3</span><span class="st">Call <code>mix_get_player</code> → get iframe URLs</span></div>
-            <div class="step"><span class="sn">4</span><span class="st">Update <code>anime.json</code> + <code>episodes.json</code></span></div>
-            <div class="step"><span class="sn">5</span><span class="st">Commit → auto-deploy → site updates live</span></div>
+        <div class="panel">
+          <div class="phead"><h2>Manual Trigger</h2></div>
+          <div class="pbody">
+            <p style="font-size:0.76rem;color:var(--text2);margin-bottom:0.75rem;line-height:1.6">Opens GitHub Actions in new tab. Click "Run workflow" → "Run workflow".</p>
+            <button class="btn bp" onclick="triggerCrawl()">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/></svg>
+              Run Scraper Now
+            </button>
           </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="phead"><h2>Pipeline steps</h2></div>
+        <div class="pbody" style="display:grid;grid-template-columns:20px 1fr;gap:6px 10px;font-size:0.76rem;line-height:1.6">
+          <span style="color:var(--gold);font-weight:700">1</span><span style="color:var(--text2)">Fetch anime listing pages → collect slugs</span>
+          <span style="color:var(--gold);font-weight:700">2</span><span style="color:var(--text2)">POST admin-ajax → <code style="font-family:var(--fm);font-size:0.68rem;color:var(--gold)">get_episode_list</code></span>
+          <span style="color:var(--gold);font-weight:700">3</span><span style="color:var(--text2)">POST admin-ajax → <code style="font-family:var(--fm);font-size:0.68rem;color:var(--gold)">mix_get_player</code> → iframe URLs</span>
+          <span style="color:var(--gold);font-weight:700">4</span><span style="color:var(--text2)">Update anime.json + episodes.json</span>
+          <span style="color:var(--gold);font-weight:700">5</span><span style="color:var(--text2)">Git push → auto-deploy → site updated ✅</span>
         </div>
       </div>
     </div>
 
-    <!-- SETTINGS -->
-    <div class="tsec" id="tab-settings">
-      <div id="settingsAlert" class="alert"></div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-        <div class="pn">
-          <div class="ph"><h2>Site Info</h2></div>
-          <div class="pb">
-            <div class="fg"><label class="fl2">Meta Title</label><input class="fi2" id="cfgTitle" value="AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ"/><div class="fhint">Max 60 chars</div></div>
-            <div class="fg"><label class="fl2">Meta Description</label><textarea class="ft2" id="cfgDesc">ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ພ້ອມຂໍ້ມູນອານິເມ ອັບເດດເນື້ອຫາໃໝ່.</textarea><div class="fhint">Max 160 chars</div></div>
-            <div class="fg"><label class="fl2">GA4 ID</label><input class="fi2" id="cfgGA4" value="G-D2H8CHS41Z"/></div>
-            <button class="btn btn-g btn-sm" onclick="saveSettings()">Show Instructions →</button>
-            <div id="settingsNote" style="display:none;margin-top:0.75rem;padding:0.75rem;background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:2px;font-family:var(--f-m);font-size:0.64rem;color:var(--gold);line-height:1.9"></div>
+    <!-- ── SETTINGS ── -->
+    <div class="sec" id="sec-settings">
+      <div class="ph"><h1>Settings</h1></div>
+      <div id="set-alert" class="alert"></div>
+      <div class="panel">
+        <div class="phead"><h2>Site Info</h2></div>
+        <div class="pbody">
+          <div class="f2">
+            <div class="fg"><label class="fl">Site Name</label><input class="fi" value="AniWatch-BJ88"/></div>
+            <div class="fg"><label class="fl">Domain</label><input class="fi" value="anime.bj88la.net" readonly style="opacity:0.5"/></div>
           </div>
+          <div class="fg"><label class="fl">Meta Title</label><input class="fi" id="smt" value="AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ"/><div class="fh">Max 60 chars for Google</div></div>
+          <div class="fg"><label class="fl">Meta Description</label><textarea class="ft" id="smd">ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ພ້ອມຂໍ້ມູນອານິເມ ອັບເດດເນື້ອຫາໃໝ່ ແລະ ຊ່ວຍນຳທາງໄປຫາການຮັບຊົມທີ່ສະດວກຂຶ້ນ.</textarea><div class="fh">Max 160 chars for LINE/Facebook previews</div></div>
+          <div class="fg"><label class="fl">GA4 Measurement ID</label><input class="fi" id="sga" value="G-D2H8CHS41Z"/><div class="fh">Format: G-XXXXXXXXXX</div></div>
+          <button class="btn bg" onclick="saveSettings()">Show Update Instructions</button>
+          <div id="sinstr" style="display:none;margin-top:0.85rem;padding:0.7rem;background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:2px;font-family:var(--fm);font-size:0.62rem;color:var(--gold);line-height:1.9"></div>
         </div>
-        <div class="pn">
-          <div class="ph"><h2>Admin Password</h2></div>
-          <div class="pb">
-            <div class="fg"><label class="fl2">Current Password</label><input class="fi2" type="password" id="curPw"/></div>
-            <div class="fg"><label class="fl2">New Password</label><input class="fi2" type="password" id="newPw" placeholder="min 6 characters"/></div>
-            <button class="btn btn-p btn-sm" onclick="changePw()">Update</button>
-            <div id="pwResult" style="display:none;margin-top:0.75rem;padding:0.65rem;border-radius:2px;font-family:var(--f-m);font-size:0.64rem;line-height:1.8;border:1px solid"></div>
+      </div>
+      <div class="panel">
+        <div class="phead"><h2>Change Password</h2></div>
+        <div class="pbody">
+          <div class="f2">
+            <div class="fg"><label class="fl">Current Password</label><input class="fi" type="password" id="cpw"/></div>
+            <div class="fg"><label class="fl">New Password</label><input class="fi" type="password" id="npw" placeholder="min 6 chars"/></div>
           </div>
+          <button class="btn bp bsm" onclick="changePw()">Update Password</button>
+          <div id="pwnote" style="display:none;margin-top:0.7rem;font-family:var(--fm);font-size:0.62rem;line-height:1.7"></div>
         </div>
       </div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /main -->
+</div><!-- /aw -->
 
 <script>
-const ADMIN_PW = 'bj88anime';
+/* ══ CONFIG ══ */
+const ADMIN_PW = 'bj88anime'; // change to update password
 
+/* ══ SLOT DEFINITIONS ══ */
 const SLOTS = [
-  {id:'leaderboard-top',   name:'Top Leaderboard',   size:'728×90',  limit:10, zone:'Above header — all pages'},
-  {id:'infeed',            name:'In-Feed',            size:'728×60',  limit:5,  zone:'Between sections — listing page'},
-  {id:'sidebar-1',         name:'Sidebar Top',        size:'300×250', limit:5,  zone:'Listing page right sidebar'},
-  {id:'sidebar-2',         name:'Sidebar Bottom',     size:'300×250', limit:5,  zone:'Listing page right sidebar'},
-  {id:'watch-header',      name:'Watch Header',       size:'728×60',  limit:5,  zone:'Top of watch page'},
-  {id:'below-player',      name:'⭐ Below Player',    size:'728×60',  limit:5,  zone:'Below video — highest CPM'},
-  {id:'watch-sidebar',     name:'Watch Sidebar',      size:'300×250', limit:5,  zone:'Watch page right sidebar'},
-  {id:'halfpage',          name:'⭐ Half Page',       size:'300×600', limit:5,  zone:'Watch sidebar — highest CPM'},
-  {id:'leaderboard-footer',name:'Footer Leaderboard', size:'728×90',  limit:10, zone:'Footer — all pages'},
+  {id:'leaderboard-top',    name:'Top Leaderboard',    size:'728×90',  max:10, zone:'Above header · every page'},
+  {id:'leaderboard-footer', name:'Footer Leaderboard', size:'728×90',  max:10, zone:'Bottom · every page'},
+  {id:'infeed',             name:'In-Feed',            size:'728×60',  max:5,  zone:'Between sections · listing'},
+  {id:'below-player',       name:'⭐ Below Player',    size:'728×60',  max:5,  zone:'Watch page · highest CPM'},
+  {id:'watch-header',       name:'Watch Header',       size:'728×60',  max:5,  zone:'Top of watch page'},
+  {id:'sidebar-1',          name:'Sidebar Top',        size:'300×250', max:5,  zone:'Right sidebar · listing'},
+  {id:'sidebar-2',          name:'Sidebar Bottom',     size:'300×250', max:5,  zone:'Right sidebar · listing'},
+  {id:'watch-sidebar',      name:'Watch Sidebar',      size:'300×250', max:5,  zone:'Right sidebar · watch'},
+  {id:'halfpage',           name:'⭐ Half Page',       size:'300×600', max:5,  zone:'Watch sidebar · highest CPM'},
 ];
 
-const BL = {
-  lo:{add:'+ ເພີ່ມ Banner',save:'ບັນທຶກ',cancel:'ຍົກເລີກ',del:'ລຶບ',edit:'ແກ້ໄຂ',empty:'ຍັງບໍ່ມີ Banner',img:'Image Banner',code:'Ad Code'},
-  th:{add:'+ เพิ่ม Banner',save:'บันทึก',cancel:'ยกเลิก',del:'ลบ',edit:'แก้ไข',empty:'ยังไม่มี Banner',img:'Image Banner',code:'Ad Code'},
-  en:{add:'+ Add Banner',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',empty:'No banners yet',img:'Image Banner',code:'Ad Code'},
+/* ══ I18N ══ */
+const I18N = {
+  lo:{
+    'n-dash':'ໜ້າຫຼັກ','n-preview':'ສະແດງໂຄສະນາ','n-ads':'ຈັດການໂຄສະນາ','n-crawl':'ດຶງຂໍ້ມູນ','n-settings':'ຕັ້ງຄ່າ',
+    'lbl-dashboard':'ໜ້າຫຼັກ','lbl-anime':'ອານິເມ','lbl-eps':'ຕອນ','lbl-slots':'ສະລັອດ','lbl-banners':'ແບນເນີ',
+    'lbl-cstatus':'ສະຖານະ','lbl-lastrun':'ດຶງຄັ້ງລ່າສຸດ','lbl-next':'ຄັ້ງຕໍ່ໄປ','lbl-cd':'ນັບຖອຍຫຼັງ',
+    'lbl-trigger':'ດຶງດ່ວນ','lbl-quick':'ລິ້ງທາງລັດ','lbl-chist':'ປະຫວັດ',
+    'lbl-adslots':'ຈັດການໂຄສະນາ','lbl-viewsite':'ເບິ່ງໜ້າເວັບ','lbl-back':'← ກັບໄປໜ້າຫຼັກ','lbl-logout':'ອອກຈາກລະບົບ',
+  },
+  th:{
+    'n-dash':'หน้าหลัก','n-preview':'ดูโฆษณา','n-ads':'จัดการโฆษณา','n-crawl':'ดึงข้อมูล','n-settings':'ตั้งค่า',
+    'lbl-dashboard':'หน้าหลัก','lbl-anime':'อนิเมะ','lbl-eps':'ตอน','lbl-slots':'สล็อต','lbl-banners':'แบนเนอร์',
+    'lbl-cstatus':'สถานะ','lbl-lastrun':'รันล่าสุด','lbl-next':'ครั้งต่อไป','lbl-cd':'นับถอยหลัง',
+    'lbl-trigger':'ดึงข้อมูลด่วน','lbl-quick':'ลิ้งลัด','lbl-chist':'ประวัติ',
+    'lbl-adslots':'จัดการโฆษณา','lbl-viewsite':'ดูเว็บไซต์','lbl-back':'← กลับหน้าหลัก','lbl-logout':'ออกจากระบบ',
+  },
+  en:{
+    'n-dash':'Dashboard','n-preview':'Ad Preview','n-ads':'Ad Slots','n-crawl':'Crawl','n-settings':'Settings',
+    'lbl-dashboard':'Dashboard','lbl-anime':'Total Anime','lbl-eps':'Episodes','lbl-slots':'Active Slots','lbl-banners':'Banners',
+    'lbl-cstatus':'Crawl Status','lbl-lastrun':'Last run','lbl-next':'Next run','lbl-cd':'Countdown',
+    'lbl-trigger':'Trigger Crawl Now','lbl-quick':'Quick Links','lbl-chist':'Crawl History',
+    'lbl-adslots':'Ad Slot Manager','lbl-viewsite':'View Live Site','lbl-back':'← Back to site','lbl-logout':'Logout',
+  },
 };
-let bLang = localStorage.getItem('bj88_bo_lang') || 'lo';
-const bt = k => (BL[bLang]||BL.lo)[k]||k;
+let lang = localStorage.getItem('bj88_admin_lang') || 'lo';
+function setLang(l, btn) {
+  lang = l; localStorage.setItem('bj88_admin_lang', l);
+  document.querySelectorAll('.slbtn').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  applyI18N();
+}
+function applyI18N() {
+  const m = I18N[lang] || I18N.en;
+  Object.entries(m).forEach(([id, txt]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = txt;
+  });
+}
 
-/* ─── AUTH ─────────────────────────────── */
+/* ══ AUTH ══ */
 function doLogin() {
-  const pw = document.getElementById('loginPw').value;
-  if (pw === (sessionStorage.getItem('bj88_pw')||ADMIN_PW)) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('adminApp').classList.add('show');
-    initAdmin();
+  const pw = document.getElementById('lpw').value;
+  const stored = sessionStorage.getItem('bj88_pw') || ADMIN_PW;
+  if (pw === stored) {
+    document.getElementById('lw').style.display = 'none';
+    document.getElementById('aw').classList.add('show');
+    document.getElementById('mbar').style.display = '';
+    init();
   } else {
-    document.getElementById('loginErr').style.display = 'block';
-    document.getElementById('loginPw').value = '';
-    document.getElementById('loginPw').focus();
+    document.getElementById('lerr').style.display = 'block';
+    document.getElementById('lpw').value = '';
   }
 }
 function doLogout() {
-  document.getElementById('adminApp').classList.remove('show');
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('loginPw').value = '';
-  document.getElementById('loginErr').style.display = 'none';
+  document.getElementById('aw').classList.remove('show');
+  document.getElementById('mbar').style.display = 'none';
+  document.getElementById('lw').style.display = 'flex';
+  document.getElementById('lpw').value = '';
+  document.getElementById('lerr').style.display = 'none';
 }
-document.getElementById('loginPw').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+document.getElementById('lpw').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('lpw').focus();
 
-/* ─── NAV ──────────────────────────────── */
-function switchTab(name, btn) {
-  document.querySelectorAll('.tsec').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.ttab').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  if (btn) btn.classList.add('active');
+/* ══ NAV ══ */
+function gSec(name, el) {
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.nv').forEach(n => n.classList.remove('on'));
+  document.getElementById('sec-' + name).classList.add('on');
+  if (el) el.classList.add('on');
+  if (window.innerWidth < 769) document.getElementById('sb').classList.remove('open');
+}
+function toggleSb() { document.getElementById('sb').classList.toggle('open'); }
+
+/* ══ STORAGE ══ */
+function allSlots() { try { return JSON.parse(localStorage.getItem('bj88_adslots') || '{}'); } catch(e) { return {}; } }
+function getSlot(id) { return allSlots()[id] || { enabled:false, banners:[] }; }
+function saveSlot(id, data) {
+  const all = allSlots(); all[id] = data;
+  localStorage.setItem('bj88_adslots', JSON.stringify(all));
+  refreshStats(); renderWF();
 }
 
-/* ─── BO LANG ───────────────────────────── */
-function setBoLang(lang, btn) {
-  bLang = lang;
-  localStorage.setItem('bj88_bo_lang', lang);
-  document.querySelectorAll('.bl-btn').forEach(b => b.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  renderAdSlots();
-}
-
-/* ─── AD DATA ───────────────────────────── */
-function getSlots() { try { return JSON.parse(localStorage.getItem('bj88_adslots')||'{}'); } catch(e) { return {}; } }
-function saveSlots(d) { localStorage.setItem('bj88_adslots', JSON.stringify(d)); }
-function getSlot(id) { const s=getSlots(); return s[id]||{enabled:false,banners:[]}; }
-function setSlot(id, data) { const all=getSlots(); all[id]=data; saveSlots(all); }
-
-/* ─── SKELETON UPDATE ───────────────────── */
-function updateSkeleton() {
-  const slots = getSlots();
-  let activeSlots=0, totalBanners=0;
-  SLOTS.forEach(def => {
-    const zone = document.getElementById('skz-'+def.id);
-    const cnt  = document.getElementById('skc-'+def.id);
-    const s    = slots[def.id];
-    const n    = (s&&s.banners) ? s.banners.filter(b=>b.imgUrl||b.code).length : 0;
-    if (cnt) cnt.textContent = `${n}/${def.limit}`;
-    if (zone) {
-      zone.className = zone.className.replace(/\s*(empty|active|full)/g,'');
-      zone.classList.add(n===0?'empty':n>=def.limit?'full':'active');
-    }
-    if (s&&s.enabled) activeSlots++;
-    totalBanners += n;
+/* ══ STATS ══ */
+function refreshStats() {
+  const all = allSlots();
+  let active = 0, total = 0;
+  SLOTS.forEach(s => {
+    const d = all[s.id] || {};
+    const n = (d.banners || []).length;
+    if (d.enabled && n > 0) active++;
+    total += n;
   });
-  const sa=document.getElementById('sActive'); if(sa) sa.textContent=activeSlots;
-  const sb=document.getElementById('sBanners'); if(sb) sb.textContent=totalBanners;
+  const ae = document.getElementById('sv-slots');
+  const be = document.getElementById('sv-banners');
+  if (ae) ae.textContent = active;
+  if (be) be.textContent = total;
 }
 
-function jumpToSlot(id) {
-  const adTab = document.querySelector('.ttab:nth-child(2)');
-  switchTab('ads', adTab);
-  setTimeout(() => {
-    const card = document.getElementById('asc-'+id);
-    if (card) {
-      card.scrollIntoView({behavior:'smooth',block:'center'});
-      card.classList.add('highlight');
-      setTimeout(() => card.classList.remove('highlight'), 2000);
-    }
-  }, 80);
+/* ══ WIREFRAME ══ */
+function wzClass(id) {
+  const d = getSlot(id);
+  const s = SLOTS.find(x => x.id === id);
+  const n = (d.banners || []).length;
+  if (!d.enabled || n === 0) return 'e';
+  if (n >= (s?.max || 5)) return 'f';
+  return 'p';
 }
-
-/* ─── RENDER SLOT CARDS ─────────────────── */
-function renderAdSlots() {
-  const grid = document.getElementById('adSlotsGrid');
-  if (!grid) return;
-
-  grid.innerHTML = SLOTS.map(def => {
-    const s       = getSlot(def.id);
-    const banners = (s.banners||[]);
-    const n       = banners.filter(b=>b.imgUrl||b.code).length;
-    const pct     = Math.round((n/def.limit)*100);
-    const fillClr = n>=def.limit?'var(--gold)':n>0?'var(--green)':'var(--border)';
-
-    const bannersHTML = banners.length
-      ? banners.map((b,i) => `
-        <div class="bi" id="bi-${def.id}-${i}">
-          ${b.type==='code'
-            ? `<div class="bprev-code">CODE</div>`
-            : `<div class="bprev"><img src="${b.imgUrl||''}" alt="" onerror="this.style.opacity=0.2"/></div>`}
-          <div class="binfo">
-            <div class="btype">${b.type==='code'?bt('code'):bt('img')}</div>
-            <div class="burl">${b.type==='code'?(b.code||'').slice(0,45)+'…':(b.imgUrl||'—')}</div>
+function wz(id, h, lbl, style) {
+  const c = wzClass(id);
+  const s = SLOTS.find(x => x.id === id);
+  const n = (getSlot(id).banners || []).length;
+  return `<div class="wz ${c}" style="height:${h}px;${style||''}" onclick="goToSlot('${id}')" title="${lbl}">
+    <div class="wz-lbl">${lbl}</div>
+    <div class="wz-cnt">${n}/${s?.max||5}</div>
+  </div>`;
+}
+function renderWF() {
+  const el = document.getElementById('wf');
+  if (!el) return;
+  el.innerHTML = `
+    ${wz('leaderboard-top',22,'Top Leaderboard','width:100%;margin-bottom:3px')}
+    <div class="wf-hdr" style="margin-bottom:3px">
+      <div class="wf-logo"></div>
+      <div class="wf-nav">${'<div class="wf-np"></div>'.repeat(5)}</div>
+    </div>
+    <div class="wf-hero" style="margin-bottom:3px">
+      <div class="wf-htxt"><div class="wf-hl t"></div><div class="wf-hl" style="width:55%"></div><div class="wf-hl" style="width:65%"></div></div>
+      <div class="wf-himg"></div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-col">
+        ${wz('infeed',16,'In-Feed','width:100%;margin-bottom:3px')}
+        <div class="wf-cards">${'<div class="wf-card"></div>'.repeat(8)}</div>
+      </div>
+      <div class="wf-side">
+        ${wz('sidebar-1',56,'Sidebar 1','width:100%;margin-bottom:3px')}
+        <div class="wf-widget" style="margin-bottom:3px"><div class="wf-wl"></div><div class="wf-wl" style="width:70%"></div><div class="wf-wl" style="width:55%"></div></div>
+        ${wz('sidebar-2',56,'Sidebar 2','width:100%')}
+      </div>
+    </div>
+    <div style="margin-top:5px;padding-top:5px;border-top:1px dashed #1e1e1e">
+      <div style="font-family:var(--fm);font-size:0.48rem;color:var(--text3);margin-bottom:3px;letter-spacing:0.1em">WATCH PAGE</div>
+      ${wz('watch-header',16,'Watch Header','width:100%;margin-bottom:3px')}
+      <div class="wf-row">
+        <div class="wf-col">
+          <div class="wf-player"><div class="wf-pi"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2a2a2a" stroke-width="1.5"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+          ${wz('below-player',16,'⭐ Below Player','width:100%;margin-bottom:3px')}
+          <div style="background:#111;border:1px solid #1e1e1e;border-radius:1px;padding:5px;display:flex;gap:4px">
+            <div style="width:26px;height:36px;background:#1a1a1a;border-radius:1px;flex-shrink:0"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:2px"><div style="height:6px;background:#1e1e1e;border-radius:1px;width:65%"></div><div style="height:4px;background:#1a1a1a;border-radius:1px;width:45%"></div></div>
           </div>
-          <div class="bact">
-            <button class="btn btn-ghost btn-xs" onclick="editBanner('${def.id}',${i})">✏</button>
-            <button class="btn btn-d btn-xs" onclick="delBanner('${def.id}',${i})">✕</button>
-          </div>
-        </div>`).join('')
-      : `<div style="font-family:var(--f-m);font-size:0.62rem;color:var(--text3);padding:5px 0">${bt('empty')}</div>`;
-
-    return `
-    <div class="asc" id="asc-${def.id}">
-      <div class="asc-h">
-        <div class="asc-n">${def.name}</div>
-        <div class="asc-sz">${def.size}</div>
-        <div class="tog">
-          <input type="checkbox" id="tog-${def.id}" ${s.enabled?'checked':''}
-                 onchange="toggleSlot('${def.id}',this.checked)"/>
-          <div class="tog-s"></div>
+        </div>
+        <div class="wf-side">
+          ${wz('watch-sidebar',56,'Watch Sidebar','width:100%;margin-bottom:3px')}
+          ${wz('halfpage',84,'⭐ Half Page','width:100%')}
         </div>
       </div>
-      <div class="asc-b">
-        <div class="asc-zone">${def.zone}</div>
-        <div class="asc-lim">
-          <span style="font-family:var(--f-m);font-size:0.58rem;color:${n>=def.limit?'var(--gold)':'var(--text3)'}">${n} / ${def.limit} banners</span>
-          <div class="lbar"><div class="lfill" style="width:${pct}%;background:${fillClr}"></div></div>
+    </div>
+    ${wz('leaderboard-footer',22,'Footer Leaderboard','width:100%;margin-top:5px')}`;
+}
+function goToSlot(id) {
+  gSec('ads', null);
+  document.querySelectorAll('.nv').forEach(n => { if (n.getAttribute('onclick')?.includes("'ads'")) n.classList.add('on'); });
+  setTimeout(() => {
+    const el = document.getElementById('sc-'+id);
+    if (el) el.scrollIntoView({behavior:'smooth', block:'center'});
+  }, 150);
+}
+
+/* ══ SLOT GRID ══ */
+function renderSlots() {
+  const el = document.getElementById('slotlist');
+  if (!el) return;
+  el.innerHTML = SLOTS.map(slot => {
+    const d = getSlot(slot.id);
+    const banners = d.banners || [];
+    const pct = Math.round((banners.length / slot.max) * 100);
+    const fc = pct >= 100 ? 'f' : pct > 0 ? 'w' : '';
+    return `<div class="scard ${d.enabled && banners.length>0?'active-slot':''}" id="sc-${slot.id}">
+      <div class="shead">
+        <div><div class="sname">${slot.name}</div><div class="smeta">${slot.size} · ${slot.zone}</div></div>
+        <div class="tog">
+          <div class="ttrack">
+            <input type="checkbox" id="tog-${slot.id}" ${d.enabled?'checked':''} onchange="toggleEnabled('${slot.id}',this.checked)"/>
+            <div class="tsl"></div>
+          </div>
         </div>
-        <div class="blist" id="bl-${def.id}">${bannersHTML}</div>
-        ${n<def.limit
-          ? `<button class="btn btn-g btn-sm" style="width:100%" onclick="openForm('${def.id}')">${bt('add')}</button>`
-          : `<div style="font-family:var(--f-m);font-size:0.58rem;color:var(--gold);text-align:center;padding:3px">Max ${def.limit} reached</div>`}
-        <div class="abform" id="abf-${def.id}">
-          <div class="abt">
-            <button class="ab-tab active" onclick="setBannerType('${def.id}','img',this)">${bt('img')}</button>
-            <button class="ab-tab" onclick="setBannerType('${def.id}','code',this)">${bt('code')}</button>
-          </div>
-          <div id="abf-img-${def.id}">
-            <div class="fg" style="margin-bottom:5px"><label class="fl2">Image URL (Cloudflare R2)</label><input class="fi2" id="nb-img-${def.id}" placeholder="https://pub-xxx.r2.dev/banner.jpg" style="font-size:0.72rem"/></div>
-            <div class="fg" style="margin-bottom:7px"><label class="fl2">Click URL</label><input class="fi2" id="nb-url-${def.id}" placeholder="https://..." style="font-size:0.72rem"/></div>
-          </div>
-          <div id="abf-code-${def.id}" style="display:none">
-            <div class="fg" style="margin-bottom:7px"><label class="fl2">Ad Network Code</label><textarea class="ft2" id="nb-code-${def.id}" placeholder="Paste ad script tag here..." style="min-height:55px;font-size:0.66rem"></textarea></div>
-          </div>
-          <div style="display:flex;gap:5px">
-            <button class="btn btn-p btn-sm" onclick="saveBanner('${def.id}')">${bt('save')}</button>
-            <button class="btn btn-ghost btn-sm" onclick="closeForm('${def.id}')">${bt('cancel')}</button>
-          </div>
+      </div>
+      <div class="sbody">
+        <div class="capbar">
+          <div class="captrack"><div class="capfill ${fc}" style="width:${pct}%"></div></div>
+          <span class="captxt">${banners.length} / ${slot.max} banners</span>
+          ${banners.length >= slot.max ? '<span style="font-family:var(--fm);font-size:0.52rem;color:var(--red-h);margin-left:4px">FULL</span>' : ''}
         </div>
+        <div class="blist" id="bl-${slot.id}">
+          ${banners.length===0
+            ? `<div style="font-family:var(--fm);font-size:0.62rem;color:var(--text3);text-align:center;padding:0.4rem">No banners — add one below</div>`
+            : banners.map((b,i) => renderBItem(slot.id, b, i)).join('')
+          }
+        </div>
+        ${banners.length < slot.max ? renderAddForm(slot.id) : `<div style="font-family:var(--fm);font-size:0.62rem;color:var(--red-h);text-align:center;padding:0.4rem">Full (${slot.max}/${slot.max}) — remove a banner to add more.</div>`}
       </div>
     </div>`;
   }).join('');
-
-  updateSkeleton();
 }
 
-/* ─── BANNER OPS ────────────────────────── */
-const bTypeState = {};
-
-function toggleSlot(id, val) { const s=getSlot(id); s.enabled=val; setSlot(id,s); updateSkeleton(); }
-
-function openForm(id) {
-  document.querySelectorAll('.abform').forEach(f => { if(f.id!=='abf-'+id) f.classList.remove('open'); });
-  document.getElementById('abf-'+id).classList.toggle('open');
-  bTypeState[id] = 'img';
-}
-function closeForm(id) { document.getElementById('abf-'+id).classList.remove('open'); }
-
-function setBannerType(id, type, btn) {
-  bTypeState[id] = type;
-  document.getElementById('abf-'+id).querySelectorAll('.ab-tab').forEach(t=>t.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('abf-img-'+id).style.display  = type==='img'  ? '':'none';
-  document.getElementById('abf-code-'+id).style.display = type==='code' ? '':'none';
+function renderBItem(sid, b, i) {
+  const prev = b.type==='banner' && b.imgUrl ? `<img src="${b.imgUrl}" alt=""/>` : `<span>${b.type==='code'?'JS':'IMG'}</span>`;
+  const info = b.type==='code' ? (b.code||'').slice(0,50)+'…' : (b.imgUrl||'—');
+  return `<div class="bitem">
+    <div class="bprev">${prev}</div>
+    <div class="binfo">
+      <div class="btype">${b.type==='code'?'Ad Code':'Image'}${b.clickUrl?' → '+b.clickUrl.slice(0,25)+'…':''}</div>
+      <div class="burl">${info}</div>
+    </div>
+    <button class="btn bd bxs" onclick="removeBanner('${sid}',${i})">✕</button>
+  </div>`;
 }
 
-function saveBanner(id) {
-  const type = bTypeState[id]||'img';
-  const s    = getSlot(id);
-  if (!s.banners) s.banners = [];
-  const def  = SLOTS.find(d=>d.id===id);
-  if (s.banners.filter(b=>b.imgUrl||b.code).length >= (def?.limit||5)) {
-    showAlert('adAlert','err',`Max ${def?.limit} banners reached`); return;
-  }
-  const b = {type};
-  if (type==='img') {
-    b.imgUrl   = (document.getElementById('nb-img-'+id)?.value||'').trim();
-    b.clickUrl = (document.getElementById('nb-url-'+id)?.value||'').trim();
-    if (!b.imgUrl) { showAlert('adAlert','err','Image URL required'); return; }
-  } else {
-    b.code = (document.getElementById('nb-code-'+id)?.value||'').trim();
-    if (!b.code) { showAlert('adAlert','err','Ad code required'); return; }
-  }
-  s.banners.push(b);
-  s.enabled = true;
-  setSlot(id, s);
-  closeForm(id);
-  renderAdSlots();
-  showAlert('adAlert','ok',`Banner added to "${def?.name}" ✓ — saved to browser storage. Update index.html on GitHub to push live.`);
+function renderAddForm(sid) {
+  return `<div class="aform" id="af-${sid}">
+    <div style="font-family:var(--fm);font-size:0.58rem;color:var(--text3);letter-spacing:0.1em;margin-bottom:0.55rem">+ ADD BANNER</div>
+    <div class="atabs">
+      <button class="atab on" id="at-code-${sid}" onclick="swType('${sid}','code',this)">Ad Code</button>
+      <button class="atab" id="at-banner-${sid}" onclick="swType('${sid}','banner',this)">Image Banner</button>
+    </div>
+    <div id="ac-${sid}">
+      <div class="fg"><label class="fl">Paste ad code</label><textarea class="ft" id="code-${sid}" placeholder="&lt;script&gt; or &lt;ins&gt; tag from adsco.re / AdSense" style="min-height:55px"></textarea></div>
+    </div>
+    <div id="ab-${sid}" style="display:none">
+      <div class="fg"><label class="fl">Image URL (R2 / CDN)</label><input class="fi" type="url" id="img-${sid}" placeholder="https://pub-xxx.r2.dev/banner.jpg"/><div class="fh">Upload to Cloudflare R2 first → copy URL</div></div>
+      <div class="fg" style="margin-bottom:0"><label class="fl">Click URL (optional)</label><input class="fi" type="url" id="url-${sid}" placeholder="https://example.com"/></div>
+    </div>
+    <div style="margin-top:0.65rem"><button class="btn bp bsm" onclick="addBanner('${sid}')">Add Banner →</button></div>
+  </div>`;
 }
 
-function delBanner(id, idx) {
-  const s = getSlot(id);
-  if (!s.banners) return;
-  s.banners.splice(idx, 1);
-  setSlot(id, s);
-  renderAdSlots();
+function swType(sid, type, btn) {
+  document.querySelectorAll(`#af-${sid} .atab`).forEach(t => t.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(`ac-${sid}`).style.display   = type==='code'  ?'':'none';
+  document.getElementById(`ab-${sid}`).style.display   = type==='banner'?'':'none';
+}
+function toggleEnabled(sid, v) {
+  const d = getSlot(sid); d.enabled = v; saveSlot(sid, d); renderSlots();
+}
+function addBanner(sid) {
+  const d = getSlot(sid);
+  const slot = SLOTS.find(s => s.id === sid);
+  const banners = d.banners || [];
+  if (banners.length >= slot.max) { showAlert('ads-alert','aerr','Slot is full! Remove a banner first.'); return; }
+  const isCode = document.getElementById(`at-code-${sid}`)?.classList.contains('on');
+  const type   = isCode ? 'code' : 'banner';
+  const code   = (document.getElementById(`code-${sid}`)?.value  || '').trim();
+  const imgUrl = (document.getElementById(`img-${sid}`)?.value   || '').trim();
+  const clickUrl=(document.getElementById(`url-${sid}`)?.value   || '').trim();
+  if (type==='code'   && !code)   { showAlert('ads-alert','aerr','Paste ad code first.');  return; }
+  if (type==='banner' && !imgUrl) { showAlert('ads-alert','aerr','Enter image URL first.'); return; }
+  banners.push({type, code, imgUrl, clickUrl});
+  d.banners = banners; d.enabled = true;
+  saveSlot(sid, d); renderSlots();
+  showAlert('ads-alert','aok',`Banner added to "${slot.name}" (${banners.length}/${slot.max}). Reload site to see it.`);
+}
+function removeBanner(sid, idx) {
+  const d = getSlot(sid);
+  d.banners = (d.banners||[]).filter((_,i) => i!==idx);
+  if (!d.banners.length) d.enabled = false;
+  saveSlot(sid, d); renderSlots();
+  showAlert('ads-alert','ainf','Banner removed.');
 }
 
-function editBanner(id, idx) {
-  const s = getSlot(id); const b = s.banners[idx];
-  if (!b) return;
-  openForm(id);
-  const type = b.type||'img';
-  bTypeState[id] = type;
-  const form = document.getElementById('abf-'+id);
-  form.querySelectorAll('.ab-tab').forEach(t=>t.classList.remove('active'));
-  form.querySelectorAll('.ab-tab')[type==='img'?0:1]?.classList.add('active');
-  document.getElementById('abf-img-'+id).style.display  = type==='img'  ? '':'none';
-  document.getElementById('abf-code-'+id).style.display = type==='code' ? '':'none';
-  if (type==='img') {
-    const ii=document.getElementById('nb-img-'+id); if(ii) ii.value=b.imgUrl||'';
-    const iu=document.getElementById('nb-url-'+id); if(iu) iu.value=b.clickUrl||'';
-  } else {
-    const ic=document.getElementById('nb-code-'+id); if(ic) ic.value=b.code||'';
-  }
-  delBanner(id, idx);
-}
-
-/* ─── CRAWL ──────────────────────────────── */
+/* ══ CRAWL ══ */
 function triggerCrawl() {
   window.open('https://github.com/Kitty99CsI/anime-portal/actions/workflows/weekly-sync.yml','_blank');
-  showAlert('dashAlert','info','Opened GitHub Actions → click "Run workflow" → green "Run workflow" button');
+  showAlert('d-alert','ainf','Opened GitHub Actions → click "Run workflow" → "Run workflow"');
 }
 
-/* ─── COUNTDOWN ─────────────────────────── */
-function updateCd() {
-  const now = new Date();
-  const bkk = new Date(now.toLocaleString('en-US',{timeZone:'Asia/Bangkok'}));
-  const day  = bkk.getDay(); const du = day===0?7:(7-day);
-  const next = new Date(bkk); next.setDate(bkk.getDate()+du); next.setHours(3,0,0,0);
-  const diff = next-bkk;
-  const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000), m=Math.floor((diff%3600000)/60000);
-  const txt=`${d}d ${h}h ${m}m`;
-  ['sCd','crawlCd'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=txt;});
-}
-
-/* ─── SETTINGS ───────────────────────────── */
+/* ══ SETTINGS ══ */
 function saveSettings() {
-  const title=document.getElementById('cfgTitle')?.value||'';
-  const ga4=document.getElementById('cfgGA4')?.value||'';
-  const note=document.getElementById('settingsNote');
-  if (!note) return;
-  note.style.display='block';
-  note.innerHTML=`To apply on GitHub → edit index.html:<br>
-1. &lt;title&gt; → <strong>${title}</strong><br>
+  const title = document.getElementById('smt')?.value||'';
+  const ga4   = document.getElementById('sga')?.value||'';
+  const el    = document.getElementById('sinstr');
+  el.style.display = 'block';
+  el.innerHTML = `To apply, update index.html on GitHub:<br>
+1. &lt;title&gt; → replace with: <strong>${title}</strong><br>
 2. meta description → update content<br>
-3. G-XXXXXXXXXX → <strong>${ga4}</strong><br>
-4. Commit → auto-deploy (~30s)`;
+3. GA4 script id → replace with: <strong>${ga4}</strong><br>
+→ Commit → auto-deploy in ~30s`;
 }
-
 function changePw() {
-  const cur=document.getElementById('curPw')?.value||'';
-  const nw=document.getElementById('newPw')?.value||'';
-  const res=document.getElementById('pwResult');
-  const stored=sessionStorage.getItem('bj88_pw')||ADMIN_PW;
-  if (cur!==stored) { res.style.display='block'; res.style.cssText='display:block;color:var(--red-h);border-color:rgba(192,57,43,0.3);background:var(--red-dim)'; res.textContent='❌ Wrong current password'; return; }
-  if (nw.length<6)  { res.style.display='block'; res.style.cssText='display:block;color:var(--red-h);border-color:rgba(192,57,43,0.3);background:var(--red-dim)'; res.textContent='❌ Min 6 characters'; return; }
-  sessionStorage.setItem('bj88_pw',nw);
-  res.style.cssText='display:block;color:var(--green);border-color:rgba(39,174,96,0.3);background:var(--green-dim)';
-  res.innerHTML=`✅ Updated for this session.<br>Permanent: find <code style="color:var(--gold)">ADMIN_PW='bj88anime'</code> in admin.html → change to <code style="color:var(--gold)">'${nw}'</code> → commit.`;
-  document.getElementById('curPw').value=''; document.getElementById('newPw').value='';
+  const cur  = document.getElementById('cpw')?.value||'';
+  const nw   = document.getElementById('npw')?.value||'';
+  const note = document.getElementById('pwnote');
+  const stored = sessionStorage.getItem('bj88_pw') || ADMIN_PW;
+  if (cur !== stored) { note.style.display='block'; note.style.color='var(--red-h)'; note.textContent='❌ Incorrect'; return; }
+  if (nw.length < 6)  { note.style.display='block'; note.style.color='var(--red-h)'; note.textContent='❌ Min 6 chars'; return; }
+  sessionStorage.setItem('bj88_pw', nw);
+  note.style.display='block'; note.style.color='var(--green)';
+  note.innerHTML = `✅ Changed this session. To make permanent: edit admin.html on GitHub → find ADMIN_PW → change to '${nw}' → commit.`;
+  document.getElementById('cpw').value=''; document.getElementById('npw').value='';
 }
 
-/* ─── ALERT ──────────────────────────────── */
-function showAlert(id, type, msg) {
-  const el=document.getElementById(id); if(!el)return;
-  const map={ok:'al-ok',err:'al-err',info:'al-info'};
-  el.className=`alert ${map[type]||'al-info'} show`; el.textContent=msg;
-  setTimeout(()=>{el.className='alert';},7000);
+/* ══ UTILS ══ */
+function showAlert(id, cls, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'alert ' + cls + ' on';
+  el.textContent = msg;
+  setTimeout(() => { el.className = 'alert'; }, 6000);
 }
 
-/* ─── INIT ───────────────────────────────── */
-function initAdmin() {
-  updateCd(); setInterval(updateCd, 60000);
+/* ══ INIT ══ */
+function init() {
+  // Clock
   function tick() {
-    const n=new Date();
-    const ts=n.toLocaleString('en-GB',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-    const el=document.getElementById('tbTime'); if(el) el.textContent=`| ${ts}`;
+    const el = document.getElementById('dashclock');
+    if (el) el.textContent = new Date().toLocaleString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
   }
-  tick(); setInterval(tick,30000);
-  renderAdSlots();
-  const bl=localStorage.getItem('bj88_bo_lang')||'lo'; bLang=bl;
-  document.querySelectorAll('.bl-btn').forEach(b=>{
-    const l=b.getAttribute('onclick')?.match(/setBoLang\('(\w+)'/)?.[1];
-    b.classList.toggle('active',l===bl);
-  });
-}
+  tick(); setInterval(tick, 30000);
 
-document.getElementById('loginPw').focus();
+  // Sunday 3am Bangkok countdown
+  function updateCd() {
+    const bkk = new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Bangkok'}));
+    const day  = bkk.getDay();
+    const dt   = day===0 ? 7 : 7-day;
+    const next = new Date(bkk); next.setDate(bkk.getDate()+dt); next.setHours(3,0,0,0);
+    const diff = next - bkk;
+    const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000), m=Math.floor((diff%3600000)/60000);
+    const el = document.getElementById('cd');
+    if (el) el.textContent = `${d}d ${h}h ${m}m`;
+  }
+  updateCd(); setInterval(updateCd, 60000);
+
+  // Sync lang buttons
+  document.querySelectorAll('.slbtn').forEach(b => {
+    const l = b.getAttribute('onclick')?.match(/setLang\('(\w+)'/)?.[1];
+    b.classList.toggle('on', l===lang);
+  });
+
+  applyI18N();
+  refreshStats();
+  renderWF();
+  renderSlots();
+}
 </script>
 </body>
 </html>
