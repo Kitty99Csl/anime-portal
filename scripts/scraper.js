@@ -1,218 +1,247 @@
 /**
  * scripts/scraper.js
- * ─────────────────────────────────────────────────────────
- * Calls anime-th.com's WordPress AJAX API (discovered via HAR)
- * and saves the result to src/data/anime.json + episodes.json
- *
- * Two real API endpoints found in HAR:
- *   POST /wp-admin/admin-ajax.php  action=get_episode_list&season_id=XXX
- *   POST /wp-admin/admin-ajax.php  action=mix_get_player&post_id=XXX&lang=soundtrack
- *
- * Run: node scripts/scraper.js
+ * AniWatch-BJ88 — Data scraper
+ * Node 20+ native fetch (no dependencies needed)
  */
 
-import fetch  from 'node-fetch';
-import fs     from 'fs';
-import path   from 'path';
+import fs   from 'fs';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR  = path.join(__dirname, '../src/data');
-
 const BASE_URL  = 'https://anime-th.com';
 const AJAX_URL  = `${BASE_URL}/wp-admin/admin-ajax.php`;
 
-// ── Headers that mimic a real browser (important for Cloudflare) ─────────
+// Browser-like headers — required to pass Cloudflare checks
 const HEADERS = {
   'User-Agent':      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-  'Accept':          'application/json, text/javascript, */*; q=0.01',
+  'Accept':          'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
   'Accept-Language': 'th,en-US;q=0.9,en;q=0.8',
   'Referer':         `${BASE_URL}/`,
   'Origin':          BASE_URL,
+};
+
+const AJAX_HEADERS = {
+  ...HEADERS,
+  'Accept':          'application/json, text/javascript, */*; q=0.01',
+  'Content-Type':    'application/x-www-form-urlencoded; charset=UTF-8',
   'X-Requested-With':'XMLHttpRequest',
 };
 
-// ── Helpers ──────────────────────────────────────────────
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// POST to AJAX endpoint with retry logic
 async function postAjax(body, retries = 3) {
   for (let i = 0; i < retries; i++) {
     try {
       const res = await fetch(AJAX_URL, {
         method:  'POST',
-        headers: { ...HEADERS, 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        headers: AJAX_HEADERS,
         body,
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch {
+        console.warn(`  ⚠️  Non-JSON response (${text.slice(0,80)})`);
+        return null;
+      }
     } catch (err) {
       console.warn(`  ⚠️  Retry ${i+1}/${retries}: ${err.message}`);
       await sleep(3000 * (i + 1));
     }
   }
-  throw new Error(`Failed after ${retries} retries`);
+  return null;
 }
 
-// Extract iframe src from player HTML
-function extractIframeSrc(playerHtml = '') {
-  const m = playerHtml.match(/src="(https:\/\/anime\.tonytonychopper\.net\/v\/[^"]+)"/);
+// Extract iframe URL from player HTML
+function extractIframeSrc(html = '') {
+  const m = html.match(/src=["'](https?:\/\/[^"']+)["']/);
   return m ? m[1] : null;
 }
 
-// ── Step 1: Get anime listing page slugs ─────────────────
-async function getAnimeListSlugs() {
-  console.log('📋 Fetching anime listing pages...');
-  const slugs = [];
-  let page = 1;
+// GET listing pages and extract anime slugs
+async function getAnimeSlugs(maxPages = 5) {
+  console.log('📋 Scanning anime listing pages...');
+  const slugSet = new Set();
 
-  while (true) {
-    const url  = page === 1 ? `${BASE_URL}/` : `${BASE_URL}/page/${page}/`;
-    const res  = await fetch(url, { headers: HEADERS });
-    const html = await res.text();
+  for (let page = 1; page <= maxPages; page++) {
+    const url = page === 1 ? `${BASE_URL}/` : `${BASE_URL}/page/${page}/`;
+    try {
+      const res  = await fetch(url, { headers: HEADERS });
+      if (!res.ok) break;
+      const html = await res.text();
 
-    // Extract anime slugs from links like /anime/SLUG/
-    const matches = [...html.matchAll(/href="https:\/\/anime-th\.com\/anime\/([^/"]+)\/"/g)];
-    const newSlugs = [...new Set(matches.map(m => m[1]))];
+      // Match anime page links
+      const matches = [...html.matchAll(/href="https:\/\/anime-th\.com\/anime\/([^/"]+)\/"/g)];
+      const found   = matches.map(m => m[1]).filter(Boolean);
 
-    if (newSlugs.length === 0) break;
+      if (found.length === 0) { console.log(`  Page ${page}: no anime found, stopping`); break; }
 
-    slugs.push(...newSlugs);
-    console.log(`  Page ${page}: found ${newSlugs.length} anime (total: ${slugs.length})`);
+      found.forEach(s => slugSet.add(s));
+      console.log(`  Page ${page}: ${found.length} anime (running total: ${slugSet.size})`);
+      await sleep(1500 + Math.random() * 500);
 
-    page++;
-    await sleep(1500 + Math.random() * 1000);
-
-    // Safety cap — remove for full crawl
-    if (page > 5) break;
+    } catch (err) {
+      console.error(`  ❌ Page ${page} error: ${err.message}`);
+      break;
+    }
   }
-
-  return [...new Set(slugs)]; // deduplicate
+  return [...slugSet];
 }
 
-// ── Step 2: Scrape detail page for a single anime ────────
+// Scrape detail page for a single anime slug
 async function scrapeAnimeDetail(slug) {
-  const url  = `${BASE_URL}/anime/${slug}/`;
+  const url = `${BASE_URL}/anime/${slug}/`;
   const res  = await fetch(url, { headers: HEADERS });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const html = await res.text();
 
-  // Extract post_id from the page (WP uses it in data attributes or inline JS)
-  const postIdMatch  = html.match(/post_id['":\s]+(\d{5,6})/);
-  const seasonIdMatch= html.match(/season_id['":\s]+(\d{5,6})/);
-  const titleMatch   = html.match(/<h1[^>]*>([^<]+)<\/h1>/);
-  const coverMatch   = html.match(/property="og:image" content="([^"]+)"/);
+  // Extract WordPress post IDs
+  const postId   = (html.match(/['"](post_id|postID)['"]\s*:\s*['"]*(\d{4,7})/)?.[2])  ||
+                   (html.match(/post_id=(\d{4,7})/)?.[1]) || null;
+  const seasonId = (html.match(/['"](season_id|seasonID)['"]\s*:\s*['"]*(\d{4,7})/)?.[2]) ||
+                   (html.match(/season_id=(\d{4,7})/)?.[1]) || null;
 
-  // TMDB image is often in the page source too
-  const tmdbMatch    = html.match(/image\.tmdb\.org\/t\/p\/[^"]+/);
+  // Title — try og:title first, then h1
+  const title = (html.match(/<meta property="og:title" content="([^"]+)"/)?.[1]) ||
+                (html.match(/<h1[^>]*class="[^"]*entry-title[^"]*"[^>]*>([^<]+)/)?.[1]) ||
+                (html.match(/<h1[^>]*>([^<]+)<\/h1>/)?.[1]) || slug;
+
+  // Cover image — prefer TMDB, fallback to og:image
+  const tmdb  = html.match(/https:\/\/image\.tmdb\.org\/t\/p\/[^"'\s]+/)?.[0];
+  const ogImg = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1];
+  const cover = tmdb || ogImg || null;
+
+  // Description
+  const desc = html.match(/<meta property="og:description" content="([^"]+)"/)?.[1] || '';
+
+  // Genre tags
+  const genreMatches = [...html.matchAll(/class="[^"]*genre[^"]*"[^>]*>([^<]+)</gi)];
+  const genres = [...new Set(genreMatches.map(m => m[1].trim()).filter(Boolean))].slice(0, 4);
+
+  // Year
+  const year = parseInt(html.match(/\b(202[3-9]|203\d)\b/)?.[0] || '2025');
+
+  // Status
+  const statusRaw = html.match(/class="[^"]*status[^"]*"[^>]*>([^<]+)</i)?.[1]?.trim().toLowerCase() || '';
+  const status = statusRaw.includes('จบ') || statusRaw.includes('complete') ? 'complete'
+               : statusRaw.includes('เร็ว') || statusRaw.includes('upcoming') ? 'upcoming'
+               : 'airing';
 
   return {
     slug,
-    post_id:   postIdMatch   ? parseInt(postIdMatch[1])   : null,
-    season_id: seasonIdMatch ? parseInt(seasonIdMatch[1]) : null,
-    title:     titleMatch    ? titleMatch[1].trim()       : slug,
-    cover_url: tmdbMatch     ? `https://${tmdbMatch[0]}`  : (coverMatch ? coverMatch[1] : null),
+    title_th:   title.trim(),
+    title_en:   slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    post_id:    postId   ? parseInt(postId)   : null,
+    season_id:  seasonId ? parseInt(seasonId) : null,
+    cover_url:  cover,
+    desc:       desc.slice(0, 300),
+    genres,
+    year,
+    status,
     source_url: url,
     scraped_at: new Date().toISOString(),
   };
 }
 
-// ── Step 3: Get episode list for an anime ────────────────
-async function getEpisodeList(season_id) {
+// Get episode list from AJAX API
+async function getEpisodes(season_id) {
   const data = await postAjax(`action=get_episode_list&season_id=${season_id}`);
-  const soundtrack = data?.soundtrack?.data || [];
-  return soundtrack.map(ep => ({
-    id:            ep.id,
-    number:        ep.number,
-    title:         ep.title,
-    full_title:    ep.full_title,
-    has_video:     ep.has_video,
-    has_th_sound:  ep.has_th_sound,
-    has_subtitle:  ep.has_soundtrack,
+  if (!data) return [];
+
+  // API returns { soundtrack: { data: [...] }, ... }
+  const arr = data?.soundtrack?.data || data?.data || [];
+  return arr.map(ep => ({
+    id:         ep.id,
+    number:     ep.number || ep.ep_number,
+    title:      ep.title  || `EP.${ep.number}`,
+    has_sub:    !!(ep.has_soundtrack || ep.has_subtitle),
+    has_dub:    !!(ep.has_th_sound),
+    video_url:  null,
   }));
 }
 
-// ── Step 4: Get video iframe URL for one episode ─────────
-async function getPlayerUrl(post_id, lang = 'soundtrack') {
-  const data = await postAjax(`action=mix_get_player&post_id=${post_id}&lang=${lang}`);
+// Get video URL for one episode
+async function getVideoUrl(post_id) {
+  const data = await postAjax(`action=mix_get_player&post_id=${post_id}&lang=soundtrack`);
   if (!data?.success) return null;
-  return extractIframeSrc(data.player || '');
+  return extractIframeSrc(data.player || data.html || '');
 }
 
-// ── MAIN ─────────────────────────────────────────────────
+// ── MAIN ──────────────────────────────────────────────────
 async function main() {
-  console.log('🚀 AniWatch TH Scraper starting...\n');
+  console.log('🚀 AniWatch-BJ88 Scraper v2\n');
 
-  // Load existing data (for incremental updates)
-  let existing = [];
+  // Load existing data (incremental — only scrape new anime)
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+
   const animePath   = path.join(DATA_DIR, 'anime.json');
   const episodePath = path.join(DATA_DIR, 'episodes.json');
-  if (fs.existsSync(animePath)) {
-    existing = JSON.parse(fs.readFileSync(animePath, 'utf8'));
-  }
+
+  let existing     = fs.existsSync(animePath)   ? JSON.parse(fs.readFileSync(animePath,   'utf8')) : [];
+  let episodeStore = fs.existsSync(episodePath)  ? JSON.parse(fs.readFileSync(episodePath, 'utf8')) : [];
+
   const existingSlugs = new Set(existing.map(a => a.slug));
+  const episodeMap    = Object.fromEntries(episodeStore.map(e => [e.anime_slug, e.episodes]));
 
-  // Step 1: Get all slugs
-  const slugs = await getAnimeListSlugs();
-  const newSlugs = slugs.filter(s => !existingSlugs.has(s));
-  console.log(`\n✅ Found ${slugs.length} total, ${newSlugs.length} new\n`);
+  // Step 1: Collect slugs
+  const allSlugs = await getAnimeSlugs(5);
+  const newSlugs = allSlugs.filter(s => !existingSlugs.has(s));
+  console.log(`\n✅ ${allSlugs.length} total slugs · ${newSlugs.length} new to scrape\n`);
 
-  const animeList   = [...existing];
-  const episodeMap  = {};
-
-  // Load existing episodes
-  if (fs.existsSync(episodePath)) {
-    const epData = JSON.parse(fs.readFileSync(episodePath, 'utf8'));
-    epData.forEach(e => { episodeMap[e.anime_slug] = e.episodes; });
+  if (newSlugs.length === 0) {
+    console.log('Nothing new to scrape — database is up to date.');
   }
 
-  // Step 2-4: Process each new anime
+  // Step 2-4: Scrape each new anime
+  let added = 0;
   for (const slug of newSlugs) {
-    console.log(`\n📺 Processing: ${slug}`);
-    await sleep(1500 + Math.random() * 1000);
+    console.log(`\n▶ ${slug}`);
+    await sleep(1000 + Math.random() * 800);
 
     try {
-      // Get detail
       const detail = await scrapeAnimeDetail(slug);
-      console.log(`  ✓ post_id=${detail.post_id}, season_id=${detail.season_id}`);
+      console.log(`  title: ${detail.title_th} | post_id: ${detail.post_id} | season_id: ${detail.season_id}`);
 
-      if (!detail.season_id) {
-        console.log(`  ⚠️  No season_id found, skipping episodes`);
-        animeList.push(detail);
-        continue;
-      }
+      let episodes = [];
+      if (detail.season_id) {
+        await sleep(600);
+        episodes = await getEpisodes(detail.season_id);
+        console.log(`  episodes: ${episodes.length}`);
 
-      // Get episodes
-      await sleep(800);
-      const episodes = await getEpisodeList(detail.season_id);
-      console.log(`  ✓ ${episodes.length} episodes found`);
-
-      // Get video URL for EP1 only (to validate)
-      if (episodes.length > 0) {
-        await sleep(800);
-        const videoUrl = await getPlayerUrl(episodes[0].id);
-        if (videoUrl) {
-          episodes[0].video_url = videoUrl;
-          console.log(`  ✓ EP1 video: ${videoUrl}`);
+        // Fetch video URL for EP1 only
+        if (episodes.length > 0 && episodes[0].id) {
+          await sleep(600);
+          const url = await getVideoUrl(episodes[0].id);
+          if (url) {
+            episodes[0].video_url = url;
+            console.log(`  EP1 video: ${url}`);
+          }
         }
       }
 
-      animeList.push({ ...detail, episode_count: episodes.length });
+      existing.push({ ...detail, episode_count: episodes.length });
       episodeMap[slug] = episodes;
+      added++;
 
     } catch (err) {
-      console.error(`  ❌ Error: ${err.message}`);
+      console.error(`  ❌ ${err.message}`);
     }
   }
 
   // Save
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.writeFileSync(animePath, JSON.stringify(animeList, null, 2));
-  console.log(`\n💾 Saved ${animeList.length} anime to src/data/anime.json`);
+  fs.writeFileSync(animePath,   JSON.stringify(existing, null, 2));
+  fs.writeFileSync(episodePath, JSON.stringify(
+    Object.entries(episodeMap).map(([anime_slug, episodes]) => ({ anime_slug, episodes })),
+    null, 2
+  ));
 
-  const epArray = Object.entries(episodeMap).map(([anime_slug, episodes]) => ({ anime_slug, episodes }));
-  fs.writeFileSync(episodePath, JSON.stringify(epArray, null, 2));
-  console.log(`💾 Saved episodes for ${epArray.length} anime to src/data/episodes.json`);
-
-  console.log('\n✅ Scrape complete!');
+  console.log(`\n💾 anime.json    → ${existing.length} anime`);
+  console.log(`💾 episodes.json → ${Object.keys(episodeMap).length} anime with episodes`);
+  console.log(`\n✅ Done! Added ${added} new anime.`);
 }
 
-main().catch(console.error);
+main().catch(err => { console.error('Fatal:', err); process.exit(1); });
