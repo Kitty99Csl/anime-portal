@@ -146,28 +146,46 @@ header::before{
 }
 
 /* Logo */
-.logo{
-  text-decoration:none;display:flex;align-items:center;gap:10px;flex-shrink:0;
-}
-.logo-emblem{
-  width:38px;height:38px;border-radius:50%;
-  border:1px solid var(--gold-line);
-  background:radial-gradient(circle at 40% 35%,#2a1a0a,#0a0a0a);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--f-display);font-size:1rem;font-weight:900;color:var(--gold);
-  box-shadow:0 0 12px var(--gold-glow);
-  flex-shrink:0;
-}
+.logo{text-decoration:none;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-svg{flex-shrink:0;width:40px;height:40px}
 .logo-text{display:flex;flex-direction:column;line-height:1}
-.logo-en{
-  font-family:var(--f-display);font-size:1rem;font-weight:700;
-  color:var(--text);letter-spacing:0.08em;
+.logo-main{
+  font-family:var(--f-display);font-size:0.95rem;font-weight:900;
+  color:var(--text);letter-spacing:0.1em;text-transform:uppercase;
 }
-.logo-en span{color:var(--gold)}
-.logo-sub{
-  font-family:var(--f-mono);font-size:0.5rem;
-  color:var(--text3);letter-spacing:0.2em;margin-top:2px;
+.logo-main .logo-accent{color:var(--gold)}
+.logo-sub{font-family:var(--f-mono);font-size:0.48rem;color:var(--text3);letter-spacing:0.2em;margin-top:2px}
+
+/* Lang switcher */
+.lang-switcher{
+  display:flex;gap:2px;background:var(--card);
+  border:1px solid var(--border);border-radius:2px;padding:2px;flex-shrink:0;
 }
+.lang-btn{
+  font-family:var(--f-mono);font-size:0.58rem;font-weight:600;
+  background:none;border:none;color:var(--text3);
+  padding:3px 7px;border-radius:1px;cursor:pointer;
+  letter-spacing:0.06em;transition:all 0.15s;white-space:nowrap;
+}
+.lang-btn.active{background:var(--gold-dim);color:var(--gold)}
+.lang-btn:hover:not(.active){color:var(--text2)}
+
+/* Stacked ad container */
+.ad-stack{
+  width:100%;display:flex;flex-direction:column;gap:4px;
+  background:var(--surface);border:1px dashed var(--gold-line);
+  border-radius:2px;overflow:hidden;
+}
+.ad-stack-item{position:relative;width:100%;overflow:hidden}
+.ad-stack-item img{width:100%;display:block;border:none}
+.ad-stack-item a{display:block}
+.ad-stack-placeholder{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;padding:8px;
+  background:repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(201,168,76,0.02) 8px,rgba(201,168,76,0.02) 9px);
+}
+.ad-stack-placeholder p{font-family:var(--f-mono);font-size:0.58rem;color:var(--text3);letter-spacing:0.08em}
+.ad-728-h{min-height:90px}.ad-60-h{min-height:60px}.ad-250-h{min-height:250px}.ad-600-h{min-height:600px}
 
 /* Nav */
 nav{display:flex;gap:0;margin-left:0.5rem}
@@ -1028,22 +1046,57 @@ footer::before{
 @media(max-width:768px){
   .hero-content{padding:1.5rem;max-width:100%}
   .hero-poster-zone{opacity:0.3}
-  .hero-title-th{font-size:1.5rem}
+  .hero-title-th{font-size:1.4rem}
+  .hero-desc{font-size:0.82rem}
   nav{display:none}
+  nav.open{
+    display:flex;flex-direction:column;
+    position:fixed;top:62px;left:0;right:0;z-index:498;
+    background:var(--surface);border-bottom:1px solid var(--border);
+    padding:0.5rem;gap:2px;
+  }
+  nav.open a{padding:0.65rem 1rem;border-radius:2px;min-height:44px;display:flex;align-items:center}
   .menu-btn{display:flex}
-  .search-wrap input{width:120px}
+  .search-wrap input{width:110px}
   .watch-wrap{grid-template-columns:1fr}
+  .page-wrap{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .hero{min-height:360px}
+  .hero-actions{gap:0.5rem}
+  .btn-watch,.btn-info{padding:0.55rem 1.1rem;font-size:0.8rem;min-height:44px}
+  .filter-bar{gap:6px}
+  .filter-btn{padding:6px 10px;min-height:36px}
+  .ep-btn{min-height:40px;padding:8px 10px}
+  .pag-btn{min-width:40px;height:40px}
+  .lang-switcher{display:none}
+  .header-wrap{gap:0.75rem}
+  .logo-sub{display:none}
+  .footer-top{grid-template-columns:1fr}
+  .ad-300{width:100%}
+}
+@media(max-width:480px){
+  .anime-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.75rem}
+  .hero-title-th{font-size:1.2rem}
+  .page-wrap{padding:1rem}
+  .section-head{margin-bottom:0.85rem}
+  .header-wrap{padding:0 0.85rem}
+  .hero-content{padding:1rem}
+  .hero-badge{font-size:0.55rem}
+}
+@supports(padding:max(0px)){
+  header{padding-top:env(safe-area-inset-top)}
+  body{padding-bottom:env(safe-area-inset-bottom)}
 }
 </style>
 </head>
 <body>
 
 <!-- ══════════════════════════════════════
-     TOP LEADERBOARD AD
+     TOP LEADERBOARD AD (stacks up to 10)
 ══════════════════════════════════════ -->
 <div class="ad-bar">
-  <div class="ad-slot ad-728" style="max-width:728px;width:100%">
-    <p>728 × 90 — Leaderboard · adsco.re / Google AdSense</p>
+  <div id="slot-leaderboard-top" class="ad-stack ad-728-h" style="max-width:728px;margin:0 auto">
+    <div class="ad-stack-placeholder ad-728-h"><p>728 × 90 — Leaderboard Top</p></div>
   </div>
 </div>
 
@@ -1054,26 +1107,38 @@ footer::before{
   <div class="header-wrap">
 
     <a class="logo" href="#" onclick="showPage('listing');return false">
-      <div class="logo-emblem">A</div>
+      <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,1 38,10 38,30 20,39 2,30 2,10" fill="#0a0a08" stroke="#c9a84c" stroke-width="1.2"/>
+        <polygon points="20,5 34,12.5 34,27.5 20,35 6,27.5 6,12.5" fill="none" stroke="#6b5a2a" stroke-width="0.5"/>
+        <text x="20" y="18" text-anchor="middle" font-family="Cinzel,serif" font-size="8" font-weight="900" fill="#c9a84c">AW</text>
+        <line x1="10" y1="21" x2="30" y2="21" stroke="#6b5a2a" stroke-width="0.5"/>
+        <text x="20" y="28" text-anchor="middle" font-family="Cinzel,serif" font-size="5.5" font-weight="700" fill="#8a6a30" letter-spacing="1">BJ88</text>
+      </svg>
       <div class="logo-text">
-        <span class="logo-en">Ani<span>Watch</span>-BJ88</span>
+        <span class="logo-main">ANIWATCH<span class="logo-accent">-BJ88</span></span>
         <span class="logo-sub">anime.bj88la.net</span>
       </div>
     </a>
 
     <nav id="mainNav">
-      <a href="#" class="active" onclick="showPage('listing');setActive(this);return false">หน้าแรก</a>
-      <a href="#" onclick="filterGenre('');setActive(this);return false">ทั้งหมด</a>
-      <a href="#" onclick="filterStatus('airing');setActive(this);return false">ออกอากาศ</a>
-      <a href="#" onclick="filterStatus('complete');setActive(this);return false">จบแล้ว</a>
-      <a href="#" onclick="filterStatus('upcoming');setActive(this);return false">เร็วๆ นี้</a>
+      <a href="#" class="active" data-i18n="nav_home" onclick="showPage('listing');setActive(this);return false">ໜ້າຫຼັກ</a>
+      <a href="#" data-i18n="nav_all" onclick="setFilter('all',null);setActive(this);showPage('listing');return false">ທັງໝົດ</a>
+      <a href="#" data-i18n="nav_airing" onclick="filterStatus('airing');setActive(this);return false">ກຳລັງອອກ</a>
+      <a href="#" data-i18n="nav_complete" onclick="filterStatus('complete');setActive(this);return false">ສຳເລັດ</a>
+      <a href="#" data-i18n="nav_upcoming" onclick="filterStatus('upcoming');setActive(this);return false">ໄວໆນີ້</a>
     </nav>
 
     <div class="search-wrap">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
       </svg>
-      <input type="text" id="searchInput" placeholder="ค้นหาอนิเมะ..." oninput="handleSearch()"/>
+      <input type="text" id="searchInput" placeholder="ຄົ້ນຫາ..." oninput="handleSearch()"/>
+    </div>
+
+    <div class="lang-switcher" id="langSwitcher">
+      <button class="lang-btn active" onclick="setLang('lo',this)">ລາວ</button>
+      <button class="lang-btn" onclick="setLang('th',this)">ไทย</button>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
     </div>
 
     <button class="menu-btn" onclick="toggleMobileNav()">
@@ -1127,8 +1192,8 @@ footer::before{
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
           ดูเลย EP.1
         </a>
-        <a class="btn-info" href="#" id="heroBtnInfo" onclick="openWatch(0);return false">รายละเอียด</a>
-        <a class="btn-source" id="heroBtnSource" href="https://anime-th.com/anime/kirei-ni-shitemoraemasu-ka/" target="_blank" rel="noopener">↗ ต้นฉบับ</a>
+        <a class="btn-info" href="#" id="heroBtnInfo" onclick="openWatch(0);return false">ລາຍລະອຽດ</a>
+        <a class="btn-source" id="heroBtnSource" href="https://anime-th.com/anime/kirei-ni-shitemoraemasu-ka/" target="_blank" rel="noopener">↗ ຕົ້ນສະບັບ</a>
       </div>
     </div>
 
@@ -1141,26 +1206,26 @@ footer::before{
 
       <!-- FILTER BAR -->
       <div class="filter-bar">
-        <button class="filter-btn active" onclick="setFilter('all',this)">ทั้งหมด</button>
-        <button class="filter-btn" onclick="setFilter('airing',this)">ออกอากาศ</button>
-        <button class="filter-btn" onclick="setFilter('complete',this)">จบแล้ว</button>
-        <button class="filter-btn" onclick="setFilter('upcoming',this)">เร็วๆ นี้</button>
+        <button class="filter-btn active" onclick="setFilter('all',this)" data-i18n="filter_all">ທັງໝົດ</button>
+        <button class="filter-btn" onclick="setFilter('airing',this)" data-i18n="filter_airing">ກຳລັງອອກ</button>
+        <button class="filter-btn" onclick="setFilter('complete',this)" data-i18n="filter_complete">ສຳເລັດ</button>
+        <button class="filter-btn" onclick="setFilter('upcoming',this)" data-i18n="filter_upcoming">ໄວໆນີ້</button>
         <div class="filter-sep"></div>
         <select class="filter-select" id="genreFilter" onchange="applyFilters()">
-          <option value="">ทุกประเภท</option>
-          <option>แอ็กชัน</option><option>โรแมนติก</option><option>ตลก</option>
-          <option>แฟนตาซี</option><option>ผจญภัย</option><option>สยองขวัญ</option>
-          <option>สไลซ์ออฟไลฟ์</option><option>ดราม่า</option><option>ซุปเปอร์ฮีโร่</option>
+          <option value="">ທຸກປະເພດ</option>
+          <option>ແອັກຊັ່ນ</option><option>ໂຣແມນຕິກ</option><option>ຕະລົກ</option>
+          <option>ແຟນຕາຊີ</option><option>ຜະຈົນໄພ</option><option>ສຍອງຂວັນ</option>
+          <option>ສໄລສ໌ອອຟໄລຟ໌</option><option>ດຣາມ່າ</option><option>ຊູເປີຮີໂຣ</option>
         </select>
         <select class="filter-select" id="yearFilter" onchange="applyFilters()">
-          <option value="">ทุกปี</option>
+          <option value="">ທຸກປີ</option>
           <option>2026</option><option>2025</option><option>2024</option>
         </select>
       </div>
 
       <!-- PER PAGE + COUNT -->
       <div class="per-page-bar">
-        <span class="per-page-label">แสดง:</span>
+        <span class="per-page-label" data-i18n="showing">ສະແດງ:</span>
         <button class="pp-btn" onclick="setPerPage(12,this)">12</button>
         <button class="pp-btn active" onclick="setPerPage(24,this)">24</button>
         <button class="pp-btn" onclick="setPerPage(48,this)">48</button>
@@ -1170,23 +1235,23 @@ footer::before{
       <!-- SECTION: AIRING -->
       <div class="section-head">
         <div class="section-accent"></div>
-        <span class="section-title">กำลังออกอากาศ</span>
+        <span class="section-title" id="airingTitle" data-i18n="section_airing">ກຳລັງອອກອາກາດ</span>
         <span class="section-count" id="airingCount">0</span>
-        <a href="#" class="section-see-all">ดูทั้งหมด →</a>
+        <a href="#" class="section-see-all" data-i18n="see_all">ເບິ່ງທັງໝົດ →</a>
       </div>
       <div class="anime-grid" id="airingGrid"></div>
 
-      <!-- IN-FEED AD -->
-      <div class="ad-slot ad-responsive" style="margin:0.5rem 0 1.5rem">
-        <p>728 × 60 In-Feed Ad · High Visibility</p>
+      <!-- IN-FEED AD (stacks up to 5) -->
+      <div id="slot-infeed" class="ad-stack ad-60-h" style="margin:0.5rem 0 1.5rem">
+        <div class="ad-stack-placeholder ad-60-h"><p>728 × 60 — In-Feed · up to 5</p></div>
       </div>
 
       <!-- SECTION: COMPLETED -->
       <div class="section-head" style="margin-top:0.5rem">
         <div class="section-accent"></div>
-        <span class="section-title">จบแล้ว</span>
+        <span class="section-title" data-i18n="section_complete">ສຳເລັດແລ້ວ</span>
         <span class="section-count" id="completeCount">0</span>
-        <a href="#" class="section-see-all">ดูทั้งหมด →</a>
+        <a href="#" class="section-see-all" data-i18n="see_all">ເບິ່ງທັງໝົດ →</a>
       </div>
       <div class="anime-grid" id="completeGrid"></div>
 
@@ -1198,30 +1263,30 @@ footer::before{
     <!-- SIDEBAR -->
     <div class="sidebar">
 
-      <!-- AD 300×250 -->
-      <div class="ad-slot ad-300">
-        <p>300 × 250<br>Medium Rectangle<br>adsco.re / Google</p>
+      <!-- SIDEBAR AD 1 (stacks up to 5) -->
+      <div id="slot-sidebar-1" class="ad-stack ad-250-h">
+        <div class="ad-stack-placeholder ad-250-h"><p>300 × 250 — Sidebar · up to 5</p></div>
       </div>
 
       <!-- TRENDING -->
       <div class="widget">
         <div class="widget-head">
           <div class="section-accent"></div>
-          <h3>🔥 ยอดนิยม</h3>
+          <h3 data-i18n="trending">🔥 ຍອດນິຍົມ</h3>
         </div>
         <div class="widget-body" id="trendingWidget"></div>
       </div>
 
-      <!-- AD 300×250 -->
-      <div class="ad-slot ad-300">
-        <p>300 × 250<br>Medium Rectangle #2</p>
+      <!-- SIDEBAR AD 2 (stacks up to 5) -->
+      <div id="slot-sidebar-2" class="ad-stack ad-250-h">
+        <div class="ad-stack-placeholder ad-250-h"><p>300 × 250 — Sidebar 2 · up to 5</p></div>
       </div>
 
       <!-- RECENT UPDATES -->
       <div class="widget">
         <div class="widget-head">
           <div class="section-accent"></div>
-          <h3>🆕 อัปเดตล่าสุด</h3>
+          <h3 data-i18n="recent">🆕 ອັບເດດລ່າສຸດ</h3>
         </div>
         <div class="widget-body" id="recentWidget"></div>
       </div>
@@ -1236,10 +1301,10 @@ footer::before{
 ══════════════════════════════════════ -->
 <div class="page" id="page-watch">
 
-  <!-- UNDER-HEADER AD -->
+  <!-- UNDER-HEADER AD (stacks up to 5) -->
   <div class="ad-bar">
-    <div class="ad-slot" style="max-width:728px;width:100%;height:60px">
-      <p>728 × 60 — Below Header · High CTR</p>
+    <div id="slot-watch-header" class="ad-stack ad-60-h" style="max-width:728px;margin:0 auto">
+      <div class="ad-stack-placeholder ad-60-h"><p>728 × 60 — Watch Header · up to 5</p></div>
     </div>
   </div>
 
@@ -1247,9 +1312,9 @@ footer::before{
     <div>
       <!-- BREADCRUMB -->
       <div class="breadcrumb">
-        <a href="#" onclick="showPage('listing');return false">หน้าแรก</a>
+        <a href="#" data-i18n="bc_home" onclick="showPage('listing');return false">ໜ້າຫຼັກ</a>
         <span class="sep">›</span>
-        <a href="#" onclick="showPage('listing');return false">อนิเมะ</a>
+        <a href="#" data-i18n="bc_anime" onclick="showPage('listing');return false">ອານິເມ</a>
         <span class="sep">›</span>
         <span class="current" id="breadAnime">—</span>
         <span class="sep">›</span>
@@ -1270,14 +1335,14 @@ footer::before{
             <div class="no-video-ring">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="1.5"><polygon points="5,3 19,12 5,21"/></svg>
             </div>
-            <p>เลือกตอนที่ต้องการด้านล่าง</p>
+            <p data-i18n="select_ep">ເລືອກຕອນດ້ານລຸ່ມ</p>
           </div>
         </div>
       </div>
 
-      <!-- BELOW-PLAYER AD (highest earning) -->
-      <div class="ad-slot ad-responsive" style="margin-bottom:1rem">
-        <p>728 × 60 — Below Player · ⭐ Highest CPM Zone</p>
+      <!-- BELOW-PLAYER AD (stacks up to 5) ⭐ Highest CPM -->
+      <div id="slot-below-player" class="ad-stack ad-60-h" style="margin-bottom:1rem">
+        <div class="ad-stack-placeholder ad-60-h"><p>⭐ Below Player — 728 × 60 · up to 5</p></div>
       </div>
 
       <!-- ANIME META -->
@@ -1296,13 +1361,13 @@ footer::before{
         <div class="meta-desc" id="watchDesc"></div>
       </div>
 
-      <!-- EPISODE LIST (real data from HAR) -->
+      <!-- EPISODE LIST -->
       <div class="ep-panel">
         <div class="ep-head">
-          <h3>เลือกตอน</h3>
+          <h3 data-i18n="select_ep_h">ເລືອກຕອນ</h3>
           <div class="lang-tabs">
-            <button class="lang-tab active" onclick="switchLang('sub',this)">ซับไทย</button>
-            <button class="lang-tab" onclick="switchLang('th',this)">พากย์ไทย</button>
+            <button class="lang-tab active" onclick="switchLang('sub',this)" data-i18n="sub_thai">ຊັບໄທ</button>
+            <button class="lang-tab" onclick="switchLang('th',this)" data-i18n="dub_thai">ພາກໄທ</button>
           </div>
         </div>
         <div class="ep-grid" id="epGrid"></div>
@@ -1313,23 +1378,23 @@ footer::before{
     <!-- WATCH SIDEBAR -->
     <div class="sidebar">
 
-      <!-- AD 300×250 -->
-      <div class="ad-slot ad-300">
-        <p>300 × 250 Watch Page Ad</p>
+      <!-- WATCH SIDEBAR AD (stacks up to 5) -->
+      <div id="slot-watch-sidebar" class="ad-stack ad-250-h">
+        <div class="ad-stack-placeholder ad-250-h"><p>300 × 250 — Watch Sidebar · up to 5</p></div>
       </div>
 
       <!-- RELATED -->
       <div class="widget">
         <div class="widget-head">
           <div class="section-accent"></div>
-          <h3>ที่เกี่ยวข้อง</h3>
+          <h3 data-i18n="related">ທີ່ກ່ຽວຂ້ອງ</h3>
         </div>
         <div class="widget-body" id="relatedWidget"></div>
       </div>
 
-      <!-- AD 300×600 (HIGHEST CPM) -->
-      <div class="ad-slot ad-600">
-        <p>300 × 600<br>Half Page<br>⭐ Highest CPM<br>adsco.re / Google</p>
+      <!-- HALF PAGE AD ⭐ (stacks up to 5) -->
+      <div id="slot-halfpage" class="ad-stack ad-600-h">
+        <div class="ad-stack-placeholder ad-600-h"><p>⭐ 300 × 600 — Half Page · up to 5</p></div>
       </div>
 
     </div>
@@ -1353,36 +1418,41 @@ footer::before{
 ══════════════════════════════════════ -->
 <footer>
   <div class="footer-wrap">
-    <!-- FOOTER AD -->
+    <!-- FOOTER LEADERBOARD AD (stacks up to 10) -->
     <div style="display:flex;justify-content:center;margin-bottom:2rem">
-      <div class="ad-slot ad-728" style="max-width:728px;width:100%">
-        <p>728 × 90 — Footer Leaderboard</p>
+      <div id="slot-leaderboard-footer" class="ad-stack ad-728-h" style="max-width:728px;width:100%">
+        <div class="ad-stack-placeholder ad-728-h"><p>728 × 90 — Footer Leaderboard · up to 10</p></div>
       </div>
     </div>
 
     <div class="footer-top">
       <div class="footer-brand">
         <a class="logo" href="#" onclick="showPage('listing');return false">
-          <div class="logo-emblem">A</div>
+          <svg class="logo-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="20,1 38,10 38,30 20,39 2,30 2,10" fill="#0a0a08" stroke="#c9a84c" stroke-width="1.2"/>
+            <polygon points="20,5 34,12.5 34,27.5 20,35 6,27.5 6,12.5" fill="none" stroke="#6b5a2a" stroke-width="0.5"/>
+            <text x="20" y="18" text-anchor="middle" font-family="Cinzel,serif" font-size="8" font-weight="900" fill="#c9a84c">AW</text>
+            <line x1="10" y1="21" x2="30" y2="21" stroke="#6b5a2a" stroke-width="0.5"/>
+            <text x="20" y="28" text-anchor="middle" font-family="Cinzel,serif" font-size="5.5" font-weight="700" fill="#8a6a30" letter-spacing="1">BJ88</text>
+          </svg>
           <div class="logo-text">
-            <span class="logo-en">Ani<span>Watch</span>-BJ88</span>
+            <span class="logo-main">ANIWATCH<span class="logo-accent">-BJ88</span></span>
             <span class="logo-sub">anime.bj88la.net</span>
           </div>
         </a>
-        <p>พอร์ทัลดูอนิเมะภาษาไทย รวบรวมซีรีส์และภาพยนตร์อนิเมะ พร้อมซับไทยและพากย์ไทย อัปเดตทุกสัปดาห์โดยอัตโนมัติ</p>
-        <div class="footer-disclaimer">⚠️ DEMO — ไม่ได้โฮสต์วิดีโอใดๆ วิดีโอฝังมาจากแหล่งต้นฉบับ</div>
+        <p style="margin-top:0.75rem" data-i18n="footer_desc">ແຫຼ່ງລວມອານິເມ ອັບເດດທຸກອາທິດ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ</p>
+        <div class="footer-disclaimer">⚠️ DEMO — ບໍ່ໄດ້ໂຮສວິດີໂອໃດໆ ວິດີໂອເຊື່ອມໄປຫາແຫຼ່ງຕົ້ນສະບັບ</div>
       </div>
 
       <div class="footer-col">
-        <h4>เนื้อหา</h4>
-        <a href="#">กำลังออกอากาศ</a>
-        <a href="#">จบแล้ว</a>
-        <a href="#">ภาพยนตร์</a>
-        <a href="#">อัปเดตล่าสุด</a>
+        <h4 data-i18n="footer_content">ເນື້ອຫາ</h4>
+        <a href="#" data-i18n="nav_airing" onclick="filterStatus('airing');return false">ກຳລັງອອກ</a>
+        <a href="#" data-i18n="nav_complete" onclick="filterStatus('complete');return false">ສຳເລັດ</a>
+        <a href="#" data-i18n="nav_upcoming" onclick="filterStatus('upcoming');return false">ໄວໆນີ້</a>
       </div>
 
       <div class="footer-col">
-        <h4>ເກີ່ຍວກັບ</h4>
+        <h4 data-i18n="footer_about">ກ່ຽວກັບ</h4>
         <a href="#">ນະໂຍບາຍຄວາມເປັນສ່ວນຕົວ</a>
         <a href="#">ເງື່ອນໄຂການນໍາໃຊ້</a>
         <a href="#">DMCA / ລາຍງານ</a>
@@ -1393,7 +1463,7 @@ footer::before{
 
     <div class="footer-bottom">
       <span>© 2026 ANIWATCH-BJ88 · anime.bj88la.net</span>
-      <span style="margin-left:auto">PHASE 1 · STATIC DEMO · GitHub + Cloudflare Workers</span>
+      <span style="margin-left:auto">PHASE 1 · GitHub + Cloudflare Workers</span>
     </div>
   </div>
 </footer>
@@ -1820,31 +1890,217 @@ function setActive(link) {
   if (link) link.classList.add('active');
 }
 
-// FIX: was broken — first click hid nav instead of showing it
-let mobileNavOpen = false;
+// FIX: use CSS class instead of inline styles — works with media query
 function toggleMobileNav() {
   const nav = el('mainNav');
   if (!nav) return;
-  mobileNavOpen = !mobileNavOpen;
-  if (mobileNavOpen) {
-    Object.assign(nav.style, {
-      display:'flex', flexDirection:'column', position:'fixed',
-      top:'64px', left:'0', right:'0', zIndex:'999',
-      background:'var(--surface)', padding:'1rem',
-      borderBottom:'1px solid var(--border)', gap:'2px'
-    });
-  } else {
-    nav.removeAttribute('style');
+  nav.classList.toggle('open');
+  mobileNavOpen = nav.classList.contains('open');
+}
+// Close mobile nav when a link is clicked
+document.addEventListener('click', e => {
+  const nav = el('mainNav');
+  if (!nav) return;
+  if (nav.classList.contains('open') && !nav.contains(e.target) && e.target.className !== 'menu-btn') {
+    nav.classList.remove('open');
+    mobileNavOpen = false;
   }
+});
+
+/* ═══════════════════════════════════════════════
+   I18N — UI LABEL TRANSLATION SYSTEM
+   Anime titles stay as-is. Only UI labels translate.
+═══════════════════════════════════════════════ */
+const I18N = {
+  lo: {
+    nav_home:'ໜ້າຫຼັກ', nav_all:'ທັງໝົດ', nav_airing:'ກຳລັງອອກ',
+    nav_complete:'ສຳເລັດ', nav_upcoming:'ໄວໆນີ້',
+    search_ph:'ຄົ້ນຫາ...', see_all:'ເບິ່ງທັງໝົດ →',
+    section_airing:'ກຳລັງອອກອາກາດ', section_complete:'ສຳເລັດແລ້ວ',
+    filter_all:'ທັງໝົດ', filter_airing:'ກຳລັງອອກ',
+    filter_complete:'ສຳເລັດ', filter_upcoming:'ໄວໆນີ້',
+    trending:'🔥 ຍອດນິຍົມ', recent:'🆕 ອັບເດດລ່າສຸດ',
+    bc_home:'ໜ້າຫຼັກ', bc_anime:'ອານິເມ',
+    select_ep:'ເລືອກຕອນດ້ານລຸ່ມ', select_ep_h:'ເລືອກຕອນ',
+    sub_thai:'ຊັບໄທ', dub_thai:'ພາກໄທ', related:'ທີ່ກ່ຽວຂ້ອງ',
+    footer_desc:'ແຫຼ່ງລວມອານິເມ ອັບເດດທຸກອາທິດ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ',
+    footer_content:'ເນື້ອຫາ', footer_about:'ກ່ຽວກັບ',
+    status_airing:'ກຳລັງອອກ', status_complete:'ສຳເລັດ', status_upcoming:'ໄວໆນີ້',
+    showing:'ສະແດງ', of:'ຈາກ', items:'ລາຍການ',
+    page_of:'ໜ້າ', page_of2:'ຈາກ',
+    watch_status_airing:'● ກຳລັງອອກອາກາດ', watch_status_complete:'✓ ສຳເລັດ',
+  },
+  th: {
+    nav_home:'หน้าแรก', nav_all:'ทั้งหมด', nav_airing:'ออกอากาศ',
+    nav_complete:'จบแล้ว', nav_upcoming:'เร็วๆ นี้',
+    search_ph:'ค้นหาอนิเมะ...', see_all:'ดูทั้งหมด →',
+    section_airing:'กำลังออกอากาศ', section_complete:'จบแล้ว',
+    filter_all:'ทั้งหมด', filter_airing:'ออกอากาศ',
+    filter_complete:'จบแล้ว', filter_upcoming:'เร็วๆ นี้',
+    trending:'🔥 ยอดนิยม', recent:'🆕 อัปเดตล่าสุด',
+    bc_home:'หน้าแรก', bc_anime:'อนิเมะ',
+    select_ep:'เลือกตอนด้านล่าง', select_ep_h:'เลือกตอน',
+    sub_thai:'ซับไทย', dub_thai:'พากย์ไทย', related:'ที่เกี่ยวข้อง',
+    footer_desc:'พอร์ทัลดูอนิเมะ อัปเดตทุกสัปดาห์ ครบทุกเรื่อง',
+    footer_content:'เนื้อหา', footer_about:'เกี่ยวกับ',
+    status_airing:'ออกอากาศ', status_complete:'จบแล้ว', status_upcoming:'เร็วๆ นี้',
+    showing:'แสดง', of:'จาก', items:'รายการ',
+    page_of:'หน้า', page_of2:'จาก',
+    watch_status_airing:'● กำลังออกอากาศ', watch_status_complete:'✓ จบแล้ว',
+  },
+  en: {
+    nav_home:'Home', nav_all:'All', nav_airing:'Airing',
+    nav_complete:'Completed', nav_upcoming:'Upcoming',
+    search_ph:'Search anime...', see_all:'View all →',
+    section_airing:'Currently Airing', section_complete:'Completed',
+    filter_all:'All', filter_airing:'Airing',
+    filter_complete:'Completed', filter_upcoming:'Upcoming',
+    trending:'🔥 Trending', recent:'🆕 Recent Updates',
+    bc_home:'Home', bc_anime:'Anime',
+    select_ep:'Select episode below', select_ep_h:'Episodes',
+    sub_thai:'Thai Sub', dub_thai:'Thai Dub', related:'Related',
+    footer_desc:'Anime portal — updated weekly, easy to find, fast to watch.',
+    footer_content:'Content', footer_about:'About',
+    status_airing:'Airing', status_complete:'Completed', status_upcoming:'Upcoming',
+    showing:'Showing', of:'of', items:'items',
+    page_of:'Page', page_of2:'of',
+    watch_status_airing:'● Airing', watch_status_complete:'✓ Completed',
+  },
+};
+
+let currentLang = localStorage.getItem('bj88_lang') || 'lo';
+
+function t(key) { return (I18N[currentLang] || I18N.lo)[key] || key; }
+
+function setLang(lang, btn) {
+  currentLang = lang;
+  localStorage.setItem('bj88_lang', lang);
+  // Update switcher buttons
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  // Apply all data-i18n elements
+  applyI18N();
+  // Re-render dynamic content with new labels
+  renderListing();
+  renderSidebars();
+}
+
+function applyI18N() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (el.tagName === 'INPUT' && el.getAttribute('data-i18n-placeholder')) {
+      el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+    } else if (key) {
+      el.textContent = t(key);
+    }
+  });
+  // Search placeholder
+  const si = el('searchInput');
+  if (si) si.placeholder = t('search_ph');
+  // Filter buttons
+  const fbtns = document.querySelectorAll('.filter-btn');
+  const fkeys = ['filter_all','filter_airing','filter_complete','filter_upcoming'];
+  fbtns.forEach((b,i) => { if (fkeys[i]) b.textContent = t(fkeys[i]); });
+  // Section titles
+  setText('airingTitle',   t('section_airing'));
+  setText('completeTitle', t('section_complete'));
+  // Sync lang switcher active state
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const lang = b.getAttribute('onclick')?.match(/setLang\('(\w+)'/)?.[1];
+    b.classList.toggle('active', lang === currentLang);
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   AD CONFIG SYSTEM
+   Reads slots from localStorage (set by admin.html)
+   and renders stacked banners / ad code into each slot.
+
+   Slot IDs match admin.html slot definitions:
+     leaderboard-top, leaderboard-footer
+     infeed, below-player
+     sidebar-1, sidebar-2
+     watch-header, watch-sidebar, halfpage
+
+   Each slot can hold up to:
+     leaderboard-*:  10 banners
+     all others:      5 banners
+═══════════════════════════════════════════════ */
+const AD_LIMITS = {
+  'leaderboard-top':10, 'leaderboard-footer':10,
+  'infeed':5, 'below-player':5,
+  'sidebar-1':5, 'sidebar-2':5,
+  'watch-header':5, 'watch-sidebar':5, 'halfpage':5,
+};
+
+// Map slot-id → DOM container id
+const SLOT_DOM = {
+  'leaderboard-top':   'slot-leaderboard-top',
+  'leaderboard-footer':'slot-leaderboard-footer',
+  'infeed':            'slot-infeed',
+  'below-player':      'slot-below-player',
+  'sidebar-1':         'slot-sidebar-1',
+  'sidebar-2':         'slot-sidebar-2',
+  'watch-header':      'slot-watch-header',
+  'watch-sidebar':     'slot-watch-sidebar',
+  'halfpage':          'slot-halfpage',
+};
+
+function renderAdSlots() {
+  let allSlots = {};
+  try { allSlots = JSON.parse(localStorage.getItem('bj88_adslots') || '{}'); } catch(e) {}
+
+  Object.entries(SLOT_DOM).forEach(([slotId, domId]) => {
+    const container = el(domId);
+    if (!container) return;
+    const slotData  = allSlots[slotId];
+
+    // No config or disabled → keep placeholder
+    if (!slotData || !slotData.enabled) return;
+
+    const banners   = slotData.banners || [];  // array of {type, code, imgUrl, clickUrl}
+    if (!banners.length && !slotData.code && !slotData.imgUrl) return;
+
+    // Build items array — support both old single-item format and new banners array
+    const items = banners.length ? banners : [{
+      type:     slotData.type     || 'code',
+      code:     slotData.code     || '',
+      imgUrl:   slotData.imgUrl   || '',
+      clickUrl: slotData.clickUrl || '',
+    }];
+
+    container.innerHTML = items.filter(item => item.code || item.imgUrl).map(item => {
+      if (item.type === 'code' && item.code) {
+        return `<div class="ad-stack-item">${item.code}</div>`;
+      } else if (item.imgUrl) {
+        const wrap = item.clickUrl
+          ? `<a href="${item.clickUrl}" target="_blank" rel="noopener sponsored">`
+          : '';
+        const wrapEnd = item.clickUrl ? '</a>' : '';
+        return `<div class="ad-stack-item">${wrap}<img src="${item.imgUrl}" alt="Advertisement" loading="lazy"/>${wrapEnd}</div>`;
+      }
+      return '';
+    }).join('');
+  });
 }
 
 /* ═══════════════════════════════════════════════
    INIT — runs once on page load
 ═══════════════════════════════════════════════ */
+// Apply saved language
+const savedLang = localStorage.getItem('bj88_lang') || 'lo';
+if (savedLang !== 'lo') {
+  currentLang = savedLang;
+  // Sync button state after render
+  document.addEventListener('DOMContentLoaded', () => applyI18N());
+}
+
 renderHero(0);
 initHeroCycle();
 renderListing();
 renderSidebars();
+renderAdSlots();
+applyI18N();
 </script>
 </body>
 </html>
