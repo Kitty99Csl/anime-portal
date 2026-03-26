@@ -2,18 +2,358 @@
   {
     "anime_slug": "kirei-ni-shitemoraemasu-ka",
     "episodes": [
-      {"id":117953,"number":"01","title":"EP 01","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":"https://anime.tonytonychopper.net/v/9jluilWP"},
-      {"id":118091,"number":"02","title":"EP 02","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":118181,"number":"03","title":"EP 03","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":119064,"number":"04","title":"EP 04","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":119066,"number":"05","title":"EP 05","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":119299,"number":"06","title":"EP 06","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":119489,"number":"07","title":"EP 07","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":120302,"number":"08","title":"EP 08","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":120299,"number":"09","title":"EP 09","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":120474,"number":"10","title":"EP 10","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":120846,"number":"11","title":"EP 11","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null},
-      {"id":121147,"number":"12","title":"EP 12","has_video":true,"has_th_sound":false,"has_subtitle":true,"video_url":null}
+      {
+        "id": 117953,
+        "number": "01",
+        "title": "EP 01",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": "https://anime.tonytonychopper.net/v/9jluilWP"
+      },
+      {
+        "id": 118091,
+        "number": "02",
+        "title": "EP 02",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 118181,
+        "number": "03",
+        "title": "EP 03",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 119064,
+        "number": "04",
+        "title": "EP 04",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 119066,
+        "number": "05",
+        "title": "EP 05",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 119299,
+        "number": "06",
+        "title": "EP 06",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 119489,
+        "number": "07",
+        "title": "EP 07",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 120302,
+        "number": "08",
+        "title": "EP 08",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 120299,
+        "number": "09",
+        "title": "EP 09",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 120474,
+        "number": "10",
+        "title": "EP 10",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 120846,
+        "number": "11",
+        "title": "EP 11",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      },
+      {
+        "id": 121147,
+        "number": "12",
+        "title": "EP 12",
+        "has_video": true,
+        "has_th_sound": false,
+        "has_subtitle": true,
+        "video_url": null
+      }
     ]
+  },
+  {
+    "anime_slug": "yuusha-party-wo-oidasareta-kiyoubinbou",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kizoku-tensei-thsub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tunshi-xingkong-th",
+    "episodes": []
+  },
+  {
+    "anime_slug": "guangyin-zhi-wai-beyond-times-gaze",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mushen-jisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mushen-jith",
+    "episodes": []
+  },
+  {
+    "anime_slug": "seihantai-na-kimi-to-boku",
+    "episodes": []
+  },
+  {
+    "anime_slug": "one-piece-allnew",
+    "episodes": []
+  },
+  {
+    "anime_slug": "jujutsu-kaisen-shimetsu-kaiyuu-zenpen",
+    "episodes": []
+  },
+  {
+    "anime_slug": "ugoku-neko-mukashibanashi",
+    "episodes": []
+  },
+  {
+    "anime_slug": "oshi-no-ko-3rd-season",
+    "episodes": []
+  },
+  {
+    "anime_slug": "okiraku-ryoushu-no-tanoshii-ryouchi-bouei",
+    "episodes": []
+  },
+  {
+    "anime_slug": "29-sai-dokushin-chuuken-boukensha-no-nichijou-%e0%b8%8a%e0%b8%b5%e0%b8%a7%e0%b8%b4%e0%b8%95%e0%b8%9b%e0%b8%a3%e0%b8%b0%e0%b8%88%e0%b8%b3%e0%b8%a7%e0%b8%b1%e0%b8%99%e0%b8%82%e0%b8%ad%e0%b8%87%e0%b8%99%e0%b8%b1%e0%b8%81%e0%b8%9c%e0%b8%88%e0%b8%8d%e0%b8%a0%e0%b8%b1%e0%b8%a2%e0%b8%a7%e0%b8%b1%e0%b8%a229",
+    "episodes": []
+  },
+  {
+    "anime_slug": "megami-no-cafe-terrace-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "hazure-skill-kinomi-master-skill-no-misub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "maou-no-musume-wa-yasashisugiru",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yuusha-party-ni-kawaii-ko-ga-ita-node",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yoroi-shin-den-samurai-troopers",
+    "episodes": []
+  },
+  {
+    "anime_slug": "one-piece-ss21-thz",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mayonaka-heart-tune",
+    "episodes": []
+  },
+  {
+    "anime_slug": "isekai-no-sata-wa-shachiku-shidai-%e0%b8%ab%e0%b8%99%e0%b8%b8%e0%b9%88%e0%b8%a1%e0%b8%9a%e0%b8%b1%e0%b8%8d%e0%b8%8a%e0%b8%b5%e0%b8%9a%e0%b9%89%e0%b8%b2%e0%b8%87%e0%b8%b2%e0%b8%99%e0%b8%81%e0%b8%b8%e0%b8%a1%e0%b8%8a%e0%b8%b0%e0%b8%95%e0%b8%b2%e0%b8%8a%e0%b8%b2%e0%b8%a7%e0%b8%95%e0%b9%88%e0%b8%b2%e0%b8%87%e0%b9%82%e0%b8%a5%e0%b8%81",
+    "episodes": []
+  },
+  {
+    "anime_slug": "hell-mode",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yuusha-kei-ni-shosu",
+    "episodes": []
+  },
+  {
+    "anime_slug": "toumei-otoko-to-ningen-onna",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mf-ghost-ss3",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mato-seihei-no-slave-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "hikuidori-ushuu-boro-tobi-gumi",
+    "episodes": []
+  },
+  {
+    "anime_slug": "eris-no-seihai",
+    "episodes": []
+  },
+  {
+    "anime_slug": "douse-koishite-shimaundasub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "dead-account",
+    "episodes": []
+  },
+  {
+    "anime_slug": "chitose-kun-wa-ramune-bin-no-nakasub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yeosin-gangnim-%e0%b8%84%e0%b8%a7%e0%b8%b2%e0%b8%a1%e0%b8%a5%e0%b8%b1%e0%b8%9a%e0%b8%82%e0%b8%ad%e0%b8%87%e0%b8%99%e0%b8%b2%e0%b8%87%e0%b8%9f%e0%b9%89%e0%b8%b2-%e0%b9%80%e0%b8%aa%e0%b8%b5%e0%b8%a2%e0%b8%87%e0%b9%84%e0%b8%97%e0%b8%a2",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tamon-kun-ima-docchi",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kenka-dokugaku-viral-hit-%e0%b8%99%e0%b8%b1%e0%b8%81%e0%b8%aa%e0%b8%b9%e0%b9%89%e0%b8%97%e0%b8%b9%e0%b8%9b%e0%b9%80%e0%b8%9a%e0%b8%ad%e0%b8%a3%e0%b9%8c",
+    "episodes": []
+  },
+  {
+    "anime_slug": "ze-tian-ji-2026-way-of-choices-%e0%b8%a5%e0%b8%b4%e0%b8%82%e0%b8%b4%e0%b8%95%e0%b9%82%e0%b8%8a%e0%b8%95%e0%b8%84%e0%b8%8a%e0%b8%b0%e0%b8%95%e0%b8%b2",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yuusha-no-kuzu-%e0%b8%9c%e0%b8%b9%e0%b9%89%e0%b8%81%e0%b8%a5%e0%b9%89%e0%b8%b2%e0%b8%aa%e0%b8%a7%e0%b8%b0",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yu-ling-shi-%e0%b8%99%e0%b8%b1%e0%b8%81%e0%b8%84%e0%b8%b8%e0%b8%a1%e0%b8%a7%e0%b8%b4%e0%b8%8d%e0%b8%8d%e0%b8%b2%e0%b8%93",
+    "episodes": []
+  },
+  {
+    "anime_slug": "trigun-stargaze",
+    "episodes": []
+  },
+  {
+    "anime_slug": "medalist",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kamen-rider-rider-zeztz-th",
+    "episodes": []
+  },
+  {
+    "anime_slug": "gnosiasub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "fumetsu-no-anata-e-season-3sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "fate-strange-fake",
+    "episodes": []
+  },
+  {
+    "anime_slug": "niwatori-fighter-%e0%b8%a2%e0%b8%ad%e0%b8%94%e0%b9%84%e0%b8%81%e0%b9%88%e0%b8%99%e0%b8%b1%e0%b8%81%e0%b8%aa%e0%b8%b9%e0%b9%89%e0%b8%81%e0%b8%b9%e0%b9%89%e0%b9%82%e0%b8%a5%e0%b8%81",
+    "episodes": []
+  },
+  {
+    "anime_slug": "xian-nisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "wushen-zhuzaisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "wan-jie-du-zun-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "uruwashi-no-yoi-no-tsuki",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tunshi-xingkongz",
+    "episodes": []
+  },
+  {
+    "anime_slug": "toujima-tanzaburou-wa-kamen-rider-ni-naritaisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tian-xiangsub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "supreme-god-emperor",
+    "episodes": []
+  },
+  {
+    "anime_slug": "si-vis-the-sound-of-heroessub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shenkong-bi-an-the-other-side-of-deep-space",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shen-yin-wangzuo-th",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shen-yin-wangzuosubz",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shanhai-jing-mima",
+    "episodes": []
+  },
+  {
+    "anime_slug": "vigilante-boku-no-hero-academia-illegals",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kamen-rider-rider-zeztz-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "immortality-ss3-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "himesama-goumon-sub",
+    "episodes": []
   }
 ]
