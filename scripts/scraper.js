@@ -219,7 +219,7 @@ async function main() {
   const episodeMap    = Object.fromEntries(episodeStore.map(e => [e.anime_slug, e.episodes]));
 
   // Step 1: Collect slugs
-  const allSlugs = await getAnimeSlugs(5);
+  const allSlugs = await getAnimeSlugs(100);
   const newSlugs = allSlugs.filter(s => !existingSlugs.has(s));
   console.log(`\n✅ ${allSlugs.length} total slugs · ${newSlugs.length} new to scrape\n`);
 
