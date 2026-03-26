@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Admin Panel — AniWatch-BJ88</title>
-<meta name="robots" content="noindex, nofollow"/>
+<title>Admin — AniWatch-BJ88</title>
+<meta name="robots" content="noindex,nofollow"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Sarabun:wght@300;400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
 <style>
@@ -12,575 +12,409 @@
   --bg:#080808;--surface:#0f0f0f;--card:#141414;--card2:#1a1a1a;
   --border:#2a2a2a;--border2:#3a3020;
   --red:#c0392b;--red-h:#e74c3c;--red-dim:rgba(192,57,43,0.12);--red-glow:rgba(192,57,43,0.3);
-  --gold:#c9a84c;--gold-h:#f0c060;--gold-dim:rgba(201,168,76,0.1);--gold-line:#6b5a2a;
-  --green:#27ae60;--green-dim:rgba(39,174,96,0.12);
-  --blue:#2980b9;--blue-dim:rgba(41,128,185,0.12);
+  --gold:#c9a84c;--gold-dim:rgba(201,168,76,0.1);--gold-line:#6b5a2a;
+  --green:#27ae60;--green-dim:rgba(39,174,96,0.1);
+  --blue-dim:rgba(41,128,185,0.1);
   --text:#f0ece0;--text2:#a09070;--text3:#60584a;
-  --f-display:'Cinzel',serif;--f-body:'Sarabun',sans-serif;--f-mono:'Share Tech Mono',monospace;
+  --f-d:'Cinzel',serif;--f-b:'Sarabun',sans-serif;--f-m:'Share Tech Mono',monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:var(--f-body);background:var(--bg);color:var(--text);min-height:100vh}
-::-webkit-scrollbar{width:4px}
+body{font-family:var(--f-b);background:var(--bg);color:var(--text);min-height:100vh}
+::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-thumb{background:var(--gold-line);border-radius:2px}
-
-/* ── LOGIN ── */
-.login-wrap{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at center,#1a0808 0%,var(--bg) 70%);
-}
-.login-box{
-  background:var(--surface);border:1px solid var(--border2);border-radius:4px;
-  padding:2.5rem;width:100%;max-width:380px;
-  box-shadow:0 0 60px rgba(192,57,43,0.1);
-  position:relative;overflow:hidden;
-}
-.login-box::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--red),var(--gold),var(--red));
-}
-.login-logo{
-  font-family:var(--f-display);font-size:1.4rem;font-weight:900;
-  color:var(--gold);text-align:center;margin-bottom:4px;letter-spacing:0.06em;
-}
-.login-sub{font-family:var(--f-mono);font-size:0.6rem;color:var(--text3);text-align:center;letter-spacing:0.2em;margin-bottom:2rem}
-.login-label{font-family:var(--f-mono);font-size:0.62rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;display:block}
-.login-input{
-  width:100%;background:var(--card);border:1px solid var(--border);border-radius:2px;
-  padding:0.65rem 1rem;color:var(--text);font-family:var(--f-mono);font-size:0.85rem;
-  outline:none;margin-bottom:1.25rem;transition:border-color 0.2s;
-}
-.login-input:focus{border-color:var(--gold-line)}
-.login-btn{
-  width:100%;background:var(--red);color:white;border:none;cursor:pointer;
-  font-family:var(--f-body);font-size:0.9rem;font-weight:700;
-  padding:0.75rem;border-radius:2px;letter-spacing:0.06em;
-  transition:background 0.2s,box-shadow 0.2s;
-  box-shadow:0 4px 20px var(--red-glow);
-}
-.login-btn:hover{background:var(--red-h)}
-.login-err{
-  font-family:var(--f-mono);font-size:0.7rem;color:var(--red-h);
-  text-align:center;margin-top:0.75rem;display:none;
-}
-
-/* ── LAYOUT ── */
-.admin-wrap{display:none;min-height:100vh}
-.admin-wrap.show{display:flex}
-
-/* ── SIDEBAR ── */
-.sidebar{
-  width:220px;flex-shrink:0;background:var(--surface);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;
-  position:sticky;top:0;height:100vh;overflow-y:auto;
-}
-.sidebar-logo{
-  padding:1.25rem 1rem 1rem;
-  border-bottom:1px solid var(--border);
-}
-.sidebar-logo-main{
-  font-family:var(--f-display);font-size:0.9rem;font-weight:900;
-  color:var(--gold);letter-spacing:0.06em;
-}
-.sidebar-logo-sub{font-family:var(--f-mono);font-size:0.52rem;color:var(--text3);letter-spacing:0.15em;margin-top:2px}
-.sidebar-badge{
-  display:inline-block;font-family:var(--f-mono);font-size:0.5rem;
-  background:var(--red-dim);color:var(--red-h);border:1px solid rgba(192,57,43,0.3);
-  padding:1px 5px;border-radius:1px;margin-top:4px;letter-spacing:0.1em;
-}
-.nav-section{
-  font-family:var(--f-mono);font-size:0.52rem;color:var(--text3);
-  letter-spacing:0.18em;text-transform:uppercase;
-  padding:1rem 1rem 0.35rem;
-}
-.nav-item{
-  display:flex;align-items:center;gap:9px;
-  padding:0.55rem 1rem;cursor:pointer;
-  font-family:var(--f-body);font-size:0.82rem;font-weight:600;
-  color:var(--text2);
-  border-left:2px solid transparent;
-  transition:all 0.15s;
-}
-.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03)}
-.nav-item.active{color:var(--gold);border-left-color:var(--gold);background:var(--gold-dim)}
-.nav-item svg{flex-shrink:0;opacity:0.6}
-.nav-item.active svg{opacity:1}
-.sidebar-footer{margin-top:auto;padding:1rem;border-top:1px solid var(--border)}
-.logout-btn{
-  width:100%;background:none;border:1px solid var(--border);border-radius:2px;
-  color:var(--text3);font-family:var(--f-mono);font-size:0.62rem;
-  padding:0.4rem;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;
-  transition:all 0.15s;
-}
-.logout-btn:hover{border-color:var(--red);color:var(--red-h)}
-
-/* ── MAIN CONTENT ── */
-.main-content{flex:1;min-width:0;overflow-y:auto}
-.page-section{display:none;padding:2rem}
-.page-section.active{display:block}
-.page-header{
-  display:flex;align-items:center;gap:1rem;
-  margin-bottom:1.75rem;padding-bottom:0.75rem;
-  border-bottom:1px solid var(--border);
-  position:relative;
-}
-.page-header::after{
-  content:'';position:absolute;bottom:-1px;left:0;
-  width:60px;height:1px;
-  background:linear-gradient(90deg,var(--gold),transparent);
-}
-.page-header h1{font-family:var(--f-display);font-size:1rem;font-weight:700;color:var(--text);letter-spacing:0.08em;text-transform:uppercase}
-.page-header .subtitle{font-family:var(--f-mono);font-size:0.62rem;color:var(--text3);margin-left:auto}
-
-/* ── STAT CARDS ── */
-.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem}
-.stat-card{
-  background:var(--card);border:1px solid var(--border);border-radius:2px;
-  padding:1.1rem 1.25rem;position:relative;overflow:hidden;
-}
-.stat-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,var(--red),var(--gold),transparent);
-}
-.stat-label{font-family:var(--f-mono);font-size:0.6rem;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px}
-.stat-value{font-family:var(--f-display);font-size:1.6rem;font-weight:700;color:var(--text);line-height:1}
-.stat-sub{font-family:var(--f-mono);font-size:0.58rem;color:var(--text3);margin-top:4px}
-.stat-icon{position:absolute;right:1rem;top:50%;transform:translateY(-50%);opacity:0.06;font-size:2.5rem}
-
-/* ── CARDS / PANELS ── */
-.panel{background:var(--card);border:1px solid var(--border);border-radius:2px;margin-bottom:1.5rem;overflow:hidden}
-.panel::before{content:'';display:block;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
-.panel-head{
-  padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;gap:10px;
-}
-.panel-head h2{font-family:var(--f-display);font-size:0.82rem;font-weight:700;color:var(--text);letter-spacing:0.08em;text-transform:uppercase;flex:1}
-.panel-body{padding:1.25rem}
-
-/* ── CRAWL LOG TABLE ── */
-.log-table{width:100%;border-collapse:collapse;font-size:0.78rem}
-.log-table th{font-family:var(--f-mono);font-size:0.58rem;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;text-align:left;border-bottom:1px solid var(--border)}
-.log-table td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text2)}
-.log-table tr:last-child td{border-bottom:none}
-.log-table tr:hover td{background:rgba(201,168,76,0.03)}
-.badge-ok{background:var(--green-dim);color:var(--green);border:1px solid rgba(39,174,96,0.25);font-family:var(--f-mono);font-size:0.55rem;padding:1px 6px;border-radius:1px;letter-spacing:0.08em}
-.badge-err{background:var(--red-dim);color:var(--red-h);border:1px solid rgba(192,57,43,0.3);font-family:var(--f-mono);font-size:0.55rem;padding:1px 6px;border-radius:1px}
-.badge-pend{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-line);font-family:var(--f-mono);font-size:0.55rem;padding:1px 6px;border-radius:1px}
-
-/* ── FORM ELEMENTS ── */
-.form-group{margin-bottom:1.1rem}
-.form-label{font-family:var(--f-mono);font-size:0.62rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:6px}
-.form-input,.form-textarea,.form-select{
-  width:100%;background:var(--card2);border:1px solid var(--border);border-radius:2px;
-  padding:0.55rem 0.85rem;color:var(--text);font-family:var(--f-body);font-size:0.85rem;
-  outline:none;transition:border-color 0.2s;
-}
-.form-textarea{resize:vertical;min-height:80px;font-family:var(--f-mono);font-size:0.75rem}
-.form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--gold-line)}
-.form-select option{background:var(--card2)}
-.form-hint{font-family:var(--f-mono);font-size:0.58rem;color:var(--text3);margin-top:4px;line-height:1.6}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-
-/* ── BUTTONS ── */
-.btn{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:var(--f-body);font-size:0.82rem;font-weight:600;
-  padding:0.5rem 1.25rem;border-radius:2px;border:none;cursor:pointer;
-  letter-spacing:0.04em;transition:all 0.15s;
-}
-.btn-primary{background:var(--red);color:white;box-shadow:0 2px 12px var(--red-glow)}
-.btn-primary:hover{background:var(--red-h)}
-.btn-gold{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-line)}
-.btn-gold:hover{background:rgba(201,168,76,0.2)}
+/* LOGIN */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at center,#1a0808,var(--bg))}
+.lbox{background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:2.5rem;width:100%;max-width:360px;position:relative;overflow:hidden}
+.lbox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--gold),var(--red))}
+.l-logo{font-family:var(--f-d);font-size:1.3rem;font-weight:900;color:var(--gold);text-align:center;margin-bottom:3px;letter-spacing:0.06em}
+.l-sub{font-family:var(--f-m);font-size:0.58rem;color:var(--text3);text-align:center;letter-spacing:0.2em;margin-bottom:2rem}
+.fl{font-family:var(--f-m);font-size:0.6rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:5px}
+.fi{width:100%;background:var(--card);border:1px solid var(--border);border-radius:2px;padding:0.6rem 0.9rem;color:var(--text);font-family:var(--f-m);font-size:0.82rem;outline:none;margin-bottom:1.1rem;transition:border-color 0.2s}
+.fi:focus{border-color:var(--gold-line)}
+.l-btn{width:100%;background:var(--red);color:white;border:none;cursor:pointer;font-family:var(--f-b);font-size:0.9rem;font-weight:700;padding:0.7rem;border-radius:2px;box-shadow:0 4px 20px var(--red-glow);transition:background 0.2s}
+.l-btn:hover{background:var(--red-h)}
+.l-err{font-family:var(--f-m);font-size:0.68rem;color:var(--red-h);text-align:center;margin-top:0.75rem;display:none}
+/* LAYOUT */
+#adminApp{display:none;min-height:100vh;flex-direction:column}
+#adminApp.show{display:flex}
+/* TOPBAR */
+.tb{background:var(--surface);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;padding:0 1.25rem;gap:0.75rem;position:sticky;top:0;z-index:100;flex-shrink:0}
+.tb::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
+.tb-logo{font-family:var(--f-d);font-size:0.85rem;font-weight:900;color:var(--gold);letter-spacing:0.08em;white-space:nowrap;flex-shrink:0}
+.tb-logo span{color:var(--text2);font-weight:400;font-size:0.62rem;font-family:var(--f-m);margin-left:6px}
+.tb-tabs{display:flex;gap:1px;flex:1;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
+.tb-tabs::-webkit-scrollbar{height:0}
+.ttab{font-family:var(--f-b);font-size:0.78rem;font-weight:600;background:none;border:none;color:var(--text2);padding:0.3rem 0.85rem;border-radius:2px;cursor:pointer;white-space:nowrap;transition:all 0.15s;border-bottom:2px solid transparent;flex-shrink:0}
+.ttab:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+.ttab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tb-r{display:flex;align-items:center;gap:6px;margin-left:auto;flex-shrink:0}
+.bo-lang{display:flex;gap:2px;background:var(--card);border:1px solid var(--border);border-radius:2px;padding:2px}
+.bl-btn{font-family:var(--f-m);font-size:0.58rem;background:none;border:none;color:var(--text3);padding:2px 7px;border-radius:1px;cursor:pointer;transition:all 0.15s}
+.bl-btn.active{background:var(--gold-dim);color:var(--gold)}
+.slink{font-family:var(--f-m);font-size:0.6rem;color:var(--text3);text-decoration:none;padding:0.3rem 0.6rem;border:1px solid var(--border);border-radius:2px;transition:all 0.15s}
+.slink:hover{color:var(--gold);border-color:var(--gold-line)}
+.out-btn{font-family:var(--f-m);font-size:0.6rem;background:none;color:var(--text3);border:1px solid var(--border);border-radius:2px;padding:0.3rem 0.6rem;cursor:pointer;transition:all 0.15s}
+.out-btn:hover{color:var(--red-h);border-color:var(--red)}
+/* MAIN */
+.main{flex:1;overflow-y:auto}
+.tsec{display:none;padding:1.5rem}
+.tsec.active{display:block}
+/* PANELS */
+.pn{background:var(--card);border:1px solid var(--border);border-radius:2px;margin-bottom:1.25rem;overflow:hidden}
+.pn::before{content:'';display:block;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
+.ph{padding:0.7rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.ph h2{font-family:var(--f-d);font-size:0.78rem;font-weight:700;color:var(--text);letter-spacing:0.08em;text-transform:uppercase;flex:1}
+.ph-note{font-family:var(--f-m);font-size:0.56rem;color:var(--text3)}
+.pb{padding:1.1rem 1.25rem}
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.9rem;margin-bottom:1.25rem}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:0.9rem 1.1rem;position:relative;overflow:hidden}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent)}
+.sc-l{font-family:var(--f-m);font-size:0.56rem;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px}
+.sc-v{font-family:var(--f-d);font-size:1.5rem;font-weight:700;color:var(--text);line-height:1}
+.sc-s{font-family:var(--f-m);font-size:0.54rem;color:var(--text3);margin-top:3px}
+/* BTNS */
+.btn{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-b);font-size:0.8rem;font-weight:600;padding:0.45rem 1.1rem;border-radius:2px;border:none;cursor:pointer;letter-spacing:0.04em;transition:all 0.15s;text-decoration:none}
+.btn-p{background:var(--red);color:white;box-shadow:0 2px 10px var(--red-glow)}
+.btn-p:hover{background:var(--red-h)}
+.btn-g{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-line)}
+.btn-g:hover{background:rgba(201,168,76,0.18)}
 .btn-ghost{background:none;color:var(--text2);border:1px solid var(--border)}
 .btn-ghost:hover{border-color:var(--border2);color:var(--text)}
-.btn-danger{background:var(--red-dim);color:var(--red-h);border:1px solid rgba(192,57,43,0.3)}
-.btn-danger:hover{background:rgba(192,57,43,0.2)}
-.btn-sm{padding:0.3rem 0.75rem;font-size:0.75rem}
-
-/* ── TOGGLE SWITCH ── */
-.toggle-wrap{display:flex;align-items:center;gap:10px}
-.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
-.toggle input{opacity:0;width:0;height:0}
-.toggle-slider{
-  position:absolute;inset:0;background:var(--border2);border-radius:11px;cursor:pointer;
-  transition:background 0.2s;
-}
-.toggle-slider::before{
-  content:'';position:absolute;width:16px;height:16px;
-  border-radius:50%;background:var(--text3);
-  left:3px;top:3px;transition:all 0.2s;
-}
-.toggle input:checked + .toggle-slider{background:var(--green)}
-.toggle input:checked + .toggle-slider::before{transform:translateX(18px);background:white}
-.toggle-label{font-size:0.82rem;color:var(--text2)}
-
-/* ── AD SLOT CARDS ── */
-.ad-slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
-.ad-slot-card{
-  background:var(--card2);border:1px solid var(--border);border-radius:2px;
-  padding:1rem 1.1rem;
-}
-.ad-slot-head{display:flex;align-items:center;gap:8px;margin-bottom:0.75rem}
-.ad-slot-name{font-family:var(--f-display);font-size:0.75rem;font-weight:700;color:var(--text);letter-spacing:0.06em;flex:1}
-.ad-slot-size{font-family:var(--f-mono);font-size:0.58rem;color:var(--text3)}
-.ad-slot-preview{
-  width:100%;height:50px;background:var(--bg);border:1px dashed var(--border2);
-  border-radius:1px;display:flex;align-items:center;justify-content:center;
-  margin-bottom:0.75rem;font-family:var(--f-mono);font-size:0.6rem;color:var(--text3);
-  overflow:hidden;position:relative;
-}
-.ad-slot-preview img{width:100%;height:100%;object-fit:cover}
-.ad-type-tabs{display:flex;gap:4px;margin-bottom:0.75rem}
-.ad-type-tab{
-  font-family:var(--f-mono);font-size:0.58rem;background:none;
-  border:1px solid var(--border);border-radius:1px;color:var(--text3);
-  padding:3px 8px;cursor:pointer;transition:all 0.15s;letter-spacing:0.06em;
-}
-.ad-type-tab.active{background:var(--gold-dim);border-color:var(--gold-line);color:var(--gold)}
-.ad-save-btn{
-  width:100%;margin-top:0.5rem;
-  background:var(--red-dim);color:var(--red-h);border:1px solid rgba(192,57,43,0.3);
-  border-radius:1px;padding:0.4rem;font-family:var(--f-mono);font-size:0.62rem;
-  cursor:pointer;letter-spacing:0.08em;text-transform:uppercase;transition:all 0.15s;
-}
-.ad-save-btn:hover{background:var(--red);color:white}
-
-/* ── STATUS DOT ── */
-.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.dot-green{background:var(--green)}
-.dot-red{background:var(--red-h)}
-.dot-gold{background:var(--gold);animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-
-/* ── ALERT ── */
-.alert{
-  padding:0.65rem 1rem;border-radius:2px;font-family:var(--f-mono);
-  font-size:0.72rem;margin-bottom:1rem;display:none;border:1px solid;
-}
+.btn-d{background:var(--red-dim);color:var(--red-h);border:1px solid rgba(192,57,43,0.3)}
+.btn-d:hover{background:rgba(192,57,43,0.2)}
+.btn-sm{padding:0.28rem 0.7rem;font-size:0.72rem}
+.btn-xs{padding:0.18rem 0.48rem;font-size:0.64rem}
+/* FORMS */
+.fg{margin-bottom:0.85rem}
+.fl2{font-family:var(--f-m);font-size:0.58rem;color:var(--text2);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:5px}
+.fi2,.ft2,.fs2{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:2px;padding:0.5rem 0.8rem;color:var(--text);font-family:var(--f-b);font-size:0.82rem;outline:none;transition:border-color 0.2s}
+.ft2{resize:vertical;min-height:65px;font-family:var(--f-m);font-size:0.72rem}
+.fi2:focus,.ft2:focus,.fs2:focus{border-color:var(--gold-line)}
+.fhint{font-family:var(--f-m);font-size:0.55rem;color:var(--text3);margin-top:3px;line-height:1.6}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:0.9rem}
+@media(max-width:600px){.frow{grid-template-columns:1fr}}
+/* TOGGLE */
+.tog{position:relative;width:38px;height:20px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-s{position:absolute;inset:0;background:var(--border2);border-radius:10px;cursor:pointer;transition:background 0.2s}
+.tog-s::before{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:var(--text3);left:3px;top:3px;transition:all 0.2s}
+.tog input:checked+.tog-s{background:var(--green)}
+.tog input:checked+.tog-s::before{transform:translateX(18px);background:white}
+/* ALERT */
+.alert{padding:0.6rem 0.9rem;border-radius:2px;font-family:var(--f-m);font-size:0.68rem;margin-bottom:1rem;border:1px solid;display:none;line-height:1.6}
 .alert.show{display:block}
-.alert-success{background:var(--green-dim);color:var(--green);border-color:rgba(39,174,96,0.3)}
-.alert-error{background:var(--red-dim);color:var(--red-h);border-color:rgba(192,57,43,0.3)}
-.alert-info{background:var(--blue-dim);color:#5dade2;border-color:rgba(41,128,185,0.3)}
+.al-ok{background:var(--green-dim);color:var(--green);border-color:rgba(39,174,96,0.3)}
+.al-err{background:var(--red-dim);color:var(--red-h);border-color:rgba(192,57,43,0.3)}
+.al-info{background:var(--blue-dim);color:#5dade2;border-color:rgba(41,128,185,0.3)}
+/* DOT */
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;display:inline-block}
+.dot-g{background:var(--green)}
+.dot-y{background:var(--gold);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+/* COUNTDOWN */
+.cd{font-family:var(--f-m);font-size:0.95rem;color:var(--gold);letter-spacing:0.1em}
+/* INFO GRID */
+.ig{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:0.78rem;line-height:1.8}
+.il{color:var(--text3);font-family:var(--f-m);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.08em;align-self:center}
+.iv{color:var(--text2)}
+/* STEP LIST */
+.step{display:grid;grid-template-columns:18px 1fr;gap:5px 9px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:0.78rem}
+.step:last-child{border-bottom:none}
+.sn{font-family:var(--f-d);font-size:0.68rem;font-weight:700;color:var(--gold)}
+.st{color:var(--text2);line-height:1.6}
+.st code{font-family:var(--f-m);font-size:0.68rem;color:var(--gold);background:var(--gold-dim);padding:1px 4px;border-radius:1px}
+/* QUICK LINKS */
+.ql{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(max-width:480px){.ql{grid-template-columns:1fr}}
 
-/* ── NEXT SYNC COUNTDOWN ── */
-.countdown{font-family:var(--f-mono);font-size:1.1rem;color:var(--gold);letter-spacing:0.1em}
+/* ═══════════════════════
+   SKELETON SITE PREVIEW
+═══════════════════════ */
+.skwrap{background:var(--card2);border:1px solid var(--border);border-radius:2px;padding:0.85rem;overflow-x:auto}
+.sksite{width:680px;margin:0 auto;font-size:0;position:relative}
+.sk-h{height:32px;background:#141414;border:1px solid #2a2a2a;border-radius:1px;margin-bottom:3px;display:flex;align-items:center;padding:0 8px;gap:8px}
+.sk-lb{width:55px;height:14px;background:#2a2a2a;border-radius:1px}
+.sk-nd{width:26px;height:7px;background:#1e1e1e;border-radius:1px}
+.sk-nd.a{background:#6b5a2a}
+.sk-sb{width:70px;height:13px;background:#1e1e1e;border-radius:1px}
+.sk-hero{width:100%;height:72px;background:#141414;border:1px solid #2a2a2a;border-radius:1px;margin-bottom:3px;overflow:hidden;position:relative}
+.sk-hero-t{position:absolute;left:8px;top:10px;width:100px}
+.sk-line{height:5px;border-radius:1px;background:#2a2a2a;margin-bottom:4px}
+.sk-body{display:flex;gap:5px;width:100%}
+.sk-main{flex:1;min-width:0}
+.sk-sidebar{width:120px;flex-shrink:0}
+.sk-gl{height:7px;background:#1e1e1e;border-radius:1px;width:70px;margin-bottom:3px}
+.sk-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-bottom:3px}
+.sk-card{height:48px;background:#141414;border:1px solid #2a2a2a;border-radius:1px}
+/* Ad zones */
+.az{border:1.5px solid;border-radius:1px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;overflow:hidden;position:relative}
+.az:hover{filter:brightness(1.2)}
+.az.empty{border-style:dashed;border-color:var(--border2);background:rgba(255,255,255,0.01)}
+.az.active{border-color:var(--green);background:rgba(39,174,96,0.07)}
+.az.full{border-color:var(--gold);background:rgba(201,168,76,0.07)}
+.az-lbl{font-family:var(--f-m);font-size:7px;color:var(--text3);text-align:center;line-height:1.3;pointer-events:none}
+.az-cnt{font-family:var(--f-m);font-size:8px;font-weight:bold;text-align:center;pointer-events:none}
+.az.active .az-cnt{color:var(--green)}
+.az.full .az-cnt{color:var(--gold)}
+.az.empty .az-cnt{color:var(--text3)}
 
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-  .sidebar{width:180px}
-  .form-row{grid-template-columns:1fr}
-  .stat-grid{grid-template-columns:repeat(2,1fr)}
-}
+/* ═══════════════════════
+   AD SLOT CARDS
+═══════════════════════ */
+.asg{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.asc{background:var(--card2);border:1px solid var(--border);border-radius:2px;overflow:hidden;transition:border-color 0.2s}
+.asc.highlight{border-color:var(--gold-line);box-shadow:0 0 0 2px var(--gold-dim)}
+.asc-h{padding:0.65rem 0.9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px}
+.asc-n{font-family:var(--f-d);font-size:0.7rem;font-weight:700;color:var(--text);letter-spacing:0.06em;flex:1}
+.asc-sz{font-family:var(--f-m);font-size:0.54rem;color:var(--text3)}
+.asc-b{padding:0.8rem 0.9rem}
+.asc-zone{font-family:var(--f-m);font-size:0.54rem;color:var(--text3);margin-bottom:0.6rem}
+.asc-lim{font-family:var(--f-m);font-size:0.56rem;margin-bottom:0.7rem}
+.lbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:3px}
+.lfill{height:100%;border-radius:2px;transition:width 0.3s}
+/* Banner list */
+.blist{display:flex;flex-direction:column;gap:4px;margin-bottom:7px;min-height:4px}
+.bi{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:1px;padding:4px 7px}
+.bprev{width:38px;height:20px;border-radius:1px;overflow:hidden;background:#111;flex-shrink:0;border:1px solid var(--border)}
+.bprev img{width:100%;height:100%;object-fit:cover}
+.bprev-code{width:38px;height:20px;background:var(--blue-dim);display:flex;align-items:center;justify-content:center;font-family:var(--f-m);font-size:6px;color:#5dade2;flex-shrink:0;border-radius:1px}
+.binfo{flex:1;min-width:0}
+.btype{font-family:var(--f-m);font-size:0.52rem;color:var(--text3)}
+.burl{font-size:0.6rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bact{display:flex;gap:3px;flex-shrink:0}
+/* Add banner form */
+.abform{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:0.7rem;margin-top:5px;display:none}
+.abform.open{display:block}
+.abt{display:flex;gap:3px;margin-bottom:0.6rem}
+.ab-tab{font-family:var(--f-m);font-size:0.56rem;background:none;border:1px solid var(--border);border-radius:1px;color:var(--text3);padding:2px 7px;cursor:pointer;transition:all 0.15s}
+.ab-tab.active{background:var(--gold-dim);border-color:var(--gold-line);color:var(--gold)}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════
-     LOGIN SCREEN
-═══════════════════════════════════════ -->
-<div class="login-wrap" id="loginWrap">
-  <div class="login-box">
-    <div class="login-logo">AniWatch-BJ88</div>
-    <div class="login-sub">ADMIN PANEL · BACK OFFICE</div>
-    <label class="login-label">Password</label>
-    <input class="login-input" type="password" id="loginPw" placeholder="Enter password"
-           onkeydown="if(event.key==='Enter')doLogin()"/>
-    <button class="login-btn" onclick="doLogin()">Login →</button>
-    <div class="login-err" id="loginErr">❌ Incorrect password</div>
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="lbox">
+    <div class="l-logo">AniWatch-BJ88</div>
+    <div class="l-sub">BACK OFFICE · ADMIN PANEL</div>
+    <label class="fl">Password</label>
+    <input class="fi" type="password" id="loginPw" placeholder="Enter password"/>
+    <button class="l-btn" onclick="doLogin()">Login →</button>
+    <div class="l-err" id="loginErr">❌ Incorrect password</div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════
-     ADMIN LAYOUT
-═══════════════════════════════════════ -->
-<div class="admin-wrap" id="adminWrap">
-
-  <!-- SIDEBAR -->
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <div class="sidebar-logo-main">AniWatch-BJ88</div>
-      <div class="sidebar-logo-sub">anime.bj88la.net</div>
-      <div class="sidebar-badge">ADMIN PANEL</div>
+<!-- ADMIN APP -->
+<div id="adminApp">
+  <!-- TOPBAR -->
+  <div class="tb">
+    <div class="tb-logo">AniWatch<span id="tbTime">-BJ88 Admin</span></div>
+    <div class="tb-tabs">
+      <button class="ttab active" onclick="switchTab('dashboard',this)">Dashboard</button>
+      <button class="ttab" onclick="switchTab('ads',this)">Ad Manager</button>
+      <button class="ttab" onclick="switchTab('crawl',this)">Crawl</button>
+      <button class="ttab" onclick="switchTab('settings',this)">Settings</button>
     </div>
-
-    <div class="nav-section">Main</div>
-    <div class="nav-item active" onclick="goSection('dashboard',this)">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Dashboard
-    </div>
-    <div class="nav-item" onclick="goSection('ads',this)">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      Ad Slots
-    </div>
-
-    <div class="nav-section">Content</div>
-    <div class="nav-item" onclick="goSection('content',this)">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Anime Content
-    </div>
-    <div class="nav-item" onclick="goSection('crawl',this)">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      Crawl Schedule
-    </div>
-
-    <div class="nav-section">System</div>
-    <div class="nav-item" onclick="goSection('settings',this)">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
-      Site Settings
-    </div>
-
-    <div class="sidebar-footer">
-      <a href="/index.html" style="display:block;font-family:var(--f-mono);font-size:0.58rem;color:var(--text3);text-decoration:none;margin-bottom:8px;letter-spacing:0.08em">← ກັບໄປໜ້າຫຼັກ</a>
-      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    <div class="tb-r">
+      <div class="bo-lang">
+        <button class="bl-btn active" onclick="setBoLang('lo',this)">ລາວ</button>
+        <button class="bl-btn" onclick="setBoLang('th',this)">ไทย</button>
+        <button class="bl-btn" onclick="setBoLang('en',this)">EN</button>
+      </div>
+      <a href="/" target="_blank" class="slink">↗ Site</a>
+      <button class="out-btn" onclick="doLogout()">Logout</button>
     </div>
   </div>
 
-  <!-- MAIN CONTENT -->
-  <div class="main-content">
+  <div class="main">
 
-    <!-- ── DASHBOARD ── -->
-    <div class="page-section active" id="sec-dashboard">
-      <div class="page-header">
-        <h1>Dashboard</h1>
-        <span class="subtitle" id="dashTime"></span>
+    <!-- DASHBOARD -->
+    <div class="tsec active" id="tab-dashboard">
+      <div id="dashAlert" class="alert"></div>
+      <div class="sg">
+        <div class="sc"><div class="sc-l">Total Anime</div><div class="sc-v" id="sAnime">1</div><div class="sc-s">in database</div></div>
+        <div class="sc"><div class="sc-l">Episodes</div><div class="sc-v" id="sEps">12</div><div class="sc-s">across all titles</div></div>
+        <div class="sc"><div class="sc-l">Active Slots</div><div class="sc-v" id="sActive">0</div><div class="sc-s">of 9 slot groups</div></div>
+        <div class="sc"><div class="sc-l">Total Banners</div><div class="sc-v" id="sBanners">0</div><div class="sc-s">across all slots</div></div>
+        <div class="sc"><div class="sc-l">Next Crawl</div><div class="cd" id="sCd" style="margin-top:4px">—</div><div class="sc-s">Sun 3AM Bangkok</div></div>
       </div>
-
-      <div id="alertBox" class="alert"></div>
-
-      <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-icon">🎌</div>
-          <div class="stat-label">Total Anime</div>
-          <div class="stat-value" id="statAnime">1</div>
-          <div class="stat-sub">in database</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📺</div>
-          <div class="stat-label">Total Episodes</div>
-          <div class="stat-value" id="statEps">12</div>
-          <div class="stat-sub">across all titles</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📢</div>
-          <div class="stat-label">Active Ad Slots</div>
-          <div class="stat-value" id="statAds">0</div>
-          <div class="stat-sub">of 6 slots filled</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">✅</div>
-          <div class="stat-label">Videos Working</div>
-          <div class="stat-value" id="statVids">1</div>
-          <div class="stat-sub">episodes with iframe</div>
-        </div>
-      </div>
-
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-
-        <!-- Crawl Status -->
-        <div class="panel">
-          <div class="panel-head">
-            <div class="dot dot-gold"></div>
-            <h2>Crawl Status</h2>
-          </div>
-          <div class="panel-body">
-            <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-size:0.8rem;margin-bottom:1rem">
-              <span style="color:var(--text3);font-family:var(--f-mono);font-size:0.62rem">Last run</span>
-              <span id="lastCrawl" style="color:var(--text2)">Never</span>
-              <span style="color:var(--text3);font-family:var(--f-mono);font-size:0.62rem">Next scheduled</span>
-              <span style="color:var(--gold)">Sunday 3:00 AM</span>
-              <span style="color:var(--text3);font-family:var(--f-mono);font-size:0.62rem">Countdown</span>
-              <span class="countdown" id="countdown">—</span>
-              <span style="color:var(--text3);font-family:var(--f-mono);font-size:0.62rem">Status</span>
-              <span><span class="dot dot-green" style="display:inline-block;margin-right:6px"></span><span style="color:var(--green);font-size:0.78rem">GitHub Actions ready</span></span>
+        <div class="pn">
+          <div class="ph"><div class="dot dot-y" style="margin-right:2px"></div><h2>Crawl Status</h2></div>
+          <div class="pb">
+            <div class="ig" style="margin-bottom:1rem">
+              <span class="il">Last run</span><span class="iv" id="lastCrawl">Never</span>
+              <span class="il">Schedule</span><span class="iv">Sunday 3:00 AM</span>
+              <span class="il">Platform</span><span class="iv">GitHub Actions</span>
+              <span class="il">Status</span>
+              <span><span class="dot dot-g" style="margin-right:4px"></span><span style="color:var(--green);font-size:0.78rem">Ready</span></span>
             </div>
-            <button class="btn btn-gold btn-sm" onclick="triggerCrawl()">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-              Trigger Manual Crawl
-            </button>
+            <button class="btn btn-g btn-sm" onclick="triggerCrawl()">↺ Run Now</button>
           </div>
         </div>
-
-        <!-- Quick Links -->
-        <div class="panel">
-          <div class="panel-head"><h2>Quick Actions</h2></div>
-          <div class="panel-body" style="display:flex;flex-direction:column;gap:8px">
-            <a href="https://anime.bj88la.net" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="text-decoration:none;justify-content:center">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 0 2 2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              View Live Site
-            </a>
-            <a href="https://github.com/Kitty99CsI/anime-portal/actions" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="text-decoration:none;justify-content:center">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              GitHub Actions Log
-            </a>
-            <a href="https://analytics.google.com" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="text-decoration:none;justify-content:center">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              Google Analytics
-            </a>
-            <a href="https://dash.cloudflare.com" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="text-decoration:none;justify-content:center">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-              Cloudflare Dashboard
-            </a>
+        <div class="pn">
+          <div class="ph"><h2>Quick Actions</h2></div>
+          <div class="pb ql">
+            <a href="/" target="_blank" class="btn btn-ghost btn-sm" style="justify-content:center">↗ Live Site</a>
+            <a href="https://github.com/Kitty99CsI/anime-portal/actions" target="_blank" class="btn btn-ghost btn-sm" style="justify-content:center">⏱ Actions</a>
+            <a href="https://analytics.google.com" target="_blank" class="btn btn-ghost btn-sm" style="justify-content:center">📊 Analytics</a>
+            <a href="https://dash.cloudflare.com" target="_blank" class="btn btn-ghost btn-sm" style="justify-content:center">☁ Cloudflare</a>
           </div>
-        </div>
-      </div>
-
-      <!-- Recent crawl log -->
-      <div class="panel">
-        <div class="panel-head"><h2>Crawl History</h2></div>
-        <div style="overflow-x:auto">
-          <table class="log-table">
-            <thead>
-              <tr>
-                <th>Date</th><th>New Anime</th><th>New Episodes</th><th>Duration</th><th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="crawlLog">
-              <tr><td colspan="5" style="text-align:center;color:var(--text3);padding:1.5rem;font-family:var(--f-mono);font-size:0.7rem">No crawl runs yet — trigger your first crawl above</td></tr>
-            </tbody>
-          </table>
         </div>
       </div>
     </div>
 
-    <!-- ── AD SLOTS ── -->
-    <div class="page-section" id="sec-ads">
-      <div class="page-header">
-        <h1>Ad Slot Manager</h1>
-        <span class="subtitle">6 slots · anime.bj88la.net</span>
-      </div>
-
+    <!-- AD MANAGER -->
+    <div class="tsec" id="tab-ads">
       <div id="adAlert" class="alert"></div>
 
-      <div style="background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:2px;padding:0.75rem 1rem;margin-bottom:1.5rem;font-family:var(--f-mono);font-size:0.68rem;color:var(--gold)">
-        ℹ After saving any slot → go to GitHub repo → edit index.html → replace the matching ad-slot div with your new code → commit → auto-deploy triggers.
+      <!-- SKELETON MAP -->
+      <div class="pn">
+        <div class="ph"><h2>Ad Slot Map</h2><span class="ph-note">Click zone to jump to slot · Green = active · Gold = full</span></div>
+        <div class="pb" style="padding:0.75rem">
+          <div class="skwrap">
+            <div class="sksite" id="skSite">
+
+              <!-- Leaderboard top -->
+              <div class="az empty" id="skz-leaderboard-top" style="width:100%;height:26px;margin-bottom:3px" onclick="jumpToSlot('leaderboard-top')">
+                <span class="az-lbl">Top Leaderboard</span><span class="az-cnt" id="skc-leaderboard-top">0/10</span>
+              </div>
+
+              <!-- Header bar -->
+              <div class="sk-h" style="margin-bottom:3px">
+                <div class="sk-lb"></div>
+                <div style="display:flex;gap:3px;flex:1"><div class="sk-nd a"></div><div class="sk-nd"></div><div class="sk-nd"></div><div class="sk-nd"></div><div class="sk-nd"></div></div>
+                <div class="sk-sb"></div>
+              </div>
+
+              <!-- Hero -->
+              <div class="sk-hero" style="margin-bottom:3px">
+                <div class="sk-hero-t"><div class="sk-line" style="width:100px"></div><div class="sk-line" style="width:70px"></div><div class="sk-line" style="width:85px"></div></div>
+              </div>
+
+              <!-- Body -->
+              <div class="sk-body">
+                <div class="sk-main">
+                  <div class="sk-gl"></div>
+                  <div class="sk-grid" style="margin-bottom:3px">
+                    <div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div>
+                  </div>
+                  <div class="az empty" id="skz-infeed" style="width:100%;height:18px;margin-bottom:3px" onclick="jumpToSlot('infeed')">
+                    <span class="az-lbl">In-Feed</span><span class="az-cnt" id="skc-infeed">0/5</span>
+                  </div>
+                  <div class="sk-gl"></div>
+                  <div class="sk-grid">
+                    <div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div><div class="sk-card"></div>
+                  </div>
+                </div>
+                <div class="sk-sidebar">
+                  <div class="az empty" id="skz-sidebar-1" style="width:100%;height:65px;margin-bottom:3px" onclick="jumpToSlot('sidebar-1')">
+                    <span class="az-lbl">Sidebar 1</span><span class="az-cnt" id="skc-sidebar-1">0/5</span>
+                  </div>
+                  <div style="height:32px;background:#141414;border:1px solid #2a2a2a;border-radius:1px;margin-bottom:3px"></div>
+                  <div class="az empty" id="skz-sidebar-2" style="width:100%;height:65px" onclick="jumpToSlot('sidebar-2')">
+                    <span class="az-lbl">Sidebar 2</span><span class="az-cnt" id="skc-sidebar-2">0/5</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Watch page divider -->
+              <div style="font-family:var(--f-m);font-size:7px;color:var(--text3);margin:8px 0 3px;letter-spacing:0.1em;text-transform:uppercase">WATCH PAGE</div>
+
+              <div class="az empty" id="skz-watch-header" style="width:100%;height:16px;margin-bottom:3px" onclick="jumpToSlot('watch-header')">
+                <span class="az-lbl">Watch Header</span><span class="az-cnt" id="skc-watch-header">0/5</span>
+              </div>
+
+              <div class="sk-body">
+                <div class="sk-main">
+                  <div style="width:100%;height:82px;background:#0a0a0a;border:1px solid #222;border-radius:1px;margin-bottom:3px;display:flex;align-items:center;justify-content:center">
+                    <span style="font-family:var(--f-m);font-size:7px;color:#333">▶ PLAYER</span>
+                  </div>
+                  <div class="az empty" id="skz-below-player" style="width:100%;height:16px;margin-bottom:3px" onclick="jumpToSlot('below-player')">
+                    <span class="az-lbl">⭐ Below Player</span><span class="az-cnt" id="skc-below-player">0/5</span>
+                  </div>
+                  <div style="height:36px;background:#141414;border:1px solid #2a2a2a;border-radius:1px"></div>
+                </div>
+                <div class="sk-sidebar">
+                  <div class="az empty" id="skz-watch-sidebar" style="width:100%;height:65px;margin-bottom:3px" onclick="jumpToSlot('watch-sidebar')">
+                    <span class="az-lbl">Watch Sidebar</span><span class="az-cnt" id="skc-watch-sidebar">0/5</span>
+                  </div>
+                  <div class="az empty" id="skz-halfpage" style="width:100%;height:95px" onclick="jumpToSlot('halfpage')">
+                    <span class="az-lbl">⭐ Half Page</span><span class="az-cnt" id="skc-halfpage">0/5</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="az empty" id="skz-leaderboard-footer" style="width:100%;height:26px;margin-top:8px" onclick="jumpToSlot('leaderboard-footer')">
+                <span class="az-lbl">Footer Leaderboard</span><span class="az-cnt" id="skc-leaderboard-footer">0/10</span>
+              </div>
+
+            </div>
+          </div>
+          <div style="display:flex;gap:1.5rem;margin-top:0.65rem;font-family:var(--f-m);font-size:0.58rem;color:var(--text3)">
+            <span><span class="dot" style="background:var(--border2);margin-right:4px;width:8px;height:8px"></span>Empty</span>
+            <span><span class="dot dot-g" style="margin-right:4px;width:8px;height:8px"></span>Active</span>
+            <span><span class="dot" style="background:var(--gold);margin-right:4px;width:8px;height:8px"></span>Full</span>
+          </div>
+        </div>
       </div>
 
-      <div class="ad-slot-grid" id="adSlotGrid">
-        <!-- Injected by JS -->
+      <!-- SLOT CARDS -->
+      <div class="asg" id="adSlotsGrid"></div>
+    </div>
+
+    <!-- CRAWL -->
+    <div class="tsec" id="tab-crawl">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div class="pn">
+          <div class="ph"><h2>Schedule</h2></div>
+          <div class="pb">
+            <div class="ig" style="margin-bottom:1rem">
+              <span class="il">Cron</span><span style="font-family:var(--f-m);color:var(--gold);font-size:0.72rem">0 20 * * 6</span>
+              <span class="il">Bangkok</span><span class="iv">Sunday 3:00 AM</span>
+              <span class="il">Branch</span><span style="font-family:var(--f-m);color:var(--gold);font-size:0.72rem">main</span>
+              <span class="il">Countdown</span><span class="cd" id="crawlCd">—</span>
+            </div>
+            <button class="btn btn-p btn-sm" onclick="triggerCrawl()">↺ Run Now</button>
+          </div>
+        </div>
+        <div class="pn">
+          <div class="ph"><h2>What it does</h2></div>
+          <div class="pb">
+            <div class="step"><span class="sn">1</span><span class="st">Fetch listing pages → find new anime slugs</span></div>
+            <div class="step"><span class="sn">2</span><span class="st">Call <code>get_episode_list</code> per anime</span></div>
+            <div class="step"><span class="sn">3</span><span class="st">Call <code>mix_get_player</code> → get iframe URLs</span></div>
+            <div class="step"><span class="sn">4</span><span class="st">Update <code>anime.json</code> + <code>episodes.json</code></span></div>
+            <div class="step"><span class="sn">5</span><span class="st">Commit → auto-deploy → site updates live</span></div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- ── CONTENT MANAGER ── -->
-    <div class="page-section" id="sec-content">
-      <div class="page-header">
-        <h1>Anime Content</h1>
-        <span class="subtitle">Phase 2 — coming soon</span>
-      </div>
-      <div class="panel">
-        <div class="panel-body" style="text-align:center;padding:3rem;color:var(--text3)">
-          <div style="font-family:var(--f-display);font-size:2rem;margin-bottom:1rem;opacity:0.3">🎌</div>
-          <div style="font-family:var(--f-mono);font-size:0.75rem;letter-spacing:0.1em;margin-bottom:0.5rem">PHASE 2 — NOT YET BUILT</div>
-          <div style="font-size:0.82rem;line-height:1.7;max-width:360px;margin:0 auto">
-            Content manager will allow editing anime titles, descriptions, cover images, and video URLs without touching code.
-          </div>
-          <div style="margin-top:1.5rem">
-            <button class="btn btn-gold btn-sm" onclick="showAlert('adAlert','info','Phase 2 is planned — run the scraper first to populate real content.')">Learn More</button>
+    <!-- SETTINGS -->
+    <div class="tsec" id="tab-settings">
+      <div id="settingsAlert" class="alert"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="pn">
+          <div class="ph"><h2>Site Info</h2></div>
+          <div class="pb">
+            <div class="fg"><label class="fl2">Meta Title</label><input class="fi2" id="cfgTitle" value="AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ"/><div class="fhint">Max 60 chars</div></div>
+            <div class="fg"><label class="fl2">Meta Description</label><textarea class="ft2" id="cfgDesc">ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ພ້ອມຂໍ້ມູນອານິເມ ອັບເດດເນື້ອຫາໃໝ່.</textarea><div class="fhint">Max 160 chars</div></div>
+            <div class="fg"><label class="fl2">GA4 ID</label><input class="fi2" id="cfgGA4" value="G-D2H8CHS41Z"/></div>
+            <button class="btn btn-g btn-sm" onclick="saveSettings()">Show Instructions →</button>
+            <div id="settingsNote" style="display:none;margin-top:0.75rem;padding:0.75rem;background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:2px;font-family:var(--f-m);font-size:0.64rem;color:var(--gold);line-height:1.9"></div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- ── CRAWL SCHEDULE ── -->
-    <div class="page-section" id="sec-crawl">
-      <div class="page-header">
-        <h1>Crawl Schedule</h1>
-        <span class="subtitle">GitHub Actions · weekly-sync.yml</span>
-      </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem">
-        <div class="panel">
-          <div class="panel-head"><h2>Current Schedule</h2></div>
-          <div class="panel-body">
-            <div style="font-family:var(--f-mono);font-size:0.75rem;color:var(--text2);line-height:2">
-              <div>Cron: <span style="color:var(--gold)">0 20 * * 6</span></div>
-              <div>Bangkok time: <span style="color:var(--gold)">Sunday 3:00 AM</span></div>
-              <div>UTC time: <span style="color:var(--text3)">Saturday 20:00</span></div>
-              <div>Branch: <span style="color:var(--gold)">main</span></div>
-            </div>
+        <div class="pn">
+          <div class="ph"><h2>Admin Password</h2></div>
+          <div class="pb">
+            <div class="fg"><label class="fl2">Current Password</label><input class="fi2" type="password" id="curPw"/></div>
+            <div class="fg"><label class="fl2">New Password</label><input class="fi2" type="password" id="newPw" placeholder="min 6 characters"/></div>
+            <button class="btn btn-p btn-sm" onclick="changePw()">Update</button>
+            <div id="pwResult" style="display:none;margin-top:0.75rem;padding:0.65rem;border-radius:2px;font-family:var(--f-m);font-size:0.64rem;line-height:1.8;border:1px solid"></div>
           </div>
-        </div>
-        <div class="panel">
-          <div class="panel-head"><h2>Manual Trigger</h2></div>
-          <div class="panel-body">
-            <p style="font-size:0.8rem;color:var(--text2);margin-bottom:1rem;line-height:1.6">Trigger the scraper immediately without waiting for the schedule.</p>
-            <button class="btn btn-primary" onclick="triggerCrawl()">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/></svg>
-              Run Scraper Now
-            </button>
-            <p style="font-family:var(--f-mono);font-size:0.6rem;color:var(--text3);margin-top:8px">Opens GitHub Actions in a new tab</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-head"><h2>What the scraper does</h2></div>
-        <div class="panel-body">
-          <div style="display:grid;grid-template-columns:24px 1fr;gap:8px 12px;font-size:0.8rem;line-height:1.6">
-            <span style="color:var(--gold);font-weight:700">1</span><span style="color:var(--text2)">Fetches listing pages from anime-th.com to find new anime slugs</span>
-            <span style="color:var(--gold);font-weight:700">2</span><span style="color:var(--text2)">Calls <code style="font-family:var(--f-mono);font-size:0.75rem;color:var(--gold)">admin-ajax.php → get_episode_list</code> for each anime</span>
-            <span style="color:var(--gold);font-weight:700">3</span><span style="color:var(--text2)">Calls <code style="font-family:var(--f-mono);font-size:0.75rem;color:var(--gold)">admin-ajax.php → mix_get_player</code> to get video iframe URLs</span>
-            <span style="color:var(--gold);font-weight:700">4</span><span style="color:var(--text2)">Updates <code style="font-family:var(--f-mono);font-size:0.75rem;color:var(--gold)">src/data/anime.json</code> and <code style="font-family:var(--f-mono);font-size:0.75rem;color:var(--gold)">episodes.json</code></span>
-            <span style="color:var(--gold);font-weight:700">5</span><span style="color:var(--text2)">Commits to main branch → triggers auto-deploy → site updated</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── SETTINGS ── -->
-    <div class="page-section" id="sec-settings">
-      <div class="page-header">
-        <h1>Site Settings</h1>
-        <span class="subtitle">anime.bj88la.net</span>
-      </div>
-
-      <div class="panel">
-        <div class="panel-head"><h2>Site Information</h2></div>
-        <div class="panel-body">
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Site Name</label>
-              <input class="form-input" type="text" value="AniWatch-BJ88" id="setSiteName"/>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Domain</label>
-              <input class="form-input" type="text" value="anime.bj88la.net" readonly style="opacity:0.5"/>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Meta Title (SEO)</label>
-            <input class="form-input" type="text" value="AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ" id="setMetaTitle"/>
-            <div class="form-hint">Max 60 characters recommended for Google</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Meta Description</label>
-            <textarea class="form-textarea" id="setMetaDesc">ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ພ້ອມຂໍ້ມູນອານິເມ ອັບເດດເນື້ອຫາໃໝ່ ແລະ ຊ່ວຍນຳທາງໄປຫາການຮັບຊົມທີ່ສະດວກຂຶ້ນ.</textarea>
-            <div class="form-hint">Max 160 characters recommended for Google</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">GA4 Measurement ID</label>
-            <input class="form-input" type="text" value="G-D2H8CHS41Z" id="setGA4"/>
-            <div class="form-hint">Format: G-XXXXXXXXXX — get from analytics.google.com</div>
-          </div>
-          <button class="btn btn-gold" onclick="saveSettings()">Save Settings (copy instructions below)</button>
-          <div id="settingsNote" style="display:none;margin-top:1rem;padding:0.75rem;background:var(--gold-dim);border:1px solid var(--gold-line);border-radius:2px;font-family:var(--f-mono);font-size:0.68rem;color:var(--gold);line-height:1.8"></div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="panel-head"><h2>Admin Password</h2></div>
-        <div class="panel-body">
-          <div class="form-group">
-            <label class="form-label">Current password</label>
-            <input class="form-input" type="password" id="curPw" placeholder="Current password"/>
-          </div>
-          <div class="form-group">
-            <label class="form-label">New password</label>
-            <input class="form-input" type="password" id="newPw" placeholder="New password (min 6 chars)"/>
-          </div>
-          <button class="btn btn-primary" onclick="changePw()">Update Password</button>
-          <div id="pwNote" style="display:none;margin-top:0.75rem;font-family:var(--f-mono);font-size:0.68rem;line-height:1.7"></div>
         </div>
       </div>
     </div>
@@ -589,243 +423,324 @@ body{font-family:var(--f-body);background:var(--bg);color:var(--text);min-height
 </div>
 
 <script>
-/* ══════════════════════════════════════════
-   CONFIG — change ADMIN_PW in this line only
-══════════════════════════════════════════ */
-const ADMIN_PW = 'bj88anime';   // ← change this to update your password
+const ADMIN_PW = 'bj88anime';
 
-/* ══════════════════════════════════════════
-   AUTH
-══════════════════════════════════════════ */
+const SLOTS = [
+  {id:'leaderboard-top',   name:'Top Leaderboard',   size:'728×90',  limit:10, zone:'Above header — all pages'},
+  {id:'infeed',            name:'In-Feed',            size:'728×60',  limit:5,  zone:'Between sections — listing page'},
+  {id:'sidebar-1',         name:'Sidebar Top',        size:'300×250', limit:5,  zone:'Listing page right sidebar'},
+  {id:'sidebar-2',         name:'Sidebar Bottom',     size:'300×250', limit:5,  zone:'Listing page right sidebar'},
+  {id:'watch-header',      name:'Watch Header',       size:'728×60',  limit:5,  zone:'Top of watch page'},
+  {id:'below-player',      name:'⭐ Below Player',    size:'728×60',  limit:5,  zone:'Below video — highest CPM'},
+  {id:'watch-sidebar',     name:'Watch Sidebar',      size:'300×250', limit:5,  zone:'Watch page right sidebar'},
+  {id:'halfpage',          name:'⭐ Half Page',       size:'300×600', limit:5,  zone:'Watch sidebar — highest CPM'},
+  {id:'leaderboard-footer',name:'Footer Leaderboard', size:'728×90',  limit:10, zone:'Footer — all pages'},
+];
+
+const BL = {
+  lo:{add:'+ ເພີ່ມ Banner',save:'ບັນທຶກ',cancel:'ຍົກເລີກ',del:'ລຶບ',edit:'ແກ້ໄຂ',empty:'ຍັງບໍ່ມີ Banner',img:'Image Banner',code:'Ad Code'},
+  th:{add:'+ เพิ่ม Banner',save:'บันทึก',cancel:'ยกเลิก',del:'ลบ',edit:'แก้ไข',empty:'ยังไม่มี Banner',img:'Image Banner',code:'Ad Code'},
+  en:{add:'+ Add Banner',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',empty:'No banners yet',img:'Image Banner',code:'Ad Code'},
+};
+let bLang = localStorage.getItem('bj88_bo_lang') || 'lo';
+const bt = k => (BL[bLang]||BL.lo)[k]||k;
+
+/* ─── AUTH ─────────────────────────────── */
 function doLogin() {
   const pw = document.getElementById('loginPw').value;
-  const stored = sessionStorage.getItem('bj88_admin_pw') || ADMIN_PW;
-  if (pw === stored) {
-    document.getElementById('loginWrap').style.display = 'none';
-    document.getElementById('adminWrap').classList.add('show');
-    initDashboard();
+  if (pw === (sessionStorage.getItem('bj88_pw')||ADMIN_PW)) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').classList.add('show');
+    initAdmin();
   } else {
     document.getElementById('loginErr').style.display = 'block';
     document.getElementById('loginPw').value = '';
+    document.getElementById('loginPw').focus();
   }
 }
 function doLogout() {
-  document.getElementById('adminWrap').classList.remove('show');
-  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('adminApp').classList.remove('show');
+  document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginPw').value = '';
   document.getElementById('loginErr').style.display = 'none';
 }
+document.getElementById('loginPw').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
-/* ══════════════════════════════════════════
-   NAVIGATION
-══════════════════════════════════════════ */
-function goSection(name, el) {
-  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('sec-' + name).classList.add('active');
-  if (el) el.classList.add('active');
+/* ─── NAV ──────────────────────────────── */
+function switchTab(name, btn) {
+  document.querySelectorAll('.tsec').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.ttab').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if (btn) btn.classList.add('active');
 }
 
-/* ══════════════════════════════════════════
-   DASHBOARD INIT
-══════════════════════════════════════════ */
-function initDashboard() {
-  // Update clock
-  function tick() {
-    const now = new Date();
-    document.getElementById('dashTime').textContent =
-      now.toLocaleString('en-GB', {weekday:'short',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  }
-  tick(); setInterval(tick, 30000);
-
-  // Countdown to next Sunday 3am Bangkok (UTC+7)
-  function updateCountdown() {
-    const now = new Date();
-    const bkk = new Date(now.toLocaleString('en-US',{timeZone:'Asia/Bangkok'}));
-    const day  = bkk.getDay(); // 0=Sun
-    const daysUntil = day === 0 ? 7 : (7 - day);
-    const next = new Date(bkk);
-    next.setDate(bkk.getDate() + daysUntil);
-    next.setHours(3, 0, 0, 0);
-    const diff = next - bkk;
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    document.getElementById('countdown').textContent = `${d}d ${h}h ${m}m`;
-  }
-  updateCountdown(); setInterval(updateCountdown, 60000);
-
-  // Load ad slot active count
-  const slots = JSON.parse(localStorage.getItem('bj88_adslots') || '{}');
-  const activeCount = Object.values(slots).filter(s => s.enabled && (s.code || s.imgUrl)).length;
-  document.getElementById('statAds').textContent = activeCount;
-
+/* ─── BO LANG ───────────────────────────── */
+function setBoLang(lang, btn) {
+  bLang = lang;
+  localStorage.setItem('bj88_bo_lang', lang);
+  document.querySelectorAll('.bl-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
   renderAdSlots();
 }
 
-/* ══════════════════════════════════════════
-   AD SLOT MANAGER
-══════════════════════════════════════════ */
-const AD_SLOTS = [
-  {id:'leaderboard-top',  name:'Top Leaderboard',    size:'728×90',  zone:'Above header'},
-  {id:'leaderboard-watch',name:'Watch Page Banner',   size:'728×60',  zone:'Below header (watch page)'},
-  {id:'below-player',     name:'Below Player',        size:'728×60',  zone:'⭐ Highest CPM spot'},
-  {id:'sidebar-1',        name:'Sidebar Top',         size:'300×250', zone:'Right sidebar'},
-  {id:'sidebar-2',        name:'Sidebar Bottom',      size:'300×250', zone:'Right sidebar'},
-  {id:'halfpage',         name:'Half Page',            size:'300×600', zone:'⭐ Watch page sidebar'},
-];
+/* ─── AD DATA ───────────────────────────── */
+function getSlots() { try { return JSON.parse(localStorage.getItem('bj88_adslots')||'{}'); } catch(e) { return {}; } }
+function saveSlots(d) { localStorage.setItem('bj88_adslots', JSON.stringify(d)); }
+function getSlot(id) { const s=getSlots(); return s[id]||{enabled:false,banners:[]}; }
+function setSlot(id, data) { const all=getSlots(); all[id]=data; saveSlots(all); }
 
-function getSlotData(id) {
-  const all = JSON.parse(localStorage.getItem('bj88_adslots') || '{}');
-  return all[id] || {enabled:false, type:'code', code:'', imgUrl:'', clickUrl:''};
-}
-function saveSlotData(id, data) {
-  const all = JSON.parse(localStorage.getItem('bj88_adslots') || '{}');
-  all[id] = data;
-  localStorage.setItem('bj88_adslots', JSON.stringify(all));
+/* ─── SKELETON UPDATE ───────────────────── */
+function updateSkeleton() {
+  const slots = getSlots();
+  let activeSlots=0, totalBanners=0;
+  SLOTS.forEach(def => {
+    const zone = document.getElementById('skz-'+def.id);
+    const cnt  = document.getElementById('skc-'+def.id);
+    const s    = slots[def.id];
+    const n    = (s&&s.banners) ? s.banners.filter(b=>b.imgUrl||b.code).length : 0;
+    if (cnt) cnt.textContent = `${n}/${def.limit}`;
+    if (zone) {
+      zone.className = zone.className.replace(/\s*(empty|active|full)/g,'');
+      zone.classList.add(n===0?'empty':n>=def.limit?'full':'active');
+    }
+    if (s&&s.enabled) activeSlots++;
+    totalBanners += n;
+  });
+  const sa=document.getElementById('sActive'); if(sa) sa.textContent=activeSlots;
+  const sb=document.getElementById('sBanners'); if(sb) sb.textContent=totalBanners;
 }
 
+function jumpToSlot(id) {
+  const adTab = document.querySelector('.ttab:nth-child(2)');
+  switchTab('ads', adTab);
+  setTimeout(() => {
+    const card = document.getElementById('asc-'+id);
+    if (card) {
+      card.scrollIntoView({behavior:'smooth',block:'center'});
+      card.classList.add('highlight');
+      setTimeout(() => card.classList.remove('highlight'), 2000);
+    }
+  }, 80);
+}
+
+/* ─── RENDER SLOT CARDS ─────────────────── */
 function renderAdSlots() {
-  const grid = document.getElementById('adSlotGrid');
+  const grid = document.getElementById('adSlotsGrid');
   if (!grid) return;
-  grid.innerHTML = AD_SLOTS.map(slot => {
-    const d = getSlotData(slot.id);
+
+  grid.innerHTML = SLOTS.map(def => {
+    const s       = getSlot(def.id);
+    const banners = (s.banners||[]);
+    const n       = banners.filter(b=>b.imgUrl||b.code).length;
+    const pct     = Math.round((n/def.limit)*100);
+    const fillClr = n>=def.limit?'var(--gold)':n>0?'var(--green)':'var(--border)';
+
+    const bannersHTML = banners.length
+      ? banners.map((b,i) => `
+        <div class="bi" id="bi-${def.id}-${i}">
+          ${b.type==='code'
+            ? `<div class="bprev-code">CODE</div>`
+            : `<div class="bprev"><img src="${b.imgUrl||''}" alt="" onerror="this.style.opacity=0.2"/></div>`}
+          <div class="binfo">
+            <div class="btype">${b.type==='code'?bt('code'):bt('img')}</div>
+            <div class="burl">${b.type==='code'?(b.code||'').slice(0,45)+'…':(b.imgUrl||'—')}</div>
+          </div>
+          <div class="bact">
+            <button class="btn btn-ghost btn-xs" onclick="editBanner('${def.id}',${i})">✏</button>
+            <button class="btn btn-d btn-xs" onclick="delBanner('${def.id}',${i})">✕</button>
+          </div>
+        </div>`).join('')
+      : `<div style="font-family:var(--f-m);font-size:0.62rem;color:var(--text3);padding:5px 0">${bt('empty')}</div>`;
+
     return `
-    <div class="ad-slot-card" id="card-${slot.id}">
-      <div class="ad-slot-head">
-        <div class="ad-slot-name">${slot.name}</div>
-        <div class="ad-slot-size">${slot.size}</div>
-        <div class="toggle">
-          <input type="checkbox" id="toggle-${slot.id}" ${d.enabled?'checked':''} onchange="toggleSlot('${slot.id}',this.checked)"/>
-          <div class="toggle-slider"></div>
+    <div class="asc" id="asc-${def.id}">
+      <div class="asc-h">
+        <div class="asc-n">${def.name}</div>
+        <div class="asc-sz">${def.size}</div>
+        <div class="tog">
+          <input type="checkbox" id="tog-${def.id}" ${s.enabled?'checked':''}
+                 onchange="toggleSlot('${def.id}',this.checked)"/>
+          <div class="tog-s"></div>
         </div>
       </div>
-      <div style="font-family:var(--f-mono);font-size:0.58rem;color:var(--text3);margin-bottom:0.75rem">${slot.zone}</div>
-
-      <div class="ad-type-tabs">
-        <button class="ad-type-tab ${d.type==='code'?'active':''}" onclick="switchAdType('${slot.id}','code',this)">Ad Code</button>
-        <button class="ad-type-tab ${d.type==='banner'?'active':''}" onclick="switchAdType('${slot.id}','banner',this)">Image Banner</button>
-      </div>
-
-      <div id="code-${slot.id}" style="${d.type!=='code'?'display:none':''}">
-        <textarea class="form-textarea" id="adcode-${slot.id}" placeholder="Paste ad network code here (adsco.re / Google AdSense script tag)" style="min-height:70px;font-size:0.68rem">${d.code||''}</textarea>
-      </div>
-
-      <div id="banner-${slot.id}" style="${d.type!=='banner'?'display:none':''}">
-        <div class="form-group">
-          <label class="form-label">Image URL (from Cloudflare R2)</label>
-          <input class="form-input" type="url" id="adimg-${slot.id}" placeholder="https://pub-xxxx.r2.dev/banner.jpg" value="${d.imgUrl||''}"/>
-          <div class="form-hint">Upload image to R2 first → copy URL → paste here</div>
+      <div class="asc-b">
+        <div class="asc-zone">${def.zone}</div>
+        <div class="asc-lim">
+          <span style="font-family:var(--f-m);font-size:0.58rem;color:${n>=def.limit?'var(--gold)':'var(--text3)'}">${n} / ${def.limit} banners</span>
+          <div class="lbar"><div class="lfill" style="width:${pct}%;background:${fillClr}"></div></div>
         </div>
-        <div class="form-group" style="margin-bottom:0">
-          <label class="form-label">Click URL</label>
-          <input class="form-input" type="url" id="adurl-${slot.id}" placeholder="https://example.com" value="${d.clickUrl||''}"/>
+        <div class="blist" id="bl-${def.id}">${bannersHTML}</div>
+        ${n<def.limit
+          ? `<button class="btn btn-g btn-sm" style="width:100%" onclick="openForm('${def.id}')">${bt('add')}</button>`
+          : `<div style="font-family:var(--f-m);font-size:0.58rem;color:var(--gold);text-align:center;padding:3px">Max ${def.limit} reached</div>`}
+        <div class="abform" id="abf-${def.id}">
+          <div class="abt">
+            <button class="ab-tab active" onclick="setBannerType('${def.id}','img',this)">${bt('img')}</button>
+            <button class="ab-tab" onclick="setBannerType('${def.id}','code',this)">${bt('code')}</button>
+          </div>
+          <div id="abf-img-${def.id}">
+            <div class="fg" style="margin-bottom:5px"><label class="fl2">Image URL (Cloudflare R2)</label><input class="fi2" id="nb-img-${def.id}" placeholder="https://pub-xxx.r2.dev/banner.jpg" style="font-size:0.72rem"/></div>
+            <div class="fg" style="margin-bottom:7px"><label class="fl2">Click URL</label><input class="fi2" id="nb-url-${def.id}" placeholder="https://..." style="font-size:0.72rem"/></div>
+          </div>
+          <div id="abf-code-${def.id}" style="display:none">
+            <div class="fg" style="margin-bottom:7px"><label class="fl2">Ad Network Code</label><textarea class="ft2" id="nb-code-${def.id}" placeholder="Paste ad script tag here..." style="min-height:55px;font-size:0.66rem"></textarea></div>
+          </div>
+          <div style="display:flex;gap:5px">
+            <button class="btn btn-p btn-sm" onclick="saveBanner('${def.id}')">${bt('save')}</button>
+            <button class="btn btn-ghost btn-sm" onclick="closeForm('${def.id}')">${bt('cancel')}</button>
+          </div>
         </div>
       </div>
-
-      <button class="ad-save-btn" onclick="saveSlot('${slot.id}')">Save Slot →</button>
     </div>`;
   }).join('');
+
+  updateSkeleton();
 }
 
-function toggleSlot(id, enabled) {
-  const d = getSlotData(id);
-  d.enabled = enabled;
-  saveSlotData(id, d);
-  refreshAdCount();
+/* ─── BANNER OPS ────────────────────────── */
+const bTypeState = {};
+
+function toggleSlot(id, val) { const s=getSlot(id); s.enabled=val; setSlot(id,s); updateSkeleton(); }
+
+function openForm(id) {
+  document.querySelectorAll('.abform').forEach(f => { if(f.id!=='abf-'+id) f.classList.remove('open'); });
+  document.getElementById('abf-'+id).classList.toggle('open');
+  bTypeState[id] = 'img';
 }
-function switchAdType(id, type, btn) {
-  const d = getSlotData(id);
-  d.type = type;
-  saveSlotData(id, d);
-  document.querySelectorAll(`#card-${id} .ad-type-tab`).forEach(t => t.classList.remove('active'));
+function closeForm(id) { document.getElementById('abf-'+id).classList.remove('open'); }
+
+function setBannerType(id, type, btn) {
+  bTypeState[id] = type;
+  document.getElementById('abf-'+id).querySelectorAll('.ab-tab').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById(`code-${id}`).style.display   = type==='code'   ? '' : 'none';
-  document.getElementById(`banner-${id}`).style.display = type==='banner' ? '' : 'none';
-}
-function saveSlot(id) {
-  const d = getSlotData(id);
-  d.code    = (document.getElementById(`adcode-${id}`)?.value || '').trim();
-  d.imgUrl  = (document.getElementById(`adimg-${id}`)?.value  || '').trim();
-  d.clickUrl= (document.getElementById(`adurl-${id}`)?.value  || '').trim();
-  saveSlotData(id, d);
-  refreshAdCount();
-  showAlert('adAlert','success',`Slot "${id}" saved locally. Now update index.html on GitHub with the code below.`);
-}
-function refreshAdCount() {
-  const slots = JSON.parse(localStorage.getItem('bj88_adslots') || '{}');
-  const n = Object.values(slots).filter(s => s.enabled && (s.code || s.imgUrl)).length;
-  const el = document.getElementById('statAds');
-  if (el) el.textContent = n;
+  document.getElementById('abf-img-'+id).style.display  = type==='img'  ? '':'none';
+  document.getElementById('abf-code-'+id).style.display = type==='code' ? '':'none';
 }
 
-/* ══════════════════════════════════════════
-   CRAWL TRIGGER
-══════════════════════════════════════════ */
+function saveBanner(id) {
+  const type = bTypeState[id]||'img';
+  const s    = getSlot(id);
+  if (!s.banners) s.banners = [];
+  const def  = SLOTS.find(d=>d.id===id);
+  if (s.banners.filter(b=>b.imgUrl||b.code).length >= (def?.limit||5)) {
+    showAlert('adAlert','err',`Max ${def?.limit} banners reached`); return;
+  }
+  const b = {type};
+  if (type==='img') {
+    b.imgUrl   = (document.getElementById('nb-img-'+id)?.value||'').trim();
+    b.clickUrl = (document.getElementById('nb-url-'+id)?.value||'').trim();
+    if (!b.imgUrl) { showAlert('adAlert','err','Image URL required'); return; }
+  } else {
+    b.code = (document.getElementById('nb-code-'+id)?.value||'').trim();
+    if (!b.code) { showAlert('adAlert','err','Ad code required'); return; }
+  }
+  s.banners.push(b);
+  s.enabled = true;
+  setSlot(id, s);
+  closeForm(id);
+  renderAdSlots();
+  showAlert('adAlert','ok',`Banner added to "${def?.name}" ✓ — saved to browser storage. Update index.html on GitHub to push live.`);
+}
+
+function delBanner(id, idx) {
+  const s = getSlot(id);
+  if (!s.banners) return;
+  s.banners.splice(idx, 1);
+  setSlot(id, s);
+  renderAdSlots();
+}
+
+function editBanner(id, idx) {
+  const s = getSlot(id); const b = s.banners[idx];
+  if (!b) return;
+  openForm(id);
+  const type = b.type||'img';
+  bTypeState[id] = type;
+  const form = document.getElementById('abf-'+id);
+  form.querySelectorAll('.ab-tab').forEach(t=>t.classList.remove('active'));
+  form.querySelectorAll('.ab-tab')[type==='img'?0:1]?.classList.add('active');
+  document.getElementById('abf-img-'+id).style.display  = type==='img'  ? '':'none';
+  document.getElementById('abf-code-'+id).style.display = type==='code' ? '':'none';
+  if (type==='img') {
+    const ii=document.getElementById('nb-img-'+id); if(ii) ii.value=b.imgUrl||'';
+    const iu=document.getElementById('nb-url-'+id); if(iu) iu.value=b.clickUrl||'';
+  } else {
+    const ic=document.getElementById('nb-code-'+id); if(ic) ic.value=b.code||'';
+  }
+  delBanner(id, idx);
+}
+
+/* ─── CRAWL ──────────────────────────────── */
 function triggerCrawl() {
-  window.open('https://github.com/Kitty99CsI/anime-portal/actions/workflows/weekly-sync.yml', '_blank');
-  showAlert('adAlert','info','Opened GitHub Actions — click "Run workflow" → "Run workflow" (green button)');
+  window.open('https://github.com/Kitty99CsI/anime-portal/actions/workflows/weekly-sync.yml','_blank');
+  showAlert('dashAlert','info','Opened GitHub Actions → click "Run workflow" → green "Run workflow" button');
 }
 
-/* ══════════════════════════════════════════
-   SETTINGS
-══════════════════════════════════════════ */
+/* ─── COUNTDOWN ─────────────────────────── */
+function updateCd() {
+  const now = new Date();
+  const bkk = new Date(now.toLocaleString('en-US',{timeZone:'Asia/Bangkok'}));
+  const day  = bkk.getDay(); const du = day===0?7:(7-day);
+  const next = new Date(bkk); next.setDate(bkk.getDate()+du); next.setHours(3,0,0,0);
+  const diff = next-bkk;
+  const d=Math.floor(diff/86400000), h=Math.floor((diff%86400000)/3600000), m=Math.floor((diff%3600000)/60000);
+  const txt=`${d}d ${h}h ${m}m`;
+  ['sCd','crawlCd'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=txt;});
+}
+
+/* ─── SETTINGS ───────────────────────────── */
 function saveSettings() {
-  const title = document.getElementById('setMetaTitle').value;
-  const desc  = document.getElementById('setMetaDesc').value;
-  const ga4   = document.getElementById('setGA4').value;
-  const note  = document.getElementById('settingsNote');
-  note.style.display = 'block';
-  note.innerHTML = `Settings noted. To apply these changes:<br>
-1. Open <strong>index.html</strong> in GitHub<br>
-2. Find the &lt;title&gt; tag → replace with: <strong>${title}</strong><br>
-3. Find meta name="description" → update content<br>
-4. GA4 ID in script tag → replace with: <strong>${ga4}</strong><br>
-5. Commit changes → auto-deploy in ~30 seconds`;
+  const title=document.getElementById('cfgTitle')?.value||'';
+  const ga4=document.getElementById('cfgGA4')?.value||'';
+  const note=document.getElementById('settingsNote');
+  if (!note) return;
+  note.style.display='block';
+  note.innerHTML=`To apply on GitHub → edit index.html:<br>
+1. &lt;title&gt; → <strong>${title}</strong><br>
+2. meta description → update content<br>
+3. G-XXXXXXXXXX → <strong>${ga4}</strong><br>
+4. Commit → auto-deploy (~30s)`;
 }
 
 function changePw() {
-  const cur = document.getElementById('curPw').value;
-  const nw  = document.getElementById('newPw').value;
-  const note = document.getElementById('pwNote');
-  const stored = sessionStorage.getItem('bj88_admin_pw') || ADMIN_PW;
-  if (cur !== stored) {
-    note.style.display='block'; note.style.color='var(--red-h)';
-    note.textContent = '❌ Current password incorrect';
-    return;
-  }
-  if (nw.length < 6) {
-    note.style.display='block'; note.style.color='var(--red-h)';
-    note.textContent = '❌ New password must be at least 6 characters';
-    return;
-  }
-  sessionStorage.setItem('bj88_admin_pw', nw);
-  note.style.display='block'; note.style.color='var(--green)';
-  note.innerHTML = `✅ Password changed for this session.<br><span style="color:var(--text3)">To make it permanent: open admin.html in GitHub → find ADMIN_PW = 'bj88anime' → change to '${nw}' → commit.</span>`;
-  document.getElementById('curPw').value = '';
-  document.getElementById('newPw').value = '';
+  const cur=document.getElementById('curPw')?.value||'';
+  const nw=document.getElementById('newPw')?.value||'';
+  const res=document.getElementById('pwResult');
+  const stored=sessionStorage.getItem('bj88_pw')||ADMIN_PW;
+  if (cur!==stored) { res.style.display='block'; res.style.cssText='display:block;color:var(--red-h);border-color:rgba(192,57,43,0.3);background:var(--red-dim)'; res.textContent='❌ Wrong current password'; return; }
+  if (nw.length<6)  { res.style.display='block'; res.style.cssText='display:block;color:var(--red-h);border-color:rgba(192,57,43,0.3);background:var(--red-dim)'; res.textContent='❌ Min 6 characters'; return; }
+  sessionStorage.setItem('bj88_pw',nw);
+  res.style.cssText='display:block;color:var(--green);border-color:rgba(39,174,96,0.3);background:var(--green-dim)';
+  res.innerHTML=`✅ Updated for this session.<br>Permanent: find <code style="color:var(--gold)">ADMIN_PW='bj88anime'</code> in admin.html → change to <code style="color:var(--gold)">'${nw}'</code> → commit.`;
+  document.getElementById('curPw').value=''; document.getElementById('newPw').value='';
 }
 
-/* ══════════════════════════════════════════
-   UTILITIES
-══════════════════════════════════════════ */
-function showAlert(containerId, type, msg) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  el.className = `alert alert-${type} show`;
-  el.textContent = msg;
-  setTimeout(() => { el.className = 'alert'; }, 6000);
+/* ─── ALERT ──────────────────────────────── */
+function showAlert(id, type, msg) {
+  const el=document.getElementById(id); if(!el)return;
+  const map={ok:'al-ok',err:'al-err',info:'al-info'};
+  el.className=`alert ${map[type]||'al-info'} show`; el.textContent=msg;
+  setTimeout(()=>{el.className='alert';},7000);
 }
 
-// Auto-login check (session)
-if (sessionStorage.getItem('bj88_authed') === '1') {
-  document.getElementById('loginWrap').style.display = 'none';
-  document.getElementById('adminWrap').classList.add('show');
-  initDashboard();
+/* ─── INIT ───────────────────────────────── */
+function initAdmin() {
+  updateCd(); setInterval(updateCd, 60000);
+  function tick() {
+    const n=new Date();
+    const ts=n.toLocaleString('en-GB',{weekday:'short',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    const el=document.getElementById('tbTime'); if(el) el.textContent=`| ${ts}`;
+  }
+  tick(); setInterval(tick,30000);
+  renderAdSlots();
+  const bl=localStorage.getItem('bj88_bo_lang')||'lo'; bLang=bl;
+  document.querySelectorAll('.bl-btn').forEach(b=>{
+    const l=b.getAttribute('onclick')?.match(/setBoLang\('(\w+)'/)?.[1];
+    b.classList.toggle('active',l===bl);
+  });
 }
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('loginPw').focus();
-});
+
+document.getElementById('loginPw').focus();
 </script>
 </body>
 </html>
