@@ -178,10 +178,28 @@ async function scrapeAnimeDetail(slug) {
   // Year
   const year = parseInt(html.match(/\b(202[0-9]|203\d|201\d)\b/)?.[0] || '2025');
 
-  // Status — check Thai keywords
-  const statusRaw = html.match(/class="[^"]*status[^"]*"[^>]*>([^<]+)</i)?.[1]?.trim().toLowerCase() || '';
-  const status = statusRaw.includes('จบ') || statusRaw.includes('complete') ? 'complete'
-               : statusRaw.includes('เร็ว') || statusRaw.includes('upcoming') ? 'upcoming'
+  // Status — multi-signal detection (Thai keywords across page)
+  // Signal 1: dedicated status element
+  const statusEl = html.match(/class="[^"]*status[^"]*"[^>]*>([^<]+)</i)?.[1]?.trim() || '';
+  // Signal 2: category links (พากย์ไทย pages often tag จบแล้ว in breadcrumb/cats)
+  const catText  = (html.match(/class="[^"]*cat[^"]*"[^>]*>([\s\S]*?)<\/[^>]+>/gi) || []).join(' ');
+  // Signal 3: full page text scan for status keywords
+  const bodySnip = html.slice(0, 15000); // check first 15KB only (header/meta area)
+  const allText  = (statusEl + ' ' + catText + ' ' + bodySnip).toLowerCase();
+
+  const isComplete = allText.includes('จบแล้ว') || allText.includes('จบสมบูรณ์') ||
+                     allText.includes('ครบแล้ว') || allText.includes('complete') ||
+                     allText.includes('จบ ');
+  const isUpcoming = allText.includes('เร็วๆ นี้') || allText.includes('upcoming') ||
+                     allText.includes('เร็วๆนี้') || allText.includes('coming soon');
+
+  // Signal 4: slug-based hints (some slugs include -end, -complete)
+  const slugLower = slug.toLowerCase();
+  const slugComplete = slugLower.includes('-end') || slugLower.includes('-complete') ||
+                       slugLower.includes('complete');
+
+  const status = (isComplete || slugComplete) ? 'complete'
+               : isUpcoming ? 'upcoming'
                : 'airing';
 
   return {
@@ -247,15 +265,21 @@ async function main() {
     console.log('Nothing new to scrape — database is up to date.');
   }
 
-  // Step 2-4: Scrape each new anime
+  // Step 2-4: Scrape each new anime — limit per run to avoid timeout
+  const MAX_PER_RUN = 500; // ~45 min safe. Increase after testing.
+  const slugsThisRun = newSlugs.slice(0, MAX_PER_RUN);
+  if (newSlugs.length > MAX_PER_RUN) {
+    console.log(`⚡ Capped at ${MAX_PER_RUN} this run — ${newSlugs.length - MAX_PER_RUN} remaining for next run\n`);
+  }
+
   let added = 0;
-  for (const slug of newSlugs) {
+  for (const slug of slugsThisRun) {
     console.log(`\n▶ ${slug}`);
     await sleep(1000 + Math.random() * 800);
 
     try {
       const detail = await scrapeAnimeDetail(slug);
-      console.log(`  title: ${detail.title_th} | post_id: ${detail.post_id} | season_id: ${detail.season_id}`);
+      console.log(`  title: ${detail.title_th} | status: ${detail.status} | post_id: ${detail.post_id} | season_id: ${detail.season_id}`);
 
       let episodes = [];
       if (detail.season_id) {
