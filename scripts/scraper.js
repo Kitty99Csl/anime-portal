@@ -155,7 +155,10 @@ async function scrapeAnimeDetail(slug) {
   // Extract WordPress post IDs
   const postId   = (html.match(/['"](post_id|postID)['"]\s*:\s*['"]*(\d{4,7})/)?.[2])  ||
                    (html.match(/post_id=(\d{4,7})/)?.[1]) || null;
-  const seasonId = (html.match(/['"](season_id|seasonID)['"]\s*:\s*['"]*(\d{4,7})/)?.[2]) ||
+
+  // season_id lives in <option value="117398"> inside the season selector
+  const seasonId = (html.match(/<option[^>]+value=["'](\d{4,7})["'][^>]*>\s*Season/i)?.[1]) ||
+                   (html.match(/['"](season_id|seasonID)['"]\s*:\s*['"]*(\d{4,7})/)?.[2]) ||
                    (html.match(/season_id=(\d{4,7})/)?.[1]) || null;
 
   // Title — try og:title first, then h1
@@ -175,12 +178,12 @@ async function scrapeAnimeDetail(slug) {
   const genreMatches = [...html.matchAll(/class="[^"]*genre[^"]*"[^>]*>([^<]+)</gi)];
   const genres = [...new Set(genreMatches.map(m => m[1].trim()).filter(Boolean))].slice(0, 4);
 
-  // Episode count — extract from page HTML directly
-  // Matches: "12 episodes", "ทั้งหมด 12 ตอน", "Season 1 (12 episodes)"
-  const epMatch = html.match(/Season\s*\d+\s*\(\s*(\d+)\s*episodes?\s*\)/i) ||
-                  html.match(/ทั้งหมด\s*(\d+)\s*ตอน/) ||
-                  html.match(/(\d+)\s*episodes?/i);
-  const episodeCountFromPage = epMatch ? parseInt(epMatch[1]) : 0;
+  // Episode count — from JSON-LD schema (most reliable)
+  // JSON-LD has: "numberOfEpisodes":12
+  const jsonLdMatch = html.match(/"numberOfEpisodes"\s*:\s*(\d+)/);
+  const epOptionMatch = html.match(/Season\s*\d+\s*\(\s*(\d+)\s*episodes?\s*\)/i);
+  const episodeCountFromPage = jsonLdMatch  ? parseInt(jsonLdMatch[1])  :
+                               epOptionMatch ? parseInt(epOptionMatch[1]) : 0;
 
   // Year
   const year = parseInt(html.match(/\b(202[0-9]|203\d|201\d)\b/)?.[0] || '2025');
@@ -223,22 +226,36 @@ async function scrapeAnimeDetail(slug) {
     episode_count: episodeCountFromPage,
     source_url:    url,
     scraped_at:    new Date().toISOString(),
+    _html:         html,  // temp: passed to getEpisodesFromHtml, not saved to JSON
   };
 }
 
-// Get episode list from AJAX API
-async function getEpisodes(season_id) {
-  const data = await postAjax(`action=get_episode_list&season_id=${season_id}`);
-  if (!data) return [];
-  const arr = data?.soundtrack?.data || data?.data || [];
-  return arr.map(ep => ({
-    id:         ep.id,
-    number:     ep.number || ep.ep_number,
-    title:      ep.title  || `EP.${ep.number}`,
-    has_sub:    !!(ep.has_soundtrack || ep.has_subtitle),
-    has_dub:    !!(ep.has_th_sound),
-    video_url:  null,
-  }));
+// Get episode list directly from HTML (no AJAX needed)
+// Episodes are rendered as: <button data-episode-id="117400" data-lang="th-sound">01</button>
+function getEpisodesFromHtml(html) {
+  const episodes = [];
+  const seen = new Set();
+  const pattern = /data-episode-id=["'](\d+)["'][^>]*data-lang=["']([^"']+)["'][^>]*>\s*(\d+)\s*</g;
+  let match;
+  while ((match = pattern.exec(html)) !== null) {
+    const id = parseInt(match[1]);
+    const lang = match[2];
+    const num = match[3].padStart(2, '0');
+    const key = `${id}-${num}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      episodes.push({
+        id,
+        number: parseInt(match[3]),
+        title: `EP.${num}`,
+        has_sub: lang.includes('soundtrack') || lang.includes('sub'),
+        has_dub: lang.includes('th-sound') || lang.includes('dub'),
+        video_url: null,
+      });
+    }
+  }
+  // Sort by episode number
+  return episodes.sort((a, b) => a.number - b.number);
 }
 
 // Get video URL for one episode
@@ -261,20 +278,27 @@ async function main() {
   let existing     = fs.existsSync(animePath)   ? JSON.parse(fs.readFileSync(animePath,   'utf8')) : [];
   let episodeStore = fs.existsSync(episodePath)  ? JSON.parse(fs.readFileSync(episodePath, 'utf8')) : [];
 
-  const existingSlugs = new Set(existing.map(a => a.slug));
+  // Build lookup map: slug → index in existing array (for updates)
+  const slugIndexMap  = new Map(existing.map((a, i) => [a.slug, i]));
   const episodeMap    = Object.fromEntries(episodeStore.map(e => [e.anime_slug, e.episodes]));
 
-  // Step 1: Collect slugs from category archives
+  // Step 1: Collect all slugs from category archives
   const allSlugs = await getAnimeSlugs(200);
-  const newSlugs = allSlugs.filter(s => !existingSlugs.has(s));
-  console.log(`\n✅ ${allSlugs.length} total slugs · ${newSlugs.length} new to scrape\n`);
+
+  // Separate: new slugs (never scraped) vs existing (already have data)
+  const newSlugs      = allSlugs.filter(s => !slugIndexMap.has(s));
+  const existingSlugs = allSlugs.filter(s => slugIndexMap.has(s));
+
+  console.log(`\n✅ ${allSlugs.length} total slugs`);
+  console.log(`   ${newSlugs.length} new to scrape`);
+  console.log(`   ${existingSlugs.length} already in database\n`);
 
   if (newSlugs.length === 0) {
-    console.log('Nothing new to scrape — database is up to date.');
+    console.log('No new anime found — database is up to date.');
   }
 
-  // Step 2-4: Scrape each new anime — limit per run to avoid timeout
-  const MAX_PER_RUN = 150; // ~12 min safe. Run multiple times to build up library.
+  // Step 2-4: Scrape new anime — limit per run to avoid timeout
+  const MAX_PER_RUN = 150; // ~12 min safe. Runs stack up weekly to build full library.
   const slugsThisRun = newSlugs.slice(0, MAX_PER_RUN);
   if (newSlugs.length > MAX_PER_RUN) {
     console.log(`⚡ Capped at ${MAX_PER_RUN} this run — ${newSlugs.length - MAX_PER_RUN} remaining for next run\n`);
@@ -289,23 +313,40 @@ async function main() {
       const detail = await scrapeAnimeDetail(slug);
       console.log(`  title: ${detail.title_th} | status: ${detail.status} | post_id: ${detail.post_id} | season_id: ${detail.season_id}`);
 
-      let episodes = [];
-      if (detail.season_id) {
-        await sleep(600);
-        episodes = await getEpisodes(detail.season_id);
-        console.log(`  episodes: ${episodes.length}`);
+      // Extract episodes directly from already-fetched HTML (no extra request)
+      let episodes = getEpisodesFromHtml(detail._html || '');
+      console.log(`  episodes from HTML: ${episodes.length}`);
 
-        if (episodes.length > 0 && episodes[0].id) {
-          await sleep(600);
-          const url = await getVideoUrl(episodes[0].id);
-          if (url) {
-            episodes[0].video_url = url;
-            console.log(`  EP1 video: ${url}`);
-          }
+      // Fallback: if no episodes in HTML, try AJAX with season_id
+      if (episodes.length === 0 && detail.season_id) {
+        await sleep(600);
+        const data = await postAjax(`action=get_episode_list&season_id=${detail.season_id}`);
+        if (data) {
+          const arr = data?.soundtrack?.data || data?.['th-sound']?.data || data?.data || [];
+          episodes = arr.map((ep, i) => ({
+            id: ep.id,
+            number: parseInt(ep.title || ep.number || i+1),
+            title: `EP.${String(ep.title || ep.number || i+1).padStart(2,'0')}`,
+            has_sub: true,
+            has_dub: !!(data?.['th-sound']),
+            video_url: null,
+          }));
+          console.log(`  episodes from AJAX: ${episodes.length}`);
         }
       }
 
-      existing.push({ ...detail, episode_count: episodes.length });
+      const { _html, ...detailClean } = detail; // strip temp HTML before saving
+      const saveEntry = { ...detailClean, episode_count: episodes.length };
+
+      if (slugIndexMap.has(slug)) {
+        // UPDATE existing entry — preserve any manual fixes, update episode count
+        const idx = slugIndexMap.get(slug);
+        existing[idx] = { ...existing[idx], ...saveEntry };
+      } else {
+        // ADD new entry
+        existing.push(saveEntry);
+        slugIndexMap.set(slug, existing.length - 1);
+      }
       episodeMap[slug] = episodes;
       added++;
 
