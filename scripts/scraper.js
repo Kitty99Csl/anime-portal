@@ -1,7 +1,13 @@
 /**
  * scripts/scraper.js
- * AniWatch-BJ88 — Data scraper
+ * AniWatch-BJ88 — Data scraper v3
  * Node 20+ native fetch (no dependencies needed)
+ *
+ * FIX v3: Scrape category archive pages (not homepage pagination)
+ * anime-th.com categories:
+ *   /category/ซับไทย/        — Thai sub (hundreds of pages)
+ *   /category/พากย์ไทย/      — Thai dub (hundreds of pages)
+ *   /category/อนิเมะจีนซับไทย/ — Chinese anime Thai sub
  */
 
 import fs   from 'fs';
@@ -12,6 +18,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DATA_DIR  = path.join(__dirname, '../src/data');
 const BASE_URL  = 'https://anime-th.com';
 const AJAX_URL  = `${BASE_URL}/wp-admin/admin-ajax.php`;
+
+// Category archive URLs to scrape (these contain the real 4000+ anime)
+const CATEGORY_URLS = [
+  `${BASE_URL}/category/%e0%b8%8b%e0%b8%b1%e0%b8%9a%e0%b9%84%e0%b8%97%e0%b8%a2`,           // ซับไทย
+  `${BASE_URL}/category/%e0%b8%9e%e0%b8%b2%e0%b8%81%e0%b8%a2%e0%b9%8c%e0%b9%84%e0%b8%97%e0%b8%a2`, // พากย์ไทย
+  `${BASE_URL}/category/%e0%b8%ad%e0%b8%99%e0%b8%b4%e0%b9%80%e0%b8%a1%e0%b8%b0%e0%b8%88%e0%b8%b5%e0%b8%99%e0%b8%8b%e0%b8%b1%e0%b8%9a%e0%b9%84%e0%b8%97%e0%b8%a2`, // อนิเมะจีนซับไทย
+];
 
 // Browser-like headers — required to pass Cloudflare checks
 const HEADERS = {
@@ -62,60 +75,69 @@ function extractIframeSrc(html = '') {
   return m ? m[1] : null;
 }
 
-// GET listing pages and extract anime slugs
-async function getAnimeSlugs(maxPages = 100) {
-  console.log('📋 Scanning anime listing pages...');
+// Extract anime slugs from a single HTML page
+function extractSlugsFromHtml(html) {
+  // Match /anime/slug/ links specifically
+  const pattern = /href="https?:\/\/anime-th\.com\/anime\/([^/"]+)\/?"/g;
+  const found = [...html.matchAll(pattern)]
+    .map(m => m[1])
+    .filter(s => s && s.length > 2 && !s.includes('page'));
+  return [...new Set(found)];
+}
+
+// Scrape all category archives to collect anime slugs
+async function getAnimeSlugs(maxPagesPerCategory = 200) {
+  console.log('📋 Scanning category archive pages...\n');
   const slugSet = new Set();
-  let emptyCount = 0;
 
-  for (let page = 1; page <= maxPages; page++) {
-    const url = page === 1 ? `${BASE_URL}/` : `${BASE_URL}/page/${page}/`;
-    try {
-      const res  = await fetch(url, { headers: HEADERS });
-      // 404 = no more pages
-      if (res.status === 404) { console.log(`  Page ${page}: 404 — end of pages`); break; }
-      if (!res.ok) { console.log(`  Page ${page}: HTTP ${res.status} — skipping`); continue; }
-      const html = await res.text();
+  for (const categoryBase of CATEGORY_URLS) {
+    // Decode for display
+    const catName = decodeURIComponent(categoryBase.split('/category/')[1]);
+    console.log(`\n📂 Category: ${catName}`);
+    console.log(`   URL: ${categoryBase}`);
 
-      // Debug: show HTML sample on first page to diagnose URL patterns
-      if (page === 1) {
-        const animeLinks = (html.match(/href="[^"]*anime[^"]*"/g) || []).slice(0, 5);
-        console.log('  🔍 Sample anime links found:', animeLinks.length ? animeLinks : 'NONE');
-        console.log('  🔍 HTML length:', html.length, 'chars');
-      }
-      const patterns = [
-        /href="https?:\/\/anime-th\.com\/anime\/([^/"]+)\/?"/g,  // absolute
-        /href="\/anime\/([^/"]+)\/?"/g,                           // relative /anime/
-        /href="([^"]+)" [^>]*class="[^"]*post-thumbnail[^"]*"/g, // thumbnail links
-        /"url":"https?:\\\/\\\/anime-th\.com\\\/anime\\\/([^\\/"]+)/g, // JSON-LD
-      ];
+    let emptyCount = 0;
 
-      let found = [];
-      for (const pattern of patterns) {
-        const m = [...html.matchAll(pattern)].map(m => m[1]).filter(s =>
-          s && !s.includes('page') && !s.includes('category') &&
-          !s.includes('tag') && !s.includes('http') && s.length > 2
-        );
-        found.push(...m);
-      }
-      found = [...new Set(found)];
+    for (let page = 1; page <= maxPagesPerCategory; page++) {
+      const url = page === 1
+        ? `${categoryBase}/`
+        : `${categoryBase}/page/${page}/`;
 
-      if (found.length === 0) {
+      try {
+        const res = await fetch(url, { headers: HEADERS });
+
+        // 404 = no more pages for this category
+        if (res.status === 404) {
+          console.log(`   Page ${page}: 404 — end of category`);
+          break;
+        }
+        if (!res.ok) {
+          console.log(`   Page ${page}: HTTP ${res.status} — skipping`);
+          continue;
+        }
+
+        const html = await res.text();
+        const found = extractSlugsFromHtml(html);
+        const prevSize = slugSet.size;
+
+        if (found.length === 0) {
+          emptyCount++;
+          console.log(`   Page ${page}: 0 anime found (${emptyCount} empty)`);
+          if (emptyCount >= 3) { console.log('   3 empty pages — moving to next category'); break; }
+        } else {
+          emptyCount = 0;
+          found.forEach(s => slugSet.add(s));
+          const newThisPage = slugSet.size - prevSize;
+          console.log(`   Page ${page}: ${found.length} found, ${newThisPage} new (total: ${slugSet.size})`);
+        }
+
+        await sleep(1200 + Math.random() * 800);
+
+      } catch (err) {
+        console.error(`   ❌ Page ${page} error: ${err.message}`);
         emptyCount++;
-        console.log(`  Page ${page}: 0 anime found (${emptyCount} empty in a row)`);
-        if (emptyCount >= 3) { console.log('  3 empty pages — stopping'); break; }
-      } else {
-        emptyCount = 0;
-        found.forEach(s => slugSet.add(s));
-        console.log(`  Page ${page}: ${found.length} anime (total: ${slugSet.size})`);
+        if (emptyCount >= 3) break;
       }
-
-      await sleep(1500 + Math.random() * 1000);
-
-    } catch (err) {
-      console.error(`  ❌ Page ${page} error: ${err.message}`);
-      emptyCount++;
-      if (emptyCount >= 3) break;
     }
   }
 
@@ -154,9 +176,9 @@ async function scrapeAnimeDetail(slug) {
   const genres = [...new Set(genreMatches.map(m => m[1].trim()).filter(Boolean))].slice(0, 4);
 
   // Year
-  const year = parseInt(html.match(/\b(202[3-9]|203\d)\b/)?.[0] || '2025');
+  const year = parseInt(html.match(/\b(202[0-9]|203\d|201\d)\b/)?.[0] || '2025');
 
-  // Status
+  // Status — check Thai keywords
   const statusRaw = html.match(/class="[^"]*status[^"]*"[^>]*>([^<]+)</i)?.[1]?.trim().toLowerCase() || '';
   const status = statusRaw.includes('จบ') || statusRaw.includes('complete') ? 'complete'
                : statusRaw.includes('เร็ว') || statusRaw.includes('upcoming') ? 'upcoming'
@@ -182,8 +204,6 @@ async function scrapeAnimeDetail(slug) {
 async function getEpisodes(season_id) {
   const data = await postAjax(`action=get_episode_list&season_id=${season_id}`);
   if (!data) return [];
-
-  // API returns { soundtrack: { data: [...] }, ... }
   const arr = data?.soundtrack?.data || data?.data || [];
   return arr.map(ep => ({
     id:         ep.id,
@@ -204,9 +224,9 @@ async function getVideoUrl(post_id) {
 
 // ── MAIN ──────────────────────────────────────────────────
 async function main() {
-  console.log('🚀 AniWatch-BJ88 Scraper v2\n');
+  console.log('🚀 AniWatch-BJ88 Scraper v3\n');
+  console.log('Strategy: category archive pages (ซับไทย + พากย์ไทย + จีนซับไทย)\n');
 
-  // Load existing data (incremental — only scrape new anime)
   fs.mkdirSync(DATA_DIR, { recursive: true });
 
   const animePath   = path.join(DATA_DIR, 'anime.json');
@@ -218,8 +238,8 @@ async function main() {
   const existingSlugs = new Set(existing.map(a => a.slug));
   const episodeMap    = Object.fromEntries(episodeStore.map(e => [e.anime_slug, e.episodes]));
 
-  // Step 1: Collect slugs
-  const allSlugs = await getAnimeSlugs(100);
+  // Step 1: Collect slugs from category archives
+  const allSlugs = await getAnimeSlugs(200);
   const newSlugs = allSlugs.filter(s => !existingSlugs.has(s));
   console.log(`\n✅ ${allSlugs.length} total slugs · ${newSlugs.length} new to scrape\n`);
 
@@ -243,7 +263,6 @@ async function main() {
         episodes = await getEpisodes(detail.season_id);
         console.log(`  episodes: ${episodes.length}`);
 
-        // Fetch video URL for EP1 only
         if (episodes.length > 0 && episodes[0].id) {
           await sleep(600);
           const url = await getVideoUrl(episodes[0].id);
@@ -261,9 +280,19 @@ async function main() {
     } catch (err) {
       console.error(`  ❌ ${err.message}`);
     }
+
+    // Save incrementally every 50 anime (safety net for long runs)
+    if (added > 0 && added % 50 === 0) {
+      fs.writeFileSync(animePath, JSON.stringify(existing, null, 2));
+      fs.writeFileSync(episodePath, JSON.stringify(
+        Object.entries(episodeMap).map(([anime_slug, episodes]) => ({ anime_slug, episodes })),
+        null, 2
+      ));
+      console.log(`\n💾 Checkpoint saved: ${existing.length} anime total\n`);
+    }
   }
 
-  // Save
+  // Final save
   fs.writeFileSync(animePath,   JSON.stringify(existing, null, 2));
   fs.writeFileSync(episodePath, JSON.stringify(
     Object.entries(episodeMap).map(([anime_slug, episodes]) => ({ anime_slug, episodes })),
