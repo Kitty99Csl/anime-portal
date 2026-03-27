@@ -175,6 +175,13 @@ async function scrapeAnimeDetail(slug) {
   const genreMatches = [...html.matchAll(/class="[^"]*genre[^"]*"[^>]*>([^<]+)</gi)];
   const genres = [...new Set(genreMatches.map(m => m[1].trim()).filter(Boolean))].slice(0, 4);
 
+  // Episode count — extract from page HTML directly
+  // Matches: "12 episodes", "ทั้งหมด 12 ตอน", "Season 1 (12 episodes)"
+  const epMatch = html.match(/Season\s*\d+\s*\(\s*(\d+)\s*episodes?\s*\)/i) ||
+                  html.match(/ทั้งหมด\s*(\d+)\s*ตอน/) ||
+                  html.match(/(\d+)\s*episodes?/i);
+  const episodeCountFromPage = epMatch ? parseInt(epMatch[1]) : 0;
+
   // Year
   const year = parseInt(html.match(/\b(202[0-9]|203\d|201\d)\b/)?.[0] || '2025');
 
@@ -204,17 +211,18 @@ async function scrapeAnimeDetail(slug) {
 
   return {
     slug,
-    title_th:   title.trim(),
-    title_en:   slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
-    post_id:    postId   ? parseInt(postId)   : null,
-    season_id:  seasonId ? parseInt(seasonId) : null,
-    cover_url:  cover,
-    desc:       desc.slice(0, 300),
+    title_th:      title.trim(),
+    title_en:      slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    post_id:       postId   ? parseInt(postId)   : null,
+    season_id:     seasonId ? parseInt(seasonId) : null,
+    cover_url:     cover,
+    desc:          desc.slice(0, 300),
     genres,
     year,
     status,
-    source_url: url,
-    scraped_at: new Date().toISOString(),
+    episode_count: episodeCountFromPage,
+    source_url:    url,
+    scraped_at:    new Date().toISOString(),
   };
 }
 
