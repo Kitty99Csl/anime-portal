@@ -1,1 +1,602 @@
-[]
+[
+  {
+    "anime_slug": "yuusha-kei-ni-shosu",
+    "episodes": []
+  },
+  {
+    "anime_slug": "ugoku-neko-mukashibanashi",
+    "episodes": []
+  },
+  {
+    "anime_slug": "toumei-otoko-to-ningen-onna",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mf-ghost-ss3",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mato-seihei-no-slave-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "jujutsu-kaisen-shimetsu-kaiyuu-zenpen",
+    "episodes": []
+  },
+  {
+    "anime_slug": "hikuidori-ushuu-boro-tobi-gumi",
+    "episodes": []
+  },
+  {
+    "anime_slug": "eris-no-seihai",
+    "episodes": []
+  },
+  {
+    "anime_slug": "douse-koishite-shimaundasub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "dead-account",
+    "episodes": []
+  },
+  {
+    "anime_slug": "chitose-kun-wa-ramune-bin-no-nakasub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yuusha-party-wo-oidasareta-kiyoubinbou",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yuusha-party-ni-kawaii-ko-ga-ita-node",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tamon-kun-ima-docchi",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shibou-yuugi-de-meshi-wo-kuu",
+    "episodes": []
+  },
+  {
+    "anime_slug": "oshi-no-ko-3rd-season",
+    "episodes": []
+  },
+  {
+    "anime_slug": "okiraku-ryoushu-no-tanoshii-ryouchi-bouei",
+    "episodes": []
+  },
+  {
+    "anime_slug": "29-sai-dokushin-chuuken-boukensha-no-nichijou-%e0%b8%8a%e0%b8%b5%e0%b8%a7%e0%b8%b4%e0%b8%95%e0%b8%9b%e0%b8%a3%e0%b8%b0%e0%b8%88%e0%b8%b3%e0%b8%a7%e0%b8%b1%e0%b8%99%e0%b8%82%e0%b8%ad%e0%b8%87%e0%b8%99%e0%b8%b1%e0%b8%81%e0%b8%9c%e0%b8%88%e0%b8%8d%e0%b8%a0%e0%b8%b1%e0%b8%a2%e0%b8%a7%e0%b8%b1%e0%b8%a229",
+    "episodes": []
+  },
+  {
+    "anime_slug": "megami-no-cafe-terrace-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "hazure-skill-kinomi-master-skill-no-misub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kizoku-tensei-thsub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tunshi-xingkong-th",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mushen-jisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mushen-jith",
+    "episodes": []
+  },
+  {
+    "anime_slug": "guangyin-zhi-wai-beyond-times-gaze",
+    "episodes": []
+  },
+  {
+    "anime_slug": "seihantai-na-kimi-to-boku",
+    "episodes": []
+  },
+  {
+    "anime_slug": "hell-mode",
+    "episodes": []
+  },
+  {
+    "anime_slug": "douluo-dalu-ii-jueshi-tangmen-thz2",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mayonaka-heart-tune",
+    "episodes": []
+  },
+  {
+    "anime_slug": "maou-no-musume-wa-yasashisugiru",
+    "episodes": []
+  },
+  {
+    "anime_slug": "isekai-no-sata-wa-shachiku-shidai-%e0%b8%ab%e0%b8%99%e0%b8%b8%e0%b9%88%e0%b8%a1%e0%b8%9a%e0%b8%b1%e0%b8%8d%e0%b8%8a%e0%b8%b5%e0%b8%9a%e0%b9%89%e0%b8%b2%e0%b8%87%e0%b8%b2%e0%b8%99%e0%b8%81%e0%b8%b8%e0%b8%a1%e0%b8%8a%e0%b8%b0%e0%b8%95%e0%b8%b2%e0%b8%8a%e0%b8%b2%e0%b8%a7%e0%b8%95%e0%b9%88%e0%b8%b2%e0%b8%87%e0%b9%82%e0%b8%a5%e0%b8%81",
+    "episodes": []
+  },
+  {
+    "anime_slug": "vigilante-boku-no-hero-academia-illegals",
+    "episodes": []
+  },
+  {
+    "anime_slug": "majutsushi-kunon-wa-mieteiru",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kirei-ni-shitemoraemasu-ka",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kamen-rider-rider-zeztz-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "immortality-ss3-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "himesama-goumon-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "fate-strange-fake",
+    "episodes": []
+  },
+  {
+    "anime_slug": "beastars",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yu-ling-shi-%e0%b8%99%e0%b8%b1%e0%b8%81%e0%b8%84%e0%b8%b8%e0%b8%a1%e0%b8%a7%e0%b8%b4%e0%b8%8d%e0%b8%8d%e0%b8%b2%e0%b8%93",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yuusha-no-kuzu-%e0%b8%9c%e0%b8%b9%e0%b9%89%e0%b8%81%e0%b8%a5%e0%b9%89%e0%b8%b2%e0%b8%aa%e0%b8%a7%e0%b8%b0",
+    "episodes": []
+  },
+  {
+    "anime_slug": "the-daily-life-of-the-immortal-kingsub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "trigun-stargaze",
+    "episodes": []
+  },
+  {
+    "anime_slug": "medalist",
+    "episodes": []
+  },
+  {
+    "anime_slug": "gnosiasub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "fumetsu-no-anata-e-season-3sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "dark-moon-tsuki-no-saidan",
+    "episodes": []
+  },
+  {
+    "anime_slug": "sousou-no-frieren-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "xuan-jie-zhi-mensub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kuroiwa-medaka-ni-watashi-no-kawaii-ga-tsuujinai-%e0%b8%84%e0%b8%b8%e0%b9%82%e0%b8%a3%e0%b8%ad%e0%b8%b4%e0%b8%a7%e0%b8%b0-%e0%b9%80%e0%b8%a1%e0%b8%94%e0%b8%b2%e0%b8%81%e0%b8%b0-%e0%b9%84%e0%b8%a1%e0%b9%88%e0%b9%80%e0%b8%82%e0%b9%89%e0%b8%b2%e0%b9%83%e0%b8%88%e0%b8%84%e0%b8%a7%e0%b8%b2%e0%b8%a1%e0%b8%99%e0%b9%88%e0%b8%b2%e0%b8%a3%e0%b8%b1%e0%b8%81%e0%b8%82%e0%b8%ad%e0%b8%87%e0%b8%89%e0%b8%b1%e0%b8%99%e0%b9%80%e0%b8%a5%e0%b8%a2",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yoroi-shin-den-samurai-troopers",
+    "episodes": []
+  },
+  {
+    "anime_slug": "uruwashi-no-yoi-no-tsuki",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tunshi-xingkongz",
+    "episodes": []
+  },
+  {
+    "anime_slug": "toujima-tanzaburou-wa-kamen-rider-ni-naritaisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tian-xiangsub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tian-guan-cifu-er-heaven-officials-blessing-season-2-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "supreme-god-emperor",
+    "episodes": []
+  },
+  {
+    "anime_slug": "si-vis-the-sound-of-heroessub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shuumatsu-train-doko-e-iku-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shenkong-bi-an-the-other-side-of-deep-space",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shanhai-jing-mima",
+    "episodes": []
+  },
+  {
+    "anime_slug": "one-punch-man-3sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kaya-chan-wa-kowakunai",
+    "episodes": []
+  },
+  {
+    "anime_slug": "jiu-yang-wushen-ascendants-of-the-nine-suns-%e0%b9%80%e0%b8%97%e0%b8%9e%e0%b8%aa%e0%b8%87%e0%b8%84%e0%b8%a3%e0%b8%b2%e0%b8%a1%e0%b9%80%e0%b8%81%e0%b9%89%e0%b8%b2%e0%b8%95%e0%b8%b0%e0%b8%a7%e0%b8%b1%e0%b8%99",
+    "episodes": []
+  },
+  {
+    "anime_slug": "jian-lai-th",
+    "episodes": []
+  },
+  {
+    "anime_slug": "ikoku-nikki-%e0%b8%9a%e0%b8%b1%e0%b8%99%e0%b8%97%e0%b8%b6%e0%b8%81%e0%b8%88%e0%b8%b2%e0%b8%81%e0%b8%a7%e0%b8%b4%e0%b9%80%e0%b8%97%e0%b8%a8",
+    "episodes": []
+  },
+  {
+    "anime_slug": "hanazakari-no-kimitachi-e-%e0%b8%aa%e0%b8%b1%e0%b8%9a%e0%b8%82%e0%b8%b1%e0%b9%89%e0%b8%a7%e0%b8%a1%e0%b8%b2%e0%b8%a5%e0%b8%b8%e0%b9%89%e0%b8%99%e0%b8%a3%e0%b8%b1%e0%b8%81",
+    "episodes": []
+  },
+  {
+    "anime_slug": "du-shi-gu-xian-yi-immortal-doctor-in-modern-city-%e0%b8%ab%e0%b8%a1%e0%b8%ad%e0%b9%80%e0%b8%97%e0%b8%a7%e0%b8%94%e0%b8%b2%e0%b9%80%e0%b8%a1%e0%b8%b7%e0%b8%ad%e0%b8%87%e0%b9%82%e0%b8%9a%e0%b8%a3%e0%b8%b2%e0%b8%93",
+    "episodes": []
+  },
+  {
+    "anime_slug": "douluo-dalu-ii-jueshi-tangmen-sub222",
+    "episodes": []
+  },
+  {
+    "anime_slug": "chaofan-jinhua-transcend-evolution-%e0%b8%ad%e0%b8%b8%e0%b8%9a%e0%b8%b1%e0%b8%95%e0%b8%b4%e0%b8%81%e0%b8%b2%e0%b8%a3%e0%b8%93%e0%b9%8c%e0%b9%80%e0%b8%ab%e0%b8%99%e0%b8%b7%e0%b8%ad%e0%b8%a1%e0%b8%99%e0%b8%b8%e0%b8%a9%e0%b8%a2%e0%b9%8c",
+    "episodes": []
+  },
+  {
+    "anime_slug": "bai-lian-cheng-shen-3-apotheosis-3-%e0%b8%a3%e0%b9%89%e0%b8%ad%e0%b8%a2%e0%b9%80%e0%b8%97%e0%b8%9e%e0%b8%9e%e0%b8%b4%e0%b8%8a%e0%b8%b4%e0%b8%94%e0%b8%9f%e0%b9%89%e0%b8%b2-%e0%b8%a0%e0%b8%b2%e0%b8%84-3",
+    "episodes": []
+  },
+  {
+    "anime_slug": "akuyaku-reijou-wa-ringoku-no-outaishi-ni-dekiai-sareru",
+    "episodes": []
+  },
+  {
+    "anime_slug": "vigilante-boku-no-hero-academia-illegalsth",
+    "episodes": []
+  },
+  {
+    "anime_slug": "jingai-kyoushitsu-no-ningengirai-kyoushi",
+    "episodes": []
+  },
+  {
+    "anime_slug": "digimon-beatbreaksub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "omae-gotoki-ga-maou-ni-kateru-to-omouna",
+    "episodes": []
+  },
+  {
+    "anime_slug": "koala-enikkisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "sanxian-lun-hui-secrets-of-th",
+    "episodes": []
+  },
+  {
+    "anime_slug": "nitian-xie-shen-against-the-gods",
+    "episodes": []
+  },
+  {
+    "anime_slug": "paradise-jigokuraku",
+    "episodes": []
+  },
+  {
+    "anime_slug": "goumon-baito-kun-no-nichijou-%e0%b8%8a%e0%b8%b5%e0%b8%a7%e0%b8%b4%e0%b8%95%e0%b8%9b%e0%b8%a3%e0%b8%b0%e0%b8%88%e0%b8%b3%e0%b8%a7%e0%b8%b1%e0%b8%99%e0%b8%82%e0%b8%ad%e0%b8%87%e0%b8%9e%e0%b8%99%e0%b8%b1%e0%b8%81%e0%b8%87%e0%b8%b2%e0%b8%99%e0%b8%9e%e0%b8%b2%e0%b8%a3%e0%b9%8c%e0%b8%95%e0%b9%84%e0%b8%97%e0%b8%a1%e0%b9%8c%e0%b8%a3%e0%b8%b1%e0%b8%9a%e0%b8%88%e0%b9%89%e0%b8%b2%e0%b8%87",
+    "episodes": []
+  },
+  {
+    "anime_slug": "da-tang-chengfeng-lu-wind-driver-in-tang-dynasty-%e0%b8%9a%e0%b8%b1%e0%b8%99%e0%b8%97%e0%b8%b6%e0%b8%81%e0%b8%9c%e0%b8%b9%e0%b9%89%e0%b8%a5%e0%b9%88%e0%b8%ad%e0%b8%87%e0%b8%a5%e0%b8%a1%e0%b9%81%e0%b8%ab%e0%b9%88%e0%b8%87%e0%b8%95%e0%b9%89%e0%b8%b2%e0%b8%96%e0%b8%b1%e0%b8%87",
+    "episodes": []
+  },
+  {
+    "anime_slug": "busamen-gachi-fightersub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "aoshi-dan-shen-the-proud-god-of-alchemy-%e0%b8%99%e0%b8%b1%e0%b8%81%e0%b9%81%e0%b8%9b%e0%b8%a3%e0%b8%98%e0%b8%b2%e0%b8%95%e0%b8%b8%e0%b9%80%e0%b8%ab%e0%b8%99%e0%b8%b7%e0%b8%ad%e0%b8%8a%e0%b8%b1%e0%b9%89%e0%b8%99%e0%b8%9f%e0%b9%89%e0%b8%b2",
+    "episodes": []
+  },
+  {
+    "anime_slug": "isekai-shikkaku-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "number-one-sentai-gozyugersub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "long-hun-soul-of-the-dragon",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kikaijikake-no-mariesub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kekkon-suru-tte-hontou-desu-ka-%e0%b9%81%e0%b8%95%e0%b9%88%e0%b8%87%e0%b8%87%e0%b8%b2%e0%b8%99%e0%b8%97%e0%b8%b5%e0%b9%88%e0%b8%a7%e0%b9%88%e0%b8%b2%e0%b8%99%e0%b8%b5%e0%b9%88%e0%b9%80%e0%b8%a3%e0%b8%b7%e0%b9%88%e0%b8%ad%e0%b8%87%e0%b8%88%e0%b8%a3%e0%b8%b4%e0%b8%87%e0%b9%80%e0%b8%ab%e0%b8%a3%e0%b8%ad%e0%b8%84%e0%b8%a3%e0%b8%b1%e0%b8%9a",
+    "episodes": []
+  },
+  {
+    "anime_slug": "darwin-jihen-%e0%b8%94%e0%b8%b2%e0%b8%a3%e0%b9%8c%e0%b8%a7%e0%b8%b4%e0%b8%99%e0%b8%9e%e0%b8%b1%e0%b8%99%e0%b8%98%e0%b8%b8%e0%b9%8c%e0%b8%ad%e0%b8%b8%e0%b8%9a%e0%b8%b1%e0%b8%95%e0%b8%b4%e0%b9%83%e0%b8%ab%e0%b8%a1%e0%b9%88",
+    "episodes": []
+  },
+  {
+    "anime_slug": "rezero-ss2",
+    "episodes": []
+  },
+  {
+    "anime_slug": "re-zero-ss2",
+    "episodes": []
+  },
+  {
+    "anime_slug": "rezero-kara-hajimeru-isekai-seikatsu",
+    "episodes": []
+  },
+  {
+    "anime_slug": "unnamed-memory-act-2",
+    "episodes": []
+  },
+  {
+    "anime_slug": "unnamed-memory-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "cats-eyesub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "alma-chan-wa-kazoku-ni-naritaisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yun-shen-buzhi-mengsub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "yishi-du-zun-the-sovereigns-ascension-%e0%b8%ab%e0%b8%99%e0%b8%b6%e0%b9%88%e0%b8%87%e0%b9%83%e0%b8%99%e0%b9%83%e0%b8%95%e0%b9%89%e0%b8%ab%e0%b8%a5%e0%b9%89%e0%b8%b2-%e0%b8%a0%e0%b8%b2%e0%b8%84-1",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shenyuan-youxi",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shenguo-zhi-shang-over-the-divine-realms-%e0%b9%80%e0%b8%ab%e0%b8%99%e0%b8%b7%e0%b8%ad%e0%b9%81%e0%b8%94%e0%b8%99%e0%b9%80%e0%b8%97%e0%b8%9e",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shen-lan-qi-yu-wushuang-zhu",
+    "episodes": []
+  },
+  {
+    "anime_slug": "shanhai-fu-mo-lu",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kanojo-okarishimasu-3rd-season-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kobayashi-san-chi-no-maid-dragon-samishigariya-no-ryuu",
+    "episodes": []
+  },
+  {
+    "anime_slug": "chou-kaguya-hime",
+    "episodes": []
+  },
+  {
+    "anime_slug": "arknights-rise-from-ember-season-3",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mahoutsukai-no-yome",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tensei-akujo-no-kuro-rekishisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mushoku-no-eiyuu-betsu-ni-skill-nanka-iranakatta-n-da-ga-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "dead-mount-death-play-ss1-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "osananajimi-to-wa-love-comedy-ni-naranai-%e0%b9%80%e0%b8%a5%e0%b8%b4%e0%b8%9f%e0%b8%84%e0%b8%ad%e0%b8%a1%e0%b8%81%e0%b8%b1%e0%b8%9a%e0%b9%80%e0%b8%9e%e0%b8%b7%e0%b9%88%e0%b8%ad%e0%b8%99%e0%b8%aa%e0%b8%a1%e0%b8%b1%e0%b8%a2%e0%b9%80%e0%b8%94%e0%b9%87%e0%b8%81%e0%b8%99%e0%b9%88%e0%b8%b0%e0%b9%80%e0%b8%ab%e0%b8%a3%e0%b8%ad%e0%b9%80%e0%b8%9e%e0%b9%89%e0%b8%ad%e0%b9%80%e0%b8%88%e0%b9%89%e0%b8%ad%e0%b8%97%e0%b8%b1%e0%b9%89%e0%b8%87%e0%b9%80%e0%b8%9e",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kaguya-sama-wa-kokurasetai-otona-e-no-kaidan",
+    "episodes": []
+  },
+  {
+    "anime_slug": "loop-7-kaime-no-akuyaku-reijou-wa-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "huo-feng-liao-yuan-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "nohara-hiroshi-hiru-meshi-no-ryuugisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "fanren-xiu-xian-chuansub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "gu-wei-nan-tingsub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "detective-conan-movie-28",
+    "episodes": []
+  },
+  {
+    "anime_slug": "ultraman-omega-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mattaku-saikin-no-tantei-to-kitarasub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "watashi-ga-koibito-ni-nareru-wake-nai-jan-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "nukitashi-the-animationsub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "hyakuemu-100-%e0%b9%80%e0%b8%a1%e0%b8%95%e0%b8%a3",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kimi-to-koete-koi-ni-narusub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "one-piece-all-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "one-piece-ss21-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "zenshuu-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "around-40-otoko-no-isekai-tsuuhansub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "koi-wa-futago-de-warikirenai-%e0%b8%84%e0%b8%a7%e0%b8%b2%e0%b8%a1%e0%b8%a3%e0%b8%b1%e0%b8%81%e0%b8%97%e0%b8%b5%e0%b9%88%e0%b9%84%e0%b8%a1%e0%b9%88%e0%b8%ad%e0%b8%b2%e0%b8%88%e0%b9%81%e0%b8%9a%e0%b9%88%e0%b8%87%e0%b9%81%e0%b8%a2%e0%b8%81%e0%b8%94%e0%b9%89%e0%b8%a7%e0%b8%a2%e0%b8%9d%e0%b8%b2%e0%b9%81%e0%b8%9d%e0%b8%94",
+    "episodes": []
+  },
+  {
+    "anime_slug": "mofa-gongzhu-de-xiao-fannaosub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "chanto-suenai-kyuuketsuki-chansub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "spy-x-family-season-3sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "ninja-to-gokudousub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kekkon-yubiwa-monogatari-iisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tougen-anki-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "watashi-wo-tabetai-hitodenashisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "wandance-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "tondemo-skill-de-isekai-hourou-meshi-2sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "isekai-quartet-3sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "debu-to-love-to-ayamachi-tosub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "ansatsusha-de-aru-ore-no-status-ga-yuushasub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "3-nen-z-gumi-ginpachi-senseisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "honzuki-no-gekokujou-bd",
+    "episodes": []
+  },
+  {
+    "anime_slug": "sawaranaide-kotesashi-kunsub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "uma-musume-cinderella-gray-part-2sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "gachiakuta-sub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "chichi-wa-eiyuu-haha-wa-seireisub",
+    "episodes": []
+  },
+  {
+    "anime_slug": "haikyu-allseason",
+    "episodes": []
+  },
+  {
+    "anime_slug": "kao-ni-denai-kashiwada-san-to-kao-ni-deru-oota-kunsub",
+    "episodes": []
+  }
+]
