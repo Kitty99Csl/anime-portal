@@ -1,7 +1,0 @@
-name = "anime-portal"
-main = "src/worker.js"
-compatibility_date = "2024-01-01"
-
-[assets]
-directory = "./"
-exclude = ["node_modules", ".github", "scripts", "docs"]
