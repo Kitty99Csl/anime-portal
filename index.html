@@ -841,6 +841,35 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 }
 
 /* No video state */
+/* ─── REDIRECT PLAYER ────────────────────────── */
+.redirect-player{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:absolute;inset:0;
+  background:#000;
+  text-decoration:none;
+  cursor:pointer;
+  transition:background 0.2s;
+}
+.redirect-player:hover{background:#0a0a0a}
+.redirect-play-ring{
+  width:72px;height:72px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.15);
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(192,57,43,0.85);
+  transition:transform 0.2s, background 0.2s;
+  box-shadow:0 0 40px rgba(192,57,43,0.3);
+}
+.redirect-player:hover .redirect-play-ring{
+  transform:scale(1.1);
+  background:var(--red-h);
+}
+.redirect-ep-label{
+  margin-top:1rem;
+  font-family:var(--f-mono);font-size:0.7rem;letter-spacing:0.15em;
+  color:rgba(255,255,255,0.35);
+  text-transform:uppercase;
+}
+
 .no-video{
   position:absolute;inset:0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -1875,17 +1904,11 @@ function openWatch(id) {
   // Related sidebar
   setHTML('relatedWidget', trendHTML(ANIME.filter(x => x.id !== id).slice(0,6)));
 
-  // Auto-load EP1 if video URL available
-  if (activeEpisodes[0] && activeEpisodes[0].url) {
+  // Always show redirect player for EP1
+  if (activeEpisodes[0]) {
     loadEpisode(0);
   } else {
-    setHTML('playerRatio', `
-      <div class="no-video">
-        <div class="no-video-ring">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><polygon points="5,3 19,12 5,21"/></svg>
-        </div>
-        <p>เลือกตอนที่ต้องการด้านล่าง</p>
-      </div>`);
+    setHTML('playerRatio', `<a class="redirect-player" href="${a.source_url||'#'}" target="_blank" rel="noopener"><div class="redirect-play-ring"><svg width="32" height="32" viewBox="0 0 24 24" fill="white" style="margin-left:4px"><polygon points="5,3 19,12 5,21"/></svg></div><div class="redirect-ep-label">EP.01</div></a>`);
     setText('playerTitle', a.title_th);
     setText('playerSrc',   '—');
   }
@@ -1915,42 +1938,21 @@ function selectEpByIdx(btn, idx) {
 }
 
 function loadEpisode(idx) {
-  const ep    = activeEpisodes[idx];
-  const a     = ANIME[activeAnimeId];
+  const ep = activeEpisodes[idx];
+  const a  = ANIME[activeAnimeId];
   if (!ep || !a) return;
-  const label = `${a.title_th} — EP.${ep.n}`;
-  setText('playerTitle', label);
-
-  if (ep.url) {
-    setText('playerSrc', 'anime.tonytonychopper.net');
-    setHTML('playerRatio', `
-      <div class="player-skeleton" id="playerSkeleton">
-        <div class="skeleton-play">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="rgba(201,168,76,0.4)"><polygon points="5,3 19,12 5,21"/></svg>
-        </div>
+  setText('playerTitle', `${a.title_th} — EP.${ep.n}`);
+  setText('playerSrc', 'anime-th.com');
+  const watchUrl = a.source_url || `https://anime-th.com/anime/${a.slug}/`;
+  setHTML('playerRatio', `
+    <a class="redirect-player" href="${watchUrl}" target="_blank" rel="noopener">
+      <div class="redirect-play-ring">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="white" style="margin-left:4px">
+          <polygon points="5,3 19,12 5,21"/>
+        </svg>
       </div>
-      <iframe src="${ep.url}"
-        allowfullscreen
-        allow="autoplay; encrypted-media; picture-in-picture"
-        referrerpolicy="origin"
-        sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
-        loading="lazy"
-        title="${label}"
-        onload="const s=document.getElementById('playerSkeleton');if(s)s.classList.add('hidden')">
-      </iframe>`);
-  } else {
-    setText('playerSrc', 'ดึงจาก API');
-    setHTML('playerRatio', `
-      <div class="no-video">
-        <div class="no-video-ring">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="1.5"><polygon points="5,3 19,12 5,21"/></svg>
-        </div>
-        <p>เลือกตอนที่ต้องการดูด้านล่าง<br>
-          <span style="font-size:0.58rem;color:var(--text3)">POST admin-ajax.php<br>action=mix_get_player&amp;post_id=${ep.id || '—'}</span>
-        </p>
-        <a href="${(ANIME[activeAnimeId]||{}).source_url||'#'}" target="_blank" rel="noopener">▶ ดูต้นฉบับ ↗</a>
-      </div>`);
-  }
+      <div class="redirect-ep-label">EP.${ep.n}</div>
+    </a>`);
 }
 
 function switchLang(lang, btn) {
