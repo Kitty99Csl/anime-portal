@@ -40,4 +40,5 @@ jobs:
           git add public/sitemap.xml || true
           git diff --cached --quiet && echo "Nothing to commit" && exit 0
           git commit -m "chore: weekly data sync $(date +'%Y-%m-%d')"
+          git pull --rebase origin main
           git push
