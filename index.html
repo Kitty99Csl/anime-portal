@@ -1098,7 +1098,8 @@ footer::before{
   .filter-btn{padding:6px 10px;min-height:36px}
   .ep-btn{min-height:40px;padding:8px 10px}
   .pag-btn{min-width:40px;height:40px}
-  .lang-switcher{display:none}
+  .lang-switcher{display:flex;gap:2px}
+  .lang-btn{padding:3px 7px;font-size:0.65rem}
   .header-wrap{gap:0.75rem}
   .logo-sub{display:none}
   .footer-top{grid-template-columns:1fr}
@@ -1166,6 +1167,12 @@ footer::before{
       <input type="text" id="searchInput" placeholder="ค้นหาอนิเมะ..." oninput="handleSearch()"/>
     </div>
 
+    <div class="lang-switcher" id="langSwitcher">
+      <button class="lang-btn" onclick="setLang('lo',this)">ລາວ</button>
+      <button class="lang-btn active" onclick="setLang('th',this)">ไทย</button>
+      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+    </div>
+
     <button class="menu-btn" onclick="toggleMobileNav()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 12h18M3 6h18M3 18h18"/>
@@ -1217,7 +1224,7 @@ footer::before{
           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
           ดูเลย EP.1
         </a>
-        <a class="btn-info" href="#" id="heroBtnInfo" onclick="openWatch(0);return false">ລາຍລະອຽດ</a>
+        <a class="btn-info" href="#" id="heroBtnInfo" onclick="openWatch(0);return false">รายละเอียด</a>
         <a class="btn-source" id="heroBtnSource" href="https://anime-th.com/anime/kirei-ni-shitemoraemasu-ka/" target="_blank" rel="noopener">↗ ຕົ້ນສະບັບ</a>
       </div>
     </div>
@@ -1297,7 +1304,7 @@ footer::before{
       <div class="widget">
         <div class="widget-head">
           <div class="section-accent"></div>
-          <h3 data-i18n="trending">🔥 ຍອດນິຍົມ</h3>
+          <h3 data-i18n="trending">🔥 ยอดนิยม</h3>
         </div>
         <div class="widget-body" id="trendingWidget"></div>
       </div>
@@ -1311,7 +1318,7 @@ footer::before{
       <div class="widget">
         <div class="widget-head">
           <div class="section-accent"></div>
-          <h3 data-i18n="recent">🆕 ອັບເດດລ່າສຸດ</h3>
+          <h3 data-i18n="recent">🆕 อัปเดตล่าสุด</h3>
         </div>
         <div class="widget-body" id="recentWidget"></div>
       </div>
@@ -1360,7 +1367,7 @@ footer::before{
             <div class="no-video-ring">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="1.5"><polygon points="5,3 19,12 5,21"/></svg>
             </div>
-            <p data-i18n="select_ep">ເລືອກຕອນດ້ານລຸ່ມ</p>
+            <p data-i18n="select_ep">เลือกตอนด้านล่าง</p>
           </div>
         </div>
       </div>
@@ -1389,10 +1396,10 @@ footer::before{
       <!-- EPISODE LIST -->
       <div class="ep-panel">
         <div class="ep-head">
-          <h3 data-i18n="select_ep_h">ເລືອກຕອນ</h3>
+          <h3 data-i18n="select_ep_h">เลือกตอน</h3>
           <div class="lang-tabs">
-            <button class="lang-tab active" onclick="switchLang('sub',this)" data-i18n="sub_thai">ຊັບໄທ</button>
-            <button class="lang-tab" onclick="switchLang('th',this)" data-i18n="dub_thai">ພາກໄທ</button>
+            <button class="lang-tab active" onclick="switchLang('sub',this)" data-i18n="sub_thai">ซับไทย</button>
+            <button class="lang-tab" onclick="switchLang('th',this)" data-i18n="dub_thai">พากย์ไทย</button>
           </div>
         </div>
         <div class="ep-grid" id="epGrid"></div>
@@ -1412,7 +1419,7 @@ footer::before{
       <div class="widget">
         <div class="widget-head">
           <div class="section-accent"></div>
-          <h3 data-i18n="related">ທີ່ກ່ຽວຂ້ອງ</h3>
+          <h3 data-i18n="related">ที่เกี่ยวข้อง</h3>
         </div>
         <div class="widget-body" id="relatedWidget"></div>
       </div>
@@ -1620,8 +1627,8 @@ async function loadData() {
     ANIME = buildDemoAnime();
   }
 
-  // Always use Thai
-  currentLang = 'th';
+  // Apply saved language (default Thai)
+  currentLang = localStorage.getItem('bj88_lang') || 'th';
 
   renderHero(0);
   initHeroCycle();
@@ -1932,16 +1939,16 @@ function loadEpisode(idx) {
         onload="const s=document.getElementById('playerSkeleton');if(s)s.classList.add('hidden')">
       </iframe>`);
   } else {
-    setText('playerSrc', 'ຕ້ອງດຶງຈາກ API');
+    setText('playerSrc', 'ดึงจาก API');
     setHTML('playerRatio', `
       <div class="no-video">
         <div class="no-video-ring">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="1.5"><polygon points="5,3 19,12 5,21"/></svg>
         </div>
-        <p>Demo — ຕ້ອງດຶງ URL ຈາກ API<br>
+        <p>เลือกตอนที่ต้องการดูด้านล่าง<br>
           <span style="font-size:0.58rem;color:var(--text3)">POST admin-ajax.php<br>action=mix_get_player&amp;post_id=${ep.id || '—'}</span>
         </p>
-        <a href="${(ANIME[activeAnimeId]||{}).source_url||'#'}" target="_blank" rel="noopener">▶ ເບິ່ງທີ່ຕົ້ນສະບັບ ↗</a>
+        <a href="${(ANIME[activeAnimeId]||{}).source_url||'#'}" target="_blank" rel="noopener">▶ ดูต้นฉบับ ↗</a>
       </div>`);
   }
 }
@@ -2081,7 +2088,7 @@ const I18N = {
   },
 };
 
-let currentLang = 'th';
+let currentLang = localStorage.getItem('bj88_lang') || 'th';
 
 function t(key) { return (I18N[currentLang] || I18N.lo)[key] || key; }
 
