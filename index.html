@@ -70,9 +70,9 @@
   --gold-line:#8a7040;
 
   /* Text — clear contrast levels */
-  --text:     #f5f0e4;
-  --text2:    #cdb890;
-  --text3:    #9a8a6a;
+  --text:     #f8f5ee;
+  --text2:    #d9c49e;
+  --text3:    #b09870;
 
   /* Fonts */
   --f-display:'Cinzel',serif;
@@ -126,10 +126,17 @@ body{
 .ad-600{width:300px;height:600px;flex-shrink:0}
 .ad-responsive{width:100%;height:70px}
 
-/* Ad bar responsive — hide overflow on mobile, don't break layout */
+/* Ad bar responsive */
 .ad-bar{overflow:hidden}
-.ad-728-h{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.ad-60-h{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ad-728-h{overflow-x:hidden}
+.ad-60-h{overflow-x:hidden}
+
+/* Ad images always fill their container proportionally */
+.ad-stack-item img{
+  width:100%;height:auto;display:block;
+  object-fit:cover;border:none;
+}
+.ad-stack-item a{display:block;width:100%}
 
 /* ═══════════════════════════════════════════════
    HEADER
@@ -150,7 +157,8 @@ header::before{
 .header-wrap{
   max-width:1400px;margin:0 auto;
   padding:0 1.5rem;
-  display:flex;align-items:center;gap:1.25rem;height:62px;
+  display:flex;align-items:center;gap:0.75rem;height:62px;
+  overflow:hidden;
 }
 
 /* Logo */
@@ -180,31 +188,35 @@ header::before{
 
 /* Stacked ad container */
 .ad-stack{
-  width:100%;display:flex;flex-direction:column;gap:4px;
-  background:var(--surface);border:1px dashed var(--gold-line);
+  width:100%;display:flex;flex-direction:column;
   border-radius:2px;overflow:hidden;
+  background:transparent;border:none;
+}
+.ad-stack.has-ads{
+  background:var(--surface);
+  gap:4px;
 }
 .ad-stack-item{position:relative;width:100%;overflow:hidden}
-.ad-stack-item img{width:100%;display:block;border:none}
-.ad-stack-item a{display:block}
+.ad-stack-item img{
+  width:100%;height:auto;display:block;border:none;
+  object-fit:cover;
+}
+.ad-stack-item a{display:block;width:100%}
 .ad-stack-placeholder{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;padding:8px;
-  background:repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(201,168,76,0.02) 8px,rgba(201,168,76,0.02) 9px);
+  display:none; /* Hidden in production — no empty boxes shown to visitors */
 }
 .ad-stack-placeholder p{font-family:var(--f-mono);font-size:0.58rem;color:var(--text3);letter-spacing:0.08em}
-.ad-728-h{min-height:90px}.ad-60-h{min-height:60px}.ad-250-h{min-height:250px}.ad-600-h{min-height:600px}
 
 /* Nav */
-nav{display:flex;gap:0;margin-left:0.5rem}
+nav{display:flex;gap:0;margin-left:0.25rem;flex-shrink:1;min-width:0;overflow:hidden}
 nav a{
-  font-family:var(--f-body);font-size:0.83rem;font-weight:600;
+  font-family:var(--f-body);font-size:0.82rem;font-weight:600;
   color:var(--text2);text-decoration:none;
-  padding:0.3rem 0.85rem;border-radius:2px;
-  letter-spacing:0.04em;
+  padding:0.3rem 0.7rem;border-radius:2px;
+  letter-spacing:0.02em;
   transition:color 0.2s,background 0.2s;
   white-space:nowrap;
-  position:relative;
+  position:relative;flex-shrink:0;
 }
 nav a::after{
   content:'';position:absolute;bottom:0;left:50%;right:50%;
@@ -222,6 +234,7 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
   border-radius:2px;
   padding:0.3rem 0.85rem;
   transition:border-color 0.2s,box-shadow 0.2s;
+  flex-shrink:1;min-width:0;
 }
 .search-wrap:focus-within{
   border-color:var(--gold-line);
@@ -244,7 +257,8 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 .hero{
   position:relative;overflow:hidden;
   background:var(--surface);
-  min-height:480px;display:flex;align-items:center;
+  min-height:clamp(420px, 58vh, 680px);
+  display:flex;align-items:center;
 }
 
 /* Atmospheric background layers */
@@ -274,16 +288,16 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 }
 
 .hero-poster-zone{
-  position:absolute;right:0;top:0;bottom:0;width:60%;
+  position:absolute;right:0;top:0;bottom:0;width:65%;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
 .hero-poster-img{
   height:100%;width:100%;object-fit:cover;object-position:center top;
-  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.5) 20%,black 50%);
-  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.5) 20%,black 50%);
-  opacity:0.75;
-  transform:scale(1.05);
+  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.6) 15%,black 40%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.6) 15%,black 40%);
+  opacity:0.88;
+  transform:scale(1.03);
   transition:transform 8s ease;
 }
 .hero:hover .hero-poster-img{transform:scale(1.0)}
@@ -299,13 +313,15 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 
 .hero-gradient{
   position:absolute;inset:0;
-  background:linear-gradient(90deg, var(--surface) 38%, rgba(15,15,15,0.7) 65%, transparent 100%);
+  background:
+    linear-gradient(90deg, var(--surface) 30%, rgba(22,22,22,0.85) 50%, rgba(15,15,15,0.3) 75%, transparent 100%),
+    linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%);
 }
 
 .hero-content{
   position:relative;z-index:2;
-  padding:2.5rem 1.5rem 2.5rem 3rem;
-  max-width:600px;
+  padding:3rem 1.5rem 3rem clamp(2rem,5vw,5rem);
+  max-width:clamp(500px,45%,680px);
   animation:heroIn 0.8s ease both;
 }
 @keyframes heroIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
@@ -327,10 +343,10 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
 
 .hero-title-th{
-  font-family:var(--f-body);font-size:2rem;font-weight:700;
+  font-family:var(--f-body);font-size:clamp(1.6rem,2.8vw,2.6rem);font-weight:700;
   line-height:1.2;margin-bottom:4px;
-  color:var(--text);
-  text-shadow:0 2px 20px rgba(0,0,0,0.8);
+  color:#ffffff;
+  text-shadow:0 2px 30px rgba(0,0,0,0.9),0 0 60px rgba(0,0,0,0.5);
 }
 .hero-title-en{
   font-family:var(--f-display);font-size:0.72rem;font-weight:600;
@@ -370,9 +386,10 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 }
 
 .hero-desc{
-  font-size:0.88rem;line-height:1.8;color:var(--text2);
-  max-width:460px;margin-bottom:1.5rem;
-  font-weight:300;
+  font-size:0.9rem;line-height:1.75;color:#d9c49e;
+  max-width:480px;margin-bottom:1.5rem;
+  font-weight:400;
+  text-shadow:0 1px 8px rgba(0,0,0,0.8);
 }
 
 .hero-actions{display:flex;gap:0.75rem;flex-wrap:wrap}
@@ -440,10 +457,15 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
    TOP AD BAR
 ═══════════════════════════════════════════════ */
 .ad-bar{
+  display:flex;justify-content:center;
+  background:transparent;
+  border-bottom:none;
+  padding:0;
+}
+.ad-bar:has(.has-ads){
   background:var(--surface);
   border-bottom:1px solid var(--border);
   padding:6px 1.5rem;
-  display:flex;justify-content:center;
 }
 
 /* ═══════════════════════════════════════════════
@@ -480,8 +502,8 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
   box-shadow:0 0 8px rgba(192,57,43,0.4);
 }
 .section-title{
-  font-family:var(--f-display);font-size:0.92rem;font-weight:700;
-  color:var(--text);letter-spacing:0.08em;text-transform:uppercase;
+  font-family:var(--f-display);font-size:0.95rem;font-weight:700;
+  color:#f0ece0;letter-spacing:0.08em;text-transform:uppercase;
 }
 .section-count{
   font-family:var(--f-mono);font-size:0.62rem;
@@ -552,14 +574,14 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 ═══════════════════════════════════════════════ */
 .anime-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(158px,1fr));
-  gap:1.1rem;
+  grid-template-columns:repeat(auto-fill,minmax(165px,1fr));
+  gap:1.2rem;
   margin-bottom:2rem;
 }
 
 .anime-card{
-  background:var(--card);
-  border:1px solid var(--border);
+  background:#222222;
+  border:1px solid #525252;
   border-radius:2px;
   overflow:hidden;cursor:pointer;
   transition:border-color 0.25s,box-shadow 0.25s,transform 0.2s;
@@ -666,13 +688,15 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 /* Card body */
 .card-body{padding:0.7rem 0.75rem 0.75rem;border-top:1px solid var(--border)}
 .card-title{
-  font-family:var(--f-body);font-size:0.83rem;font-weight:700;
-  line-height:1.35;color:var(--text);margin-bottom:4px;
+  font-family:var(--f-body);font-size:0.85rem;font-weight:700;
+  line-height:1.35;color:#f0ece0;margin-bottom:4px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  text-shadow:0 1px 3px rgba(0,0,0,0.5);
 }
 .card-en{
-  font-family:var(--f-mono);font-size:0.59rem;color:var(--text2);
+  font-family:var(--f-mono);font-size:0.6rem;color:var(--text2);
   margin-bottom:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  opacity:0.9;
 }
 .card-tags{display:flex;flex-wrap:wrap;gap:3px}
 .card-tag{
@@ -1092,21 +1116,17 @@ footer::before{
 .e404-btn:hover{background:var(--red-h);transform:translateY(-1px)}
 @media(max-width:768px){
   .hero-content{padding:1.5rem;max-width:100%;position:relative;z-index:3}
-  .hero-poster-zone{
-    width:100%;left:0;right:0;opacity:1;
-  }
+  .hero-poster-zone{width:100%;left:0;right:0;opacity:1}
   .hero-poster-img{
-    mask-image:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,transparent 100%),
-               linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.3) 100%);
-    -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,transparent 100%),
-               linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.3) 100%);
-    opacity:0.35;
+    mask-image:linear-gradient(180deg,rgba(0,0,0,0.15) 0%,transparent 100%);
+    -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,0.15) 0%,transparent 100%);
+    opacity:0.45;
   }
   .hero-gradient{
-    background:linear-gradient(180deg, rgba(22,22,22,0.3) 0%, var(--surface) 75%);
+    background:linear-gradient(180deg, rgba(22,22,22,0.15) 0%, rgba(22,22,22,0.6) 50%, var(--surface) 85%);
   }
-  .hero-title-th{font-size:1.4rem}
-  .hero-desc{font-size:0.82rem}
+  .hero-title-th{font-size:1.5rem}
+  .hero-desc{font-size:0.84rem}
   nav{display:none}
   nav.open{
     display:flex;flex-direction:column;
@@ -1156,7 +1176,7 @@ footer::before{
      TOP LEADERBOARD AD (stacks up to 10)
 ══════════════════════════════════════ -->
 <div class="ad-bar">
-  <div id="slot-leaderboard-top" class="ad-stack ad-728-h" style="max-width:728px;margin:0 auto">
+  <div id="slot-leaderboard-top" class="ad-stack ad-728-h" style="width:100%;max-width:1280px;margin:0 auto">
     <div class="ad-stack-placeholder ad-728-h"><p>728 × 90 — Leaderboard Top</p></div>
   </div>
 </div>
@@ -1386,10 +1406,10 @@ footer::before{
       <div class="player-container">
         <div class="player-header">
           <div class="player-live">
-            <div class="player-live-dot"></div>LIVE
+            <div class="player-live-dot"></div><span id="playerLiveLabel">กำลังโหลด</span>
           </div>
           <div class="player-title-text" id="playerTitle">—</div>
-          <div class="player-src" id="playerSrc">—</div>
+
         </div>
         <div class="player-ratio" id="playerRatio">
           <div class="no-video">
@@ -1481,7 +1501,7 @@ footer::before{
   <div class="footer-wrap">
     <!-- FOOTER LEADERBOARD AD (stacks up to 10) -->
     <div style="display:flex;justify-content:center;margin-bottom:2rem">
-      <div id="slot-leaderboard-footer" class="ad-stack ad-728-h" style="max-width:728px;width:100%">
+      <div id="slot-leaderboard-footer" class="ad-stack ad-728-h" style="width:100%;max-width:1280px;margin:0 auto">
         <div class="ad-stack-placeholder ad-728-h"><p>728 × 90 — Footer Leaderboard · up to 10</p></div>
       </div>
     </div>
@@ -1583,7 +1603,7 @@ function normalizeAnime(raw, idx) {
   return {
     id:           idx,
     slug:         raw.slug         || '',
-    title_th:     raw.title_th     || raw.title || raw.slug || 'Unknown',
+    title_th:     (raw.title_th || raw.title || raw.slug || 'Unknown').replace(/\s*[-–]\s*Anime\s*TH\s*$/i, '').trim(),
     title_en:     raw.title_en     || raw.slug?.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()) || '',
     status:       raw.status       || 'airing',
     episodes:     raw.episode_count|| 0,
@@ -1591,7 +1611,7 @@ function normalizeAnime(raw, idx) {
     genres:       raw.genres       || [],
     img:          raw.cover_url    || REAL_IMGS[idx % REAL_IMGS.length],
     emoji:        EMOJIS[idx % EMOJIS.length],
-    desc:         raw.desc         || '',
+    desc:         (raw.desc || '').replace(/&hellip;/g,'…').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#8220;/g,'"').replace(/&#8221;/g,'"').replace(/&#8216;/g,"'").replace(/&#8217;/g,"'").replace(/\[&hellip;\]/g,'…').replace(/&[a-z]+;/g,'').replace(/&#\d+;/g,'').trim(),
     source_url:   raw.source_url   || `https://anime-th.com/anime/${raw.slug}/`,
     video_url:    null,
     episodes_list: [], // filled after episodes.json loads
@@ -1675,6 +1695,7 @@ async function loadData() {
   // Apply saved language (default Thai)
   currentLang = localStorage.getItem('bj88_lang') || 'th';
 
+  buildFilters();
   renderHero(0);
   initHeroCycle();
   renderListing();
@@ -1740,7 +1761,7 @@ function renderListing() {
   const e = Math.min(start + state.perPage, total);
 
   setHTML('airingGrid',   pageA.length ? pageA.map(renderCard).join('') : '<p style="color:var(--text3);padding:1rem;font-size:0.82rem">ไม่พบรายการ</p>');
-  setHTML('completeGrid', pageC.map(renderCard).join(''));
+  setHTML('completeGrid', pageC.length ? pageC.map(renderCard).join('') : '');
   setText('airingCount',   String(airing.length));
   setText('completeCount', String(complete.length));
   setText('resultCount',   total ? `แสดง ${s}–${e} จาก ${total}` : 'ไม่พบรายการ');
@@ -1822,7 +1843,9 @@ function trendHTML(list) {
 }
 function renderSidebars() {
   setHTML('trendingWidget', trendHTML(ANIME.slice(0,8)));
-  setHTML('recentWidget',   trendHTML(ANIME.slice(0,5).map(a => ({...a}))));
+  // Recent = sorted by scraped_at descending
+  const recentSorted = [...ANIME].sort((a,b) => (b.scraped_at||'').localeCompare(a.scraped_at||'')).slice(0,5);
+  setHTML('recentWidget', trendHTML(recentSorted));
 }
 
 /* ═══════════════════════════════════════════════
@@ -1860,7 +1883,9 @@ function jumpHero(i) {
 }
 
 function initHeroCycle() {
-  const HEROES  = [0,1,2,3];
+  // Pick up to 5 airing anime with covers for hero
+  const airingWithImg = ANIME.filter(a => a.status === 'airing' && a.img).slice(0, 5);
+  const HEROES = airingWithImg.length >= 2 ? airingWithImg.map(a => a.id) : [0,1,2,3].filter(i => ANIME[i]);
   const dotsEl  = el('heroDots');
   if (!dotsEl) return;
   dotsEl.innerHTML = HEROES.map((_, i) =>
@@ -1911,7 +1936,7 @@ function openWatch(id) {
     <span class="meta-lbl">สถานะ</span><span class="meta-val">${statusLabel}</span>
     <span class="meta-lbl">ตอน</span><span class="meta-val">${a.episodes} ตอน</span>
     <span class="meta-lbl">ปี</span><span class="meta-val">${a.year}</span>
-    <span class="meta-lbl">เสียง</span><span class="meta-val">ซับไทย</span>`);
+    <span class="meta-lbl">เสียง</span><span class="meta-val">${a.episodes_list?.some(e=>e.th) && a.episodes_list?.some(e=>e.sub) ? 'ซับไทย • พากย์ไทย' : a.episodes_list?.some(e=>e.th) ? 'พากย์ไทย' : 'ซับไทย'}</span>`);
   setHTML('watchTags', a.genres.map(g => `<span class="card-tag">${g}</span>`).join(''));
 
   // Episode list — uses data-idx, NO JSON in onclick
@@ -1958,6 +1983,7 @@ function loadEpisode(idx) {
   const a  = ANIME[activeAnimeId];
   if (!ep || !a) return;
   setText('playerTitle', `${a.title_th} — EP.${ep.n}`);
+  setText('playerLiveLabel', `EP.${ep.n}`);
   setText('playerSrc', 'anime-th.com');
   const watchUrl = a.source_url || `https://anime-th.com/anime/${a.slug}/`;
   setHTML('playerRatio', `
@@ -1974,6 +2000,19 @@ function loadEpisode(idx) {
 function switchLang(lang, btn) {
   document.querySelectorAll('.lang-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
+  // Filter episodes by language tab
+  const a = ANIME[activeAnimeId];
+  if (!a) return;
+  const allEps = a.episodes_list || [];
+  if (lang === 'sub') {
+    activeEpisodes = allEps.filter(ep => ep.sub !== false);
+  } else if (lang === 'th') {
+    const dubbed = allEps.filter(ep => ep.th === true);
+    activeEpisodes = dubbed.length > 0 ? dubbed : allEps;
+  } else {
+    activeEpisodes = allEps;
+  }
+  renderEpisodes();
 }
 
 /* ═══════════════════════════════════════════════
@@ -1992,6 +2031,21 @@ function filterStatus(s) {
   state.page   = 1;
   showPage('listing');
   renderListing();
+}
+function buildFilters() {
+  // Auto-populate genre and year dropdowns from actual data
+  const genres = [...new Set(ANIME.flatMap(a => a.genres))].filter(Boolean).sort();
+  const years  = [...new Set(ANIME.map(a => a.year))].filter(Boolean).sort((a,b) => b-a);
+  const gf = el('genreFilter');
+  const yf = el('yearFilter');
+  if (gf) {
+    const cur = gf.value;
+    gf.innerHTML = '<option value="">ทุกประเภท</option>' + genres.map(g=>`<option${g===cur?' selected':''}>${g}</option>`).join('');
+  }
+  if (yf) {
+    const cur = yf.value;
+    yf.innerHTML = '<option value="">ทุกปี</option>' + years.map(y=>`<option${String(y)===cur?' selected':''}>${y}</option>`).join('');
+  }
 }
 function applyFilters() {
   const gf = el('genreFilter');
@@ -2207,18 +2261,27 @@ function renderAdSlots() {
       clickUrl: slotData.clickUrl || '',
     }];
 
-    container.innerHTML = items.filter(item => item.code || item.imgUrl).map(item => {
+    const rendered = items.filter(item => item.code || item.imgUrl).map(item => {
       if (item.type === 'code' && item.code) {
         return `<div class="ad-stack-item">${item.code}</div>`;
       } else if (item.imgUrl) {
         const wrap = item.clickUrl
-          ? `<a href="${item.clickUrl}" target="_blank" rel="noopener sponsored">`
-          : '';
-        const wrapEnd = item.clickUrl ? '</a>' : '';
-        return `<div class="ad-stack-item">${wrap}<img src="${item.imgUrl}" alt="Advertisement" loading="lazy"/>${wrapEnd}</div>`;
+          ? `<a href="${item.clickUrl}" target="_blank" rel="noopener sponsored" style="display:block;width:100%">`
+          : '<div style="display:block;width:100%">';
+        const wrapEnd = item.clickUrl ? '</a>' : '</div>';
+        // Flexible image — fills container width, any height/ratio supported
+        return `<div class="ad-stack-item">${wrap}<img src="${item.imgUrl}" alt="Advertisement" loading="lazy" style="width:100%;height:auto;display:block;max-width:100%"/>${wrapEnd}</div>`;
       }
       return '';
-    }).join('');
+    }).filter(Boolean).join('');
+
+    if (rendered) {
+      container.innerHTML = rendered;
+      container.classList.add('has-ads');
+      // Remove placeholder if present
+      const ph = container.querySelector('.ad-stack-placeholder');
+      if (ph) ph.remove();
+    }
   });
 }
 
