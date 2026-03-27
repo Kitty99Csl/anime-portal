@@ -266,7 +266,7 @@ async function main() {
   }
 
   // Step 2-4: Scrape each new anime — limit per run to avoid timeout
-  const MAX_PER_RUN = 500; // ~45 min safe. Increase after testing.
+  const MAX_PER_RUN = 150; // ~12 min safe. Run multiple times to build up library.
   const slugsThisRun = newSlugs.slice(0, MAX_PER_RUN);
   if (newSlugs.length > MAX_PER_RUN) {
     console.log(`⚡ Capped at ${MAX_PER_RUN} this run — ${newSlugs.length - MAX_PER_RUN} remaining for next run\n`);
