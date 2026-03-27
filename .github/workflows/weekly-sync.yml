@@ -26,6 +26,7 @@ jobs:
       - name: Generate sitemap
         run: node scripts/generate-sitemap.js
         working-directory: .
+        continue-on-error: true  # don't block commit if sitemap fails
 
       - name: Commit updated data
         run: |
