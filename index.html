@@ -1641,7 +1641,23 @@ async function loadData() {
     // Normalize into UI format
     ANIME = animeRaw.map((raw, idx) => {
       const a = normalizeAnime(raw, idx);
-      a.episodes_list = EPISODES_MAP[raw.slug] || [{n:'01',sub:true,th:false,url:null}];
+      // Use episodes from episodes.json if available
+      // Otherwise generate episode buttons from episode_count
+      const mappedEps = EPISODES_MAP[raw.slug] || [];
+      if (mappedEps.length > 0) {
+        a.episodes_list = mappedEps;
+      } else if (raw.episode_count && raw.episode_count > 0) {
+        // Generate placeholder episode list from count
+        a.episodes_list = Array.from({length: raw.episode_count}, (_, i) => ({
+          id: null,
+          n: String(i + 1).padStart(2, '0'),
+          sub: true,
+          th: false,
+          url: null,
+        }));
+      } else {
+        a.episodes_list = [{n:'01',sub:true,th:false,url:null}];
+      }
       // Set video_url from first episode if available
       if (a.episodes_list[0]?.url) a.video_url = a.episodes_list[0].url;
       a.episodes = a.episodes_list.length || raw.episode_count || 0;
