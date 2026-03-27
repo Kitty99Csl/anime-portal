@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="lo">
+<html lang="th">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 
 <!-- ═══ SEO META TAGS ═══ -->
-<title>AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ</title>
-<meta name="description" content="ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ພ້ອມຂໍ້ມູນອານິເມ ອັບເດດເນື້ອຫາໃໝ່ ແລະ ຊ່ວຍນຳທາງໄປຫາການຮັບຊົມທີ່ສະດວກຂຶ້ນ."/>
-<meta name="keywords" content="ອານິເມ,anime,AniWatch-BJ88,BJ88,ອານິເມລາວ,ດູອານິເມ"/>
+<title>AniWatch-BJ88 - ดูอนิเมะออนไลน์ ซับไทย พากย์ไทย อัปเดตทุกสัปดาห์</title>
+<meta name="description" content="ดูอนิเมะออนไลน์ฟรีกับ AniWatch-BJ88 รวมอนิเมะซับไทย พากย์ไทย และอนิเมะจีน อัปเดตใหม่ทุกสัปดาห์ ค้นหาง่าย รับชมได้เลย"/>
+<meta name="keywords" content="อนิเมะ,anime,AniWatch-BJ88,BJ88,ดูอนิเมะ,ซับไทย,พากย์ไทย"/>
 <meta name="robots" content="index, follow"/>
 <meta name="author" content="AniWatch-BJ88"/>
 <link rel="canonical" href="https://anime.bj88la.net/"/>
@@ -15,18 +15,18 @@
 <!-- ═══ OPEN GRAPH — Facebook / LINE / Telegram preview ═══ -->
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="AniWatch-BJ88"/>
-<meta property="og:title" content="AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ"/>
-<meta property="og:description" content="ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ພ້ອມຂໍ້ມູນອານິເມ ອັບເດດເນື້ອຫາໃໝ່ ແລະ ຊ່ວຍນຳທາງໄປຫາການຮັບຊົມທີ່ສະດວກຂຶ້ນ."/>
+<meta property="og:title" content="AniWatch-BJ88 - ดูอนิเมะออนไลน์ ซับไทย พากย์ไทย"/>
+<meta property="og:description" content="รวมอนิเมะซับไทย พากย์ไทย และอนิเมะจีน อัปเดตใหม่ทุกสัปดาห์ ค้นหาง่าย รับชมได้เลย"/>
 <meta property="og:url" content="https://anime.bj88la.net/"/>
 <meta property="og:image" content="https://anime-th.com/wp-content/uploads/2026/01/jqkDWnBDltFCjAdhxCqUWg9GXFB.jpg"/>
 <meta property="og:image:width" content="300"/>
 <meta property="og:image:height" content="400"/>
-<meta property="og:locale" content="lo_LA"/>
+<meta property="og:locale" content="th_TH"/>
 
 <!-- ═══ TWITTER / X CARD ═══ -->
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="AniWatch-BJ88 - ແຫຼ່ງລວມອານິເມ"/>
-<meta name="twitter:description" content="ສຳຫຼວດໂລກອານິເມກັບ AniWatch-BJ88 ອັບເດດເນື້ອຫາໃໝ່ສະເໝີ"/>
+<meta name="twitter:title" content="AniWatch-BJ88 - ดูอนิเมะออนไลน์ ซับไทย พากย์ไทย"/>
+<meta name="twitter:description" content="รวมอนิเมะซับไทย พากย์ไทย อัปเดตใหม่ทุกสัปดาห์ ค้นหาง่าย รับชมได้เลย"/>
 <meta name="twitter:image" content="https://anime-th.com/wp-content/uploads/2026/01/jqkDWnBDltFCjAdhxCqUWg9GXFB.jpg"/>
 
 <!-- ═══ GOOGLE ANALYTICS GA4 ═══ -->
@@ -125,6 +125,11 @@ body{
 .ad-300{width:300px;height:250px;flex-shrink:0}
 .ad-600{width:300px;height:600px;flex-shrink:0}
 .ad-responsive{width:100%;height:70px}
+
+/* Ad bar responsive — hide overflow on mobile, don't break layout */
+.ad-bar{overflow:hidden}
+.ad-728-h{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ad-60-h{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
 /* ═══════════════════════════════════════════════
    HEADER
@@ -269,15 +274,15 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 }
 
 .hero-poster-zone{
-  position:absolute;right:0;top:0;bottom:0;width:50%;
+  position:absolute;right:0;top:0;bottom:0;width:60%;
   display:flex;align-items:center;justify-content:center;
   overflow:hidden;
 }
 .hero-poster-img{
-  height:100%;width:100%;object-fit:cover;
-  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.6) 25%,black 60%);
-  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.6) 25%,black 60%);
-  opacity:0.45;
+  height:100%;width:100%;object-fit:cover;object-position:center top;
+  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.5) 20%,black 50%);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.5) 20%,black 50%);
+  opacity:0.75;
   transform:scale(1.05);
   transition:transform 8s ease;
 }
@@ -1057,8 +1062,20 @@ footer::before{
 }
 .e404-btn:hover{background:var(--red-h);transform:translateY(-1px)}
 @media(max-width:768px){
-  .hero-content{padding:1.5rem;max-width:100%}
-  .hero-poster-zone{opacity:0.3}
+  .hero-content{padding:1.5rem;max-width:100%;position:relative;z-index:3}
+  .hero-poster-zone{
+    width:100%;left:0;right:0;opacity:1;
+  }
+  .hero-poster-img{
+    mask-image:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,transparent 100%),
+               linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.3) 100%);
+    -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,0.2) 0%,transparent 100%),
+               linear-gradient(90deg,transparent 0%,rgba(0,0,0,0.3) 100%);
+    opacity:0.35;
+  }
+  .hero-gradient{
+    background:linear-gradient(180deg, rgba(22,22,22,0.3) 0%, var(--surface) 75%);
+  }
   .hero-title-th{font-size:1.4rem}
   .hero-desc{font-size:0.82rem}
   nav{display:none}
@@ -1074,7 +1091,7 @@ footer::before{
   .watch-wrap{grid-template-columns:1fr}
   .page-wrap{grid-template-columns:1fr}
   .sidebar{display:none}
-  .hero{min-height:360px}
+  .hero{min-height:420px}
   .hero-actions{gap:0.5rem}
   .btn-watch,.btn-info{padding:0.55rem 1.1rem;font-size:0.8rem;min-height:44px}
   .filter-bar{gap:6px}
@@ -1086,6 +1103,7 @@ footer::before{
   .logo-sub{display:none}
   .footer-top{grid-template-columns:1fr}
   .ad-300{width:100%}
+  .ad-728-h,.ad-60-h{overflow-x:auto}
 }
 @media(max-width:480px){
   .anime-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.75rem}
@@ -1134,24 +1152,18 @@ footer::before{
     </a>
 
     <nav id="mainNav">
-      <a href="#" class="active" data-i18n="nav_home" onclick="showPage('listing');setActive(this);return false">ໜ້າຫຼັກ</a>
-      <a href="#" data-i18n="nav_all" onclick="setFilter('all',null);setActive(this);showPage('listing');return false">ທັງໝົດ</a>
-      <a href="#" data-i18n="nav_airing" onclick="filterStatus('airing');setActive(this);return false">ກຳລັງອອກ</a>
-      <a href="#" data-i18n="nav_complete" onclick="filterStatus('complete');setActive(this);return false">ສຳເລັດ</a>
-      <a href="#" data-i18n="nav_upcoming" onclick="filterStatus('upcoming');setActive(this);return false">ໄວໆນີ້</a>
+      <a href="#" class="active" data-i18n="nav_home" onclick="showPage('listing');setActive(this);return false">หน้าแรก</a>
+      <a href="#" data-i18n="nav_all" onclick="setFilter('all',null);setActive(this);showPage('listing');return false">ทั้งหมด</a>
+      <a href="#" data-i18n="nav_airing" onclick="filterStatus('airing');setActive(this);return false">ออกอากาศ</a>
+      <a href="#" data-i18n="nav_complete" onclick="filterStatus('complete');setActive(this);return false">จบแล้ว</a>
+      <a href="#" data-i18n="nav_upcoming" onclick="filterStatus('upcoming');setActive(this);return false">เร็วๆ นี้</a>
     </nav>
 
     <div class="search-wrap">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
       </svg>
-      <input type="text" id="searchInput" placeholder="ຄົ້ນຫາ..." oninput="handleSearch()"/>
-    </div>
-
-    <div class="lang-switcher" id="langSwitcher">
-      <button class="lang-btn active" onclick="setLang('lo',this)">ລາວ</button>
-      <button class="lang-btn" onclick="setLang('th',this)">ไทย</button>
-      <button class="lang-btn" onclick="setLang('en',this)">EN</button>
+      <input type="text" id="searchInput" placeholder="ค้นหาอนิเมะ..." oninput="handleSearch()"/>
     </div>
 
     <button class="menu-btn" onclick="toggleMobileNav()">
@@ -1219,26 +1231,26 @@ footer::before{
 
       <!-- FILTER BAR -->
       <div class="filter-bar">
-        <button class="filter-btn active" onclick="setFilter('all',this)" data-i18n="filter_all">ທັງໝົດ</button>
-        <button class="filter-btn" onclick="setFilter('airing',this)" data-i18n="filter_airing">ກຳລັງອອກ</button>
-        <button class="filter-btn" onclick="setFilter('complete',this)" data-i18n="filter_complete">ສຳເລັດ</button>
-        <button class="filter-btn" onclick="setFilter('upcoming',this)" data-i18n="filter_upcoming">ໄວໆນີ້</button>
+        <button class="filter-btn active" onclick="setFilter('all',this)" data-i18n="filter_all">ทั้งหมด</button>
+        <button class="filter-btn" onclick="setFilter('airing',this)" data-i18n="filter_airing">ออกอากาศ</button>
+        <button class="filter-btn" onclick="setFilter('complete',this)" data-i18n="filter_complete">จบแล้ว</button>
+        <button class="filter-btn" onclick="setFilter('upcoming',this)" data-i18n="filter_upcoming">เร็วๆ นี้</button>
         <div class="filter-sep"></div>
         <select class="filter-select" id="genreFilter" onchange="applyFilters()">
-          <option value="">ທຸກປະເພດ</option>
-          <option>ແອັກຊັ່ນ</option><option>ໂຣແມນຕິກ</option><option>ຕະລົກ</option>
-          <option>ແຟນຕາຊີ</option><option>ຜະຈົນໄພ</option><option>ສຍອງຂວັນ</option>
-          <option>ສໄລສ໌ອອຟໄລຟ໌</option><option>ດຣາມ່າ</option><option>ຊູເປີຮີໂຣ</option>
+          <option value="">ทุกประเภท</option>
+          <option>แอคชัน</option><option>โรแมนติก</option><option>ตลก</option>
+          <option>แฟนตาซี</option><option>ผจญภัย</option><option>สยองขวัญ</option>
+          <option>สไลซ์ออฟไลฟ์</option><option>ดราม่า</option><option>ซูเปอร์ฮีโร่</option>
         </select>
         <select class="filter-select" id="yearFilter" onchange="applyFilters()">
-          <option value="">ທຸກປີ</option>
-          <option>2026</option><option>2025</option><option>2024</option>
+          <option value="">ทุกปี</option>
+          <option>2026</option><option>2025</option><option>2024</option><option>2023</option>
         </select>
       </div>
 
       <!-- PER PAGE + COUNT -->
       <div class="per-page-bar">
-        <span class="per-page-label" data-i18n="showing">ສະແດງ:</span>
+        <span class="per-page-label" data-i18n="showing">แสดง:</span>
         <button class="pp-btn" onclick="setPerPage(12,this)">12</button>
         <button class="pp-btn active" onclick="setPerPage(24,this)">24</button>
         <button class="pp-btn" onclick="setPerPage(48,this)">48</button>
@@ -1248,9 +1260,9 @@ footer::before{
       <!-- SECTION: AIRING -->
       <div class="section-head">
         <div class="section-accent"></div>
-        <span class="section-title" id="airingTitle" data-i18n="section_airing">ກຳລັງອອກອາກາດ</span>
+        <span class="section-title" id="airingTitle" data-i18n="section_airing">กำลังออกอากาศ</span>
         <span class="section-count" id="airingCount">0</span>
-        <a href="#" class="section-see-all" data-i18n="see_all">ເບິ່ງທັງໝົດ →</a>
+        <a href="#" class="section-see-all" data-i18n="see_all">ดูทั้งหมด →</a>
       </div>
       <div class="anime-grid" id="airingGrid"></div>
 
@@ -1262,9 +1274,9 @@ footer::before{
       <!-- SECTION: COMPLETED -->
       <div class="section-head" style="margin-top:0.5rem">
         <div class="section-accent"></div>
-        <span class="section-title" id="completeTitle" data-i18n="section_complete">ສຳເລັດແລ້ວ</span>
+        <span class="section-title" id="completeTitle" data-i18n="section_complete">จบแล้ว</span>
         <span class="section-count" id="completeCount">0</span>
-        <a href="#" class="section-see-all" data-i18n="see_all">ເບິ່ງທັງໝົດ →</a>
+        <a href="#" class="section-see-all" data-i18n="see_all">ดูทั้งหมด →</a>
       </div>
       <div class="anime-grid" id="completeGrid"></div>
 
@@ -1325,9 +1337,9 @@ footer::before{
     <div>
       <!-- BREADCRUMB -->
       <div class="breadcrumb">
-        <a href="#" data-i18n="bc_home" onclick="showPage('listing');return false">ໜ້າຫຼັກ</a>
+        <a href="#" data-i18n="bc_home" onclick="showPage('listing');return false">หน้าแรก</a>
         <span class="sep">›</span>
-        <a href="#" data-i18n="bc_anime" onclick="showPage('listing');return false">ອານິເມ</a>
+        <a href="#" data-i18n="bc_anime" onclick="showPage('listing');return false">อนิเมะ</a>
         <span class="sep">›</span>
         <span class="current" id="breadAnime">—</span>
         <span class="sep">›</span>
@@ -1421,8 +1433,8 @@ footer::before{
   <div class="page-404">
     <div class="e404-code">404</div>
     <div class="e404-title">PAGE NOT FOUND</div>
-    <p class="e404-desc">ບໍ່ພົບໜ້ານີ້ ອາດຖືກລຶບໄປແລ້ວ ຫຼື URL ບໍ່ຖືກຕ້ອງ</p>
-    <a class="e404-btn" href="#" onclick="showPage('listing');return false">← ກັບໄປໜ້າຫຼັກ</a>
+    <p class="e404-desc">ไม่พบหน้านี้ อาจถูกลบไปแล้ว หรือ URL ไม่ถูกต้อง</p>
+    <a class="e404-btn" href="#" onclick="showPage('listing');return false">← กลับหน้าแรก</a>
   </div>
 </div>
 
@@ -1453,30 +1465,29 @@ footer::before{
             <span class="logo-sub">anime.bj88la.net</span>
           </div>
         </a>
-        <p style="margin-top:0.75rem" data-i18n="footer_desc">ແຫຼ່ງລວມອານິເມ ອັບເດດທຸກອາທິດ ຄົ້ນຫາງ່າຍ ຮັບຊົມໄດ້ໄວ</p>
-        <div class="footer-disclaimer">⚠️ DEMO — ບໍ່ໄດ້ໂຮສວິດີໂອໃດໆ ວິດີໂອເຊື່ອມໄປຫາແຫຼ່ງຕົ້ນສະບັບ</div>
+        <p style="margin-top:0.75rem" data-i18n="footer_desc">พอร์ทัลดูอนิเมะ อัปเดตทุกสัปดาห์ ครบทุกเรื่อง</p>
+        <div class="footer-disclaimer">⚠️ เว็บไซต์นี้ไม่ได้โฮสต์วิดีโอใดๆ — วิดีโอเชื่อมต่อไปยังแหล่งต้นฉบับ</div>
       </div>
 
       <div class="footer-col">
-        <h4 data-i18n="footer_content">ເນື້ອຫາ</h4>
-        <a href="#" data-i18n="nav_airing" onclick="filterStatus('airing');return false">ກຳລັງອອກ</a>
-        <a href="#" data-i18n="nav_complete" onclick="filterStatus('complete');return false">ສຳເລັດ</a>
-        <a href="#" data-i18n="nav_upcoming" onclick="filterStatus('upcoming');return false">ໄວໆນີ້</a>
+        <h4 data-i18n="footer_content">เนื้อหา</h4>
+        <a href="#" data-i18n="nav_airing" onclick="filterStatus('airing');return false">ออกอากาศ</a>
+        <a href="#" data-i18n="nav_complete" onclick="filterStatus('complete');return false">จบแล้ว</a>
+        <a href="#" data-i18n="nav_upcoming" onclick="filterStatus('upcoming');return false">เร็วๆ นี้</a>
       </div>
 
       <div class="footer-col">
-        <h4 data-i18n="footer_about">ກ່ຽວກັບ</h4>
-        <a href="/policy.html">ນະໂຍບາຍຄວາມເປັນສ່ວນຕົວ</a>
-        <a href="/policy.html#terms">ເງື່ອນໄຂການນໍາໃຊ້</a>
-        <a href="/policy.html#dmca">DMCA / ລາຍງານ</a>
-        <a href="/policy.html#contact">ຕິດຕໍ່ເຮົາ</a>
+        <h4 data-i18n="footer_about">เกี่ยวกับ</h4>
+        <a href="/policy.html">นโยบายความเป็นส่วนตัว</a>
+        <a href="/policy.html#terms">เงื่อนไขการใช้งาน</a>
+        <a href="/policy.html#dmca">DMCA / รายงาน</a>
+        <a href="/policy.html#contact">ติดต่อเรา</a>
         <a href="/admin.html" style="color:var(--text3);margin-top:8px;font-size:0.72rem">⚙ Admin Panel</a>
       </div>
     </div>
 
     <div class="footer-bottom">
       <span>© 2026 ANIWATCH-BJ88 · anime.bj88la.net</span>
-      <span style="margin-left:auto">PHASE 1 · GitHub + Cloudflare Workers</span>
     </div>
   </div>
 </footer>
@@ -1609,9 +1620,8 @@ async function loadData() {
     ANIME = buildDemoAnime();
   }
 
-  // Now render everything
-  const savedLang = localStorage.getItem('bj88_lang') || 'lo';
-  if (savedLang !== 'lo') { currentLang = savedLang; }
+  // Always use Thai
+  currentLang = 'th';
 
   renderHero(0);
   initHeroCycle();
@@ -1671,7 +1681,7 @@ function renderListing() {
   const complete = all.filter(a => a.status !== 'airing');
   const start   = (state.page - 1) * state.perPage;
   const pageA   = airing.slice(start, start + state.perPage);
-  const pageC   = complete.slice(0, 6);
+  const pageC   = complete.slice(0, state.perPage);
   const total   = airing.length;
   const pages   = Math.max(1, Math.ceil(total / state.perPage));
   const s = total === 0 ? 0 : start + 1;
@@ -1694,10 +1704,9 @@ function renderCard(a) {
     <div class="card-thumb">
       <div class="card-fallback" id="fb-${a.id}">${a.emoji}</div>
       <img src="${a.img}" alt="" loading="lazy"
-           style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover"
+           style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.3s"
            onload="this.style.opacity=1"
-           onerror="this.style.display='none'"
-           style="opacity:1;transition:opacity 0.3s"/>
+           onerror="this.style.display='none'"/>
       <div class="card-thumb-grad"></div>
       <span class="card-status ${sClass}">${sLabel}</span>
       <span class="card-ep">${a.episodes} ตอน</span>
@@ -1772,23 +1781,25 @@ function renderHero(idx) {
   const img = el('heroPosterImg');
   if (img) img.src = a.img;
   setText('heroEmoji',   a.emoji);
-  setText('heroBadge',   {airing:'กำลังออกอากาศ', complete:'จบแล้ว', upcoming:'เร็วๆ นี้'}[a.status] || '');
+  setText('heroBadge',   {airing:'กำลังออกอากาศ', complete:'จบแล้ว', upcoming:'เร็วๆ นี้'}[a.status] || 'กำลังออกอากาศ');
   setText('heroTitleTh', a.title_th);
-  setText('heroTitleEn', a.title_en + ' — Season 1');
-  setText('heroDesc',    a.desc);
+  setText('heroTitleEn', a.title_en);
+  setText('heroDesc',    a.desc || '');
   const btnWatch = el('heroBtnWatch');
   const btnInfo  = el('heroBtnInfo');
   const btnSrc   = el('heroBtnSource');
-  if (btnWatch) btnWatch.onclick = e => { e.preventDefault(); openWatch(a.id); };
-  if (btnInfo)  btnInfo.onclick  = e => { e.preventDefault(); openWatch(a.id); };
+  if (btnWatch) { btnWatch.onclick = e => { e.preventDefault(); openWatch(a.id); }; btnWatch.textContent = '▶ ดูเลย EP.1'; }
+  if (btnInfo)  { btnInfo.onclick  = e => { e.preventDefault(); openWatch(a.id); }; btnInfo.textContent  = 'รายละเอียด'; }
   if (btnSrc)   btnSrc.href = a.source_url;
+  const subLabel = a.slug?.includes('-th') || a.slug?.includes('th') ? 'พากย์ไทย' : 'ซับไทย';
+  const statusLabel = {airing:'ออกอากาศ', complete:'จบแล้ว', upcoming:'เร็วๆ นี้'}[a.status] || '';
   setHTML('heroTags', [
-    `<span class="hero-tag gold">ซับไทย</span>`,
-    `<span class="hero-tag">${a.episodes} ตอน</span>`,
+    `<span class="hero-tag gold">${subLabel}</span>`,
+    a.episodes ? `<span class="hero-tag">${a.episodes} ตอน</span>` : '',
     `<span class="hero-tag">${a.year}</span>`,
-    `<span class="hero-tag red">• ${{airing:'ออกอากาศ',complete:'จบแล้ว',upcoming:'เร็วๆ นี้'}[a.status]}</span>`,
-    ...a.genres.map(g => `<span class="hero-tag">${g}</span>`)
-  ].join(''));
+    `<span class="hero-tag red">• ${statusLabel}</span>`,
+    ...a.genres.slice(0,2).map(g => `<span class="hero-tag">${g}</span>`)
+  ].filter(Boolean).join(''));
 }
 
 // Global stub — replaced by initHeroCycle with real impl
@@ -2070,7 +2081,7 @@ const I18N = {
   },
 };
 
-let currentLang = localStorage.getItem('bj88_lang') || 'lo';
+let currentLang = 'th';
 
 function t(key) { return (I18N[currentLang] || I18N.lo)[key] || key; }
 
