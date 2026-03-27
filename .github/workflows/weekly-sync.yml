@@ -8,7 +8,9 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 70    # 500 anime × ~4s = ~35min. Increase MAX_PER_RUN in scraper.js to do more.
+    timeout-minutes: 70
+    permissions:
+      contents: write  # needed to push anime.json + sitemap back to repo
 
     steps:
       - name: Checkout repo
