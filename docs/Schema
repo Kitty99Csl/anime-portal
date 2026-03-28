@@ -1,0 +1,139 @@
+-- ═══════════════════════════════════════════════
+-- AniWatch-BJ88 — Supabase Schema
+-- Run this in Supabase SQL Editor (one click)
+-- ═══════════════════════════════════════════════
+
+-- ── SITES ────────────────────────────────────────
+create table if not exists sites (
+  id         serial primary key,
+  domain     text not null unique,
+  name       text not null,
+  active     boolean default true,
+  created_at timestamptz default now()
+);
+insert into sites (domain, name) values ('anime.bj88la.net', 'AniWatch-BJ88')
+on conflict (domain) do nothing;
+
+-- ── ADMINS ───────────────────────────────────────
+create table if not exists admins (
+  id         serial primary key,
+  site_id    int references sites(id) on delete cascade,
+  username   text not null,
+  password   text not null,
+  role       text default 'editor',
+  created_at timestamptz default now()
+);
+insert into admins (site_id, username, password, role)
+values (1, 'admin', 'bj88anime', 'super_admin')
+on conflict do nothing;
+
+-- ── ANIME ────────────────────────────────────────
+create table if not exists anime (
+  id            serial primary key,
+  site_id       int references sites(id) default 1,
+  slug          text not null,
+  title_th      text,
+  title_en      text,
+  cover_url     text,
+  description   text,
+  genres        text[] default '{}',
+  year          int,
+  status        text default 'airing',
+  episode_count int default 0,
+  post_id       int,
+  season_id     int,
+  source_url    text,
+  scraped_at    timestamptz,
+  created_at    timestamptz default now(),
+  updated_at    timestamptz default now(),
+  unique(site_id, slug)
+);
+create index if not exists idx_anime_site_status on anime(site_id, status);
+create index if not exists idx_anime_site_slug   on anime(site_id, slug);
+create index if not exists idx_anime_scraped     on anime(scraped_at desc);
+
+-- ── EPISODES ─────────────────────────────────────
+create table if not exists episodes (
+  id         serial primary key,
+  anime_id   int references anime(id) on delete cascade,
+  number     int not null,
+  title      text,
+  has_sub    boolean default true,
+  has_dub    boolean default false,
+  video_url  text,
+  created_at timestamptz default now(),
+  unique(anime_id, number)
+);
+create index if not exists idx_episodes_anime on episodes(anime_id, number);
+
+-- ── BANNERS ──────────────────────────────────────
+create table if not exists banners (
+  id         serial primary key,
+  site_id    int references sites(id) default 1,
+  slot_id    text not null,
+  img_url    text,
+  click_url  text,
+  html_code  text,
+  type       text default 'image',
+  enabled    boolean default true,
+  sort_order int default 0,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+create index if not exists idx_banners_slot on banners(site_id, slot_id, enabled);
+
+-- ── CRAWL LOG ────────────────────────────────────
+create table if not exists crawl_log (
+  id         serial primary key,
+  site_id    int references sites(id) default 1,
+  run_at     timestamptz default now(),
+  added      int default 0,
+  fixed      int default 0,
+  total      int default 0,
+  duration_s int default 0,
+  status     text default 'success',
+  notes      text
+);
+
+-- ── ROW LEVEL SECURITY ───────────────────────────
+alter table anime      enable row level security;
+alter table episodes   enable row level security;
+alter table banners    enable row level security;
+alter table sites      enable row level security;
+alter table admins     enable row level security;
+alter table crawl_log  enable row level security;
+
+-- Public read
+create policy "public read anime"    on anime    for select using (true);
+create policy "public read episodes" on episodes for select using (true);
+create policy "public read banners"  on banners  for select using (enabled = true);
+create policy "public read sites"    on sites    for select using (active = true);
+create policy "anon read admins"     on admins   for select using (true);
+
+-- Scraper writes (anon key)
+create policy "anon insert anime"    on anime    for insert with check (true);
+create policy "anon update anime"    on anime    for update using (true);
+create policy "anon insert episodes" on episodes for insert with check (true);
+create policy "anon update episodes" on episodes for update using (true);
+create policy "anon insert crawl"    on crawl_log for insert with check (true);
+
+-- Admin manages banners (anon key)
+create policy "anon manage banners"  on banners  for all using (true) with check (true);
+
+-- ── AUTO UPDATE updated_at ───────────────────────
+create or replace function update_updated_at()
+returns trigger as $$
+begin new.updated_at = now(); return new; end;
+$$ language plpgsql;
+
+create trigger anime_updated_at
+  before update on anime
+  for each row execute function update_updated_at();
+
+create trigger banners_updated_at
+  before update on banners
+  for each row execute function update_updated_at();
+
+-- Verify
+select table_name from information_schema.tables
+where table_schema = 'public' order by table_name;
