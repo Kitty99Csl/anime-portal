@@ -21,6 +21,88 @@ const DATA_DIR  = path.join(__dirname, '../src/data');
 const BASE_URL  = 'https://anime-th.com';
 const AJAX_URL  = `${BASE_URL}/wp-admin/admin-ajax.php`;
 
+// ── SUPABASE CONFIG ───────────────────────────────
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://pzrzdljwglybljthbffl.supabase.co';
+const SUPABASE_KEY = process.env.SUPABASE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6cnpkbGp3Z2x5Ymxq' +
+  'dGhiZmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NzczNjUsImV4cCI6MjA5MDI1MzM2NX0.HzAKYcSQ_kjlKrf-HQSwVdwi_-J8aBnP6HinMDjfkTA';
+const SITE_ID = 1;
+
+const SB_HEADERS = {
+  'Content-Type':  'application/json',
+  'apikey':        SUPABASE_KEY,
+  'Authorization': `Bearer ${SUPABASE_KEY}`,
+  'Prefer':        'resolution=merge-duplicates',
+};
+
+async function sbQuery(path, options = {}) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: SB_HEADERS,
+    ...options,
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`Supabase ${path}: ${res.status} ${err.slice(0,200)}`);
+  }
+  return res.status === 204 ? null : res.json();
+}
+
+// Upsert anime row → returns id
+async function sbUpsertAnime(data) {
+  const row = {
+    site_id:       SITE_ID,
+    slug:          data.slug,
+    title_th:      data.title_th,
+    title_en:      data.title_en,
+    cover_url:     data.cover_url,
+    description:   data.desc,
+    genres:        data.genres || [],
+    year:          data.year,
+    status:        data.status,
+    episode_count: data.episode_count,
+    post_id:       data.post_id,
+    season_id:     data.season_id,
+    source_url:    data.source_url,
+    scraped_at:    data.scraped_at,
+  };
+  const result = await sbQuery('anime?on_conflict=site_id,slug&select=id', {
+    method:  'POST',
+    headers: { ...SB_HEADERS, 'Prefer': 'return=representation,resolution=merge-duplicates' },
+    body:    JSON.stringify(row),
+  });
+  return result?.[0]?.id || null;
+}
+
+// Upsert episodes for an anime
+async function sbUpsertEpisodes(animeId, episodes) {
+  if (!animeId || !episodes.length) return;
+  const rows = episodes.map(ep => ({
+    anime_id:  animeId,
+    number:    ep.number,
+    title:     ep.title,
+    has_sub:   ep.has_sub,
+    has_dub:   ep.has_dub,
+    video_url: ep.video_url || null,
+  }));
+  await sbQuery('episodes?on_conflict=anime_id,number', {
+    method: 'POST',
+    body:   JSON.stringify(rows),
+  });
+}
+
+// Get all existing slugs from Supabase
+async function sbGetExistingSlugs() {
+  const data = await sbQuery(`anime?site_id=eq.${SITE_ID}&select=slug,episode_count,genres`);
+  return data || [];
+}
+
+// Log crawl run
+async function sbLogCrawl(added, fixed, total, durationS, status, notes) {
+  await sbQuery('crawl_log', {
+    method: 'POST',
+    body:   JSON.stringify({ site_id: SITE_ID, added, fixed, total, duration_s: durationS, status, notes }),
+  });
+}
+
 // Category archive URLs — all 3 contain the full library
 const CATEGORY_URLS = [
   `${BASE_URL}/category/%e0%b8%8b%e0%b8%b1%e0%b8%9a%e0%b9%84%e0%b8%97%e0%b8%a2`,
@@ -243,28 +325,49 @@ async function main() {
 
   fs.mkdirSync(DATA_DIR, { recursive: true });
 
+  const startTime = Date.now();
+
+  // ── LOAD FROM SUPABASE ──
+  console.log('📡 Loading existing data from Supabase...');
+  let sbExisting = [];
+  try {
+    sbExisting = await sbGetExistingSlugs();
+    console.log(`   Found ${sbExisting.length} anime in Supabase`);
+  } catch(err) {
+    console.warn(`   ⚠️ Supabase load failed: ${err.message}`);
+    console.warn('   Falling back to local anime.json');
+  }
+
+  // Also keep local JSON as backup/cache
   const animePath   = path.join(DATA_DIR, 'anime.json');
   const episodePath = path.join(DATA_DIR, 'episodes.json');
-
   let existing     = fs.existsSync(animePath)   ? JSON.parse(fs.readFileSync(animePath,   'utf8')) : [];
   let episodeStore = fs.existsSync(episodePath)  ? JSON.parse(fs.readFileSync(episodePath, 'utf8')) : [];
 
+  // Merge Supabase data into local map
   const slugIndexMap = new Map(existing.map((a, i) => [a.slug, i]));
-  const episodeMap   = Object.fromEntries(episodeStore.map(e => [e.anime_slug, e.episodes]));
+  sbExisting.forEach(a => {
+    if (!slugIndexMap.has(a.slug)) {
+      existing.push(a);
+      slugIndexMap.set(a.slug, existing.length - 1);
+    }
+  });
+  const episodeMap = Object.fromEntries(episodeStore.map(e => [e.anime_slug, e.episodes]));
 
   // ── STEP 1: Collect all slugs ──
   const allSlugs = await getAnimeSlugs(200);
 
   // ── STEP 2: Classify slugs ──
-  const newSlugs   = allSlugs.filter(s => !slugIndexMap.has(s));
+  const sbSlugMap = new Map(sbExisting.map(a => [a.slug, a]));
+  const newSlugs   = allSlugs.filter(s => !sbSlugMap.has(s) && !slugIndexMap.has(s));
   const staleSlugs = allSlugs.filter(s => {
-    if (!slugIndexMap.has(s)) return false;
-    const a = existing[slugIndexMap.get(s)];
-    // Stale = missing episode count OR missing genres OR no episodes saved
+    const sbEntry  = sbSlugMap.get(s);
+    const locEntry = slugIndexMap.has(s) ? existing[slugIndexMap.get(s)] : null;
+    const a = sbEntry || locEntry;
+    if (!a) return false;
     const missingEp     = !a.episode_count || a.episode_count === 0;
     const missingGenres = !a.genres || a.genres.length === 0;
-    const missingEpList = !episodeMap[s] || episodeMap[s].length === 0;
-    return missingEp || missingGenres || missingEpList;
+    return missingEp || missingGenres;
   });
 
   console.log(`\n📊 Status:`);
@@ -323,6 +426,19 @@ async function main() {
         episode_count: episodes.length > 0 ? episodes.length : detail.episode_count,
       };
 
+      // Save to Supabase
+      let animeId = null;
+      try {
+        animeId = await sbUpsertAnime(saveEntry);
+        if (animeId && episodes.length > 0) {
+          await sbUpsertEpisodes(animeId, episodes);
+        }
+        console.log(`  ✅ Saved to Supabase (id: ${animeId})`);
+      } catch(err) {
+        console.warn(`  ⚠️ Supabase save failed: ${err.message} — saving to local JSON only`);
+      }
+
+      // Always save to local JSON as backup
       if (slugIndexMap.has(slug)) {
         const idx = slugIndexMap.get(slug);
         existing[idx] = { ...existing[idx], ...saveEntry };
@@ -330,10 +446,7 @@ async function main() {
         existing.push(saveEntry);
         slugIndexMap.set(slug, existing.length - 1);
       }
-
-      if (episodes.length > 0) {
-        episodeMap[slug] = episodes;
-      }
+      if (episodes.length > 0) episodeMap[slug] = episodes;
       processed++;
 
     } catch (err) {
@@ -359,13 +472,29 @@ async function main() {
   ));
 
   const goodCount = existing.filter(a => a.episode_count > 0 && a.genres?.length > 0).length;
+  const durationS = Math.round((Date.now() - startTime) / 1000);
 
   console.log(`\n💾 anime.json    → ${existing.length} anime`);
   console.log(`💾 episodes.json → ${Object.keys(episodeMap).length} with episodes`);
   console.log(`📊 Complete data: ${goodCount} / ${existing.length} anime`);
-  console.log(`\n✅ Done! Processed ${processed} anime.`);
+  console.log(`\n✅ Done! Processed ${processed} anime in ${durationS}s`);
   if (remaining > 0) {
     console.log(`⚡ ${remaining} more to process — run workflow again to continue.`);
+  }
+
+  // Log to Supabase
+  try {
+    await sbLogCrawl(
+      newSlugs.slice(0, MAX_PER_RUN).length,
+      staleSlugs.slice(0, Math.max(0, MAX_PER_RUN - newSlugs.length)).length,
+      existing.length,
+      durationS,
+      'success',
+      remaining > 0 ? `${remaining} remaining` : 'complete'
+    );
+    console.log('📡 Crawl log saved to Supabase');
+  } catch(err) {
+    console.warn(`⚠️ Could not log to Supabase: ${err.message}`);
   }
 }
 
