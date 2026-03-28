@@ -127,9 +127,12 @@ body{
 .ad-responsive{width:100%;height:70px}
 
 /* Ad bar responsive */
-.ad-bar{overflow:hidden}
-.ad-728-h{overflow-x:hidden}
-.ad-60-h{overflow-x:hidden}
+.ad-bar{
+  display:block;
+  width:100%;
+}
+.ad-bar:empty{display:none}
+.ad-728-h,.ad-60-h{width:100%;overflow:hidden}
 
 /* Ad images always fill their container proportionally */
 .ad-stack-item img{
@@ -460,12 +463,12 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
   padding:0;
   width:100%;
 }
-.ad-bar:has(.has-ads){
+/* JS adds .ad-bar-active when banners present */
+.ad-bar.ad-bar-active{
   background:var(--surface);
   border-bottom:1px solid var(--border);
   padding:4px 0;
 }
-/* Banner fills full width up to 1280px, centred */
 .ad-bar .ad-stack{
   max-width:1280px;
   width:100%;
@@ -1210,9 +1213,14 @@ footer::before{
   .footer-top{grid-template-columns:1fr}
   .ad-300{width:100%}
   .ad-728-h,.ad-60-h{width:100%;overflow:hidden}
-  /* Ads on mobile — full width, no scroll */
+  /* Ads on mobile — full width */
   .ad-stack{width:100%!important;max-width:100%!important}
-  .ad-stack-item img{width:100%;height:auto;object-fit:cover}
+  .ad-stack.has-ads{display:flex!important;flex-direction:column}
+  .ad-stack-item{width:100%;display:block}
+  .ad-stack-item img{width:100%!important;height:auto!important;display:block!important}
+  .ad-stack-item a{display:block;width:100%}
+  /* Ad bar on mobile */
+  .ad-bar.ad-bar-active{padding:0}
 }
 @media(max-width:480px){
   .anime-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.75rem}
@@ -1388,7 +1396,7 @@ footer::before{
       <div class="anime-grid" id="airingGrid"></div>
 
       <!-- IN-FEED AD (stacks up to 5) -->
-      <div id="slot-infeed" class="ad-stack ad-60-h" style="margin:0.5rem 0 1.5rem">
+      <div id="slot-infeed" class="ad-stack ad-60-h" style="margin:0.5rem 0 1.5rem;width:100%">
         <div class="ad-stack-placeholder ad-60-h"><p>728 × 60 — In-Feed · up to 5</p></div>
       </div>
 
@@ -2365,6 +2373,9 @@ function renderAdSlots() {
       // Remove placeholder if present
       const ph = container.querySelector('.ad-stack-placeholder');
       if (ph) ph.remove();
+      // Mark parent ad-bar active (iOS Safari doesn't support :has())
+      const bar = container.closest('.ad-bar');
+      if (bar) bar.classList.add('ad-bar-active');
     }
   });
 }
