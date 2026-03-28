@@ -64,12 +64,21 @@ async function sbUpsertAnime(data) {
     source_url:    data.source_url,
     scraped_at:    data.scraped_at,
   };
-  const result = await sbQuery('anime?on_conflict=site_id,slug&select=id', {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/anime?on_conflict=site_id,slug&select=id`, {
     method:  'POST',
     headers: { ...SB_HEADERS, 'Prefer': 'return=representation,resolution=merge-duplicates' },
     body:    JSON.stringify(row),
   });
-  return result?.[0]?.id || null;
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`anime upsert ${res.status}: ${txt.slice(0,100)}`);
+  }
+  const text = await res.text();
+  if (!text || text === '' || text === 'null') return null;
+  try {
+    const result = JSON.parse(text);
+    return Array.isArray(result) ? result[0]?.id : result?.id || null;
+  } catch { return null; }
 }
 
 // Upsert episodes for an anime
@@ -83,10 +92,15 @@ async function sbUpsertEpisodes(animeId, episodes) {
     has_dub:   ep.has_dub,
     video_url: ep.video_url || null,
   }));
-  await sbQuery('episodes?on_conflict=anime_id,number', {
-    method: 'POST',
-    body:   JSON.stringify(rows),
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/episodes?on_conflict=anime_id,number`, {
+    method:  'POST',
+    headers: { ...SB_HEADERS, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+    body:    JSON.stringify(rows),
   });
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(`episodes upsert ${res.status}: ${txt.slice(0,100)}`);
+  }
 }
 
 // Get all existing slugs from Supabase
