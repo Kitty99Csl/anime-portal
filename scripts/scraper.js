@@ -164,26 +164,40 @@ async function scrapeAnimeDetail(slug) {
   // Description
   const desc = (html.match(/<meta property="og:description" content="([^"]+)"/)?.[1] || '').slice(0, 300);
 
-  // Genres — from JSON-LD "genre" array (most reliable source)
-  // JSON-LD has: "genre":["Action","Romance","..."]
+  // Genres — multiple strategies
   let genres = [];
-  const jsonLdRaw = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/i)?.[1];
-  if (jsonLdRaw) {
+
+  // Strategy 1: JSON-LD "genre" array
+  const jsonLdBlocks = [...html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  for (const block of jsonLdBlocks) {
     try {
-      const jsonLd = JSON.parse(jsonLdRaw);
-      const rawGenres = Array.isArray(jsonLd.genre) ? jsonLd.genre : [];
-      // Filter out sub/dub category labels, keep real genres
-      genres = rawGenres.filter(g =>
-        !['ซับไทย','พากย์ไทย','อนิเมะจีนซับไทย','soundtrack','sub','dub'].includes(g.toLowerCase())
-      ).slice(0, 4);
+      const jsonLd = JSON.parse(block[1]);
+      const raw = Array.isArray(jsonLd.genre) ? jsonLd.genre
+                : typeof jsonLd.genre === 'string' ? [jsonLd.genre] : [];
+      const filtered = raw.filter(g => {
+        const gl = g.toLowerCase();
+        return g.length > 1 && !['ซับไทย','พากย์ไทย','อนิเมะจีนซับไทย',
+          'soundtrack','sub','dub','thai sub','thai dub'].includes(gl);
+      });
+      if (filtered.length > 0) { genres = filtered.slice(0, 4); break; }
     } catch {}
   }
-  // Fallback: look for genre spans in HTML
+
+  // Strategy 2: TMDb/schema genre spans
   if (genres.length === 0) {
-    const genreMatches = [...html.matchAll(/class="[^"]*genre[^"]*"[^>]*>([^<]+)</gi)];
-    genres = [...new Set(genreMatches.map(m => m[1].trim()).filter(g =>
-      g.length > 1 && !['ซับไทย','พากย์ไทย'].includes(g)
+    const genreRe = /(?:genre|ประเภท)[^>]*>([^<]{2,30})</gi;
+    const gMatches = [...html.matchAll(genreRe)];
+    genres = [...new Set(gMatches.map(m => m[1].trim()).filter(g =>
+      g.length > 1 && !['ซับไทย','พากย์ไทย','อนิเมะจีน'].includes(g)
     ))].slice(0, 4);
+  }
+
+  // Strategy 3: "Action & Adventure • Animation" pattern from TMDb descriptions
+  if (genres.length === 0) {
+    const descGenres = html.match(/Action[^<]*•[^<]*Animation|Romance|Fantasy|Adventure|Horror|Comedy|Drama|Sci-Fi/gi);
+    if (descGenres) {
+      genres = [...new Set(descGenres.flatMap(s => s.split(/[•|,]/)).map(g => g.trim()).filter(Boolean))].slice(0, 4);
+    }
   }
 
   // Episode count from JSON-LD (most reliable)
