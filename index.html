@@ -1213,14 +1213,17 @@ footer::before{
   .footer-top{grid-template-columns:1fr}
   .ad-300{width:100%}
   .ad-728-h,.ad-60-h{width:100%;overflow:hidden}
-  /* Ads on mobile — full width */
-  .ad-stack{width:100%!important;max-width:100%!important}
-  .ad-stack.has-ads{display:flex!important;flex-direction:column}
-  .ad-stack-item{width:100%;display:block}
-  .ad-stack-item img{width:100%!important;height:auto!important;display:block!important}
-  .ad-stack-item a{display:block;width:100%}
-  /* Ad bar on mobile */
-  .ad-bar.ad-bar-active{padding:0}
+  /* Ads on mobile — force visible */
+  .ad-bar{display:block!important;width:100%!important}
+  .ad-bar.ad-bar-active{
+    display:block!important;padding:0!important;
+    background:var(--surface);
+  }
+  .ad-stack{width:100%!important;max-width:100%!important;display:flex!important;flex-direction:column!important}
+  .ad-stack.has-ads{display:flex!important}
+  .ad-stack-item{width:100%!important;display:block!important;overflow:visible!important}
+  .ad-stack-item img{width:100%!important;height:auto!important;display:block!important;max-width:100%!important}
+  .ad-stack-item a,.ad-stack-item div{display:block!important;width:100%!important}
 }
 @media(max-width:480px){
   .anime-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.75rem}
@@ -1793,18 +1796,6 @@ async function loadData() {
   renderListing();
   renderSidebars();
 
-  // ── Load banners from Supabase ──
-  try {
-    const bannerData = await sbFetch(`banners?site_id=eq.${SITE_ID}&enabled=eq.true&select=*&order=slot_id,sort_order`);
-    if (bannerData?.length > 0) {
-      renderSupaBanners(bannerData);
-    } else {
-      renderAdSlots(); // fallback to localStorage
-    }
-  } catch(err) {
-    renderAdSlots(); // fallback to localStorage
-  }
-
   applyI18N();
 }
 
@@ -1847,7 +1838,25 @@ function buildDemoAnime() {
   }));
 }
 
-// Start loading
+// Load banners immediately — independent of anime data
+// This ensures banners show even before anime grid loads
+async function loadBanners() {
+  try {
+    const bannerData = await sbFetch(`banners?site_id=eq.${SITE_ID}&enabled=eq.true&select=*&order=slot_id,sort_order`);
+    if (bannerData?.length > 0) {
+      renderSupaBanners(bannerData);
+      console.log(`✅ ${bannerData.length} banners loaded`);
+      return;
+    }
+  } catch(err) {
+    console.warn('Banner Supabase fetch failed:', err.message);
+  }
+  // Fallback to localStorage
+  renderAdSlots();
+}
+
+// Start both in parallel
+loadBanners();
 loadData();
 
 
@@ -2472,7 +2481,25 @@ function renderAdSlots() {
   });
 }
 
-// Start loading
+// Load banners immediately — independent of anime data
+// This ensures banners show even before anime grid loads
+async function loadBanners() {
+  try {
+    const bannerData = await sbFetch(`banners?site_id=eq.${SITE_ID}&enabled=eq.true&select=*&order=slot_id,sort_order`);
+    if (bannerData?.length > 0) {
+      renderSupaBanners(bannerData);
+      console.log(`✅ ${bannerData.length} banners loaded`);
+      return;
+    }
+  } catch(err) {
+    console.warn('Banner Supabase fetch failed:', err.message);
+  }
+  // Fallback to localStorage
+  renderAdSlots();
+}
+
+// Start both in parallel
+loadBanners();
 loadData();
 </script>
 </body>
