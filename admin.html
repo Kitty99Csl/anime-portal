@@ -823,6 +823,26 @@ body{font-family:var(--f-body);background:var(--bg);color:var(--text);min-height
 </div>
 
 <script>
+// ═══ SUPABASE ═══
+const SUPABASE_URL = 'https://pzrzdljwglybljthbffl.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6cnpkbGp3Z2x5YmxqdGhiZmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NzczNjUsImV4cCI6MjA5MDI1MzM2NX0.HzAKYcSQ_kjlKrf-HQSwVdwi_-J8aBnP6HinMDjfkTA';
+const SB_SITE_ID = 1;
+const SB_H = { 'Content-Type':'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
+
+async function sbGet(path) {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: SB_H });
+  return r.ok ? r.json() : [];
+}
+async function sbPost(path, body, prefer='return=representation') {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method:'POST', headers:{...SB_H,'Prefer':prefer}, body: JSON.stringify(body)
+  });
+  return r.ok ? (r.status===204 ? null : r.json()) : null;
+}
+async function sbDelete(path) {
+  await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { method:'DELETE', headers: SB_H });
+}
+
 // ═══ CONFIG ═══
 const ADMIN_PW = 'bj88anime';
 
@@ -868,8 +888,29 @@ function showSection(id, item) {
 }
 
 // ═══ INIT ═══
-function initAdmin() {
+async function initAdmin() {
   loadDashboard();
+  // Load existing banners from Supabase into localStorage for display
+  try {
+    const banners = await sbGet(`banners?site_id=eq.${SB_SITE_ID}&order=slot_id,sort_order`);
+    if (banners.length > 0) {
+      // Convert Supabase format to localStorage format
+      const slots = {};
+      banners.forEach(b => {
+        if (!slots[b.slot_id]) slots[b.slot_id] = { enabled: b.enabled, banners: [] };
+        slots[b.slot_id].banners.push({
+          imgUrl: b.img_url || '', img_url: b.img_url || '',
+          clickUrl: b.click_url || '', click_url: b.click_url || '',
+          code: b.html_code || '', html_code: b.html_code || '',
+          type: b.type || 'image',
+        });
+      });
+      localStorage.setItem('bj88_adslots', JSON.stringify(slots));
+      console.log(`✅ Loaded ${banners.length} banners from Supabase`);
+    }
+  } catch(err) {
+    console.warn('Could not load banners from Supabase:', err.message);
+  }
   buildSlotGrid();
   buildSlotStatus();
   updateSiteMap();
@@ -878,17 +919,36 @@ function initAdmin() {
 // ═══ DASHBOARD ═══
 async function loadDashboard() {
   try {
-    const r = await fetch('/src/data/anime.json');
-    if (r.ok) {
-      const data = await r.json();
-      document.getElementById('statAnime').textContent = data.length.toLocaleString();
-      // Count total episodes
-      const totalEp = data.reduce((sum, a) => sum + (a.episode_count || 0), 0);
-      document.getElementById('statEpisodes').textContent = totalEp.toLocaleString();
+    // Get counts from Supabase
+    const [animeData, crawlData] = await Promise.all([
+      sbGet(`anime?site_id=eq.${SB_SITE_ID}&select=episode_count`),
+      sbGet(`crawl_log?site_id=eq.${SB_SITE_ID}&order=run_at.desc&limit=1`),
+    ]);
+    const totalAnime = animeData.length;
+    const totalEp = animeData.reduce((s,a) => s + (a.episode_count||0), 0);
+    document.getElementById('statAnime').textContent = totalAnime.toLocaleString();
+    document.getElementById('statEpisodes').textContent = totalEp.toLocaleString();
+    // Last run
+    if (crawlData.length > 0) {
+      const last = crawlData[0];
+      const d = new Date(last.run_at);
+      document.getElementById('lastRun').textContent =
+        `${d.toLocaleDateString('th-TH')} — เพิ่ม ${last.added}, แก้ไข ${last.fixed}`;
     }
   } catch(e) {
-    document.getElementById('statAnime').textContent = '—';
-    document.getElementById('statEpisodes').textContent = '—';
+    // Fallback to anime.json
+    try {
+      const r = await fetch('/src/data/anime.json');
+      if (r.ok) {
+        const data = await r.json();
+        document.getElementById('statAnime').textContent = data.length.toLocaleString();
+        const totalEp = data.reduce((s,a) => s+(a.episode_count||0), 0);
+        document.getElementById('statEpisodes').textContent = totalEp.toLocaleString();
+      }
+    } catch(e2) {
+      document.getElementById('statAnime').textContent = '—';
+      document.getElementById('statEpisodes').textContent = '—';
+    }
   }
   updateSlotStats();
 }
