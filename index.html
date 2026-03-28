@@ -1667,7 +1667,19 @@ const REAL_EPS = [
 
 const EMOJIS = ['🎌','⚔️','🌸','🔥','🗡️','✨','🏯','🌙','💥','🎭','🦊','👁️','🌊','🐉','🎋','🌺','🗺️','⛩️','🧿','🎆'];
 
-// ANIME is populated from anime.json — starts empty, filled by loadData()
+// ── SUPABASE CONFIG ──────────────────────────────
+const SUPABASE_URL = 'https://pzrzdljwglybljthbffl.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6cnpkbGp3Z2x5YmxqdGhiZmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NzczNjUsImV4cCI6MjA5MDI1MzM2NX0.HzAKYcSQ_kjlKrf-HQSwVdwi_-J8aBnP6HinMDjfkTA';
+const SITE_ID = 1;
+const SB_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
+
+async function sbFetch(path) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: SB_HEADERS });
+  if (!res.ok) throw new Error(`Supabase ${res.status}`);
+  return res.json();
+}
+
+// ANIME is populated from Supabase (with anime.json fallback)
 let ANIME = [];
 let EPISODES_MAP = {}; // slug → episodes array
 
@@ -1684,7 +1696,7 @@ function normalizeAnime(raw, idx) {
     genres:       raw.genres       || [],
     img:          raw.cover_url    || REAL_IMGS[idx % REAL_IMGS.length],
     emoji:        EMOJIS[idx % EMOJIS.length],
-    desc:         (raw.desc || '').replace(/&hellip;/g,'…').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#8220;/g,'"').replace(/&#8221;/g,'"').replace(/&#8216;/g,"'").replace(/&#8217;/g,"'").replace(/\[&hellip;\]/g,'…').replace(/&[a-z]+;/g,'').replace(/&#\d+;/g,'').trim(),
+    desc:         (raw.description || raw.desc || '').replace(/&hellip;/g,'…').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&#8220;/g,'"').replace(/&#8221;/g,'"').replace(/&#8216;/g,"'").replace(/&#8217;/g,"'").replace(/\[&hellip;\]/g,'…').replace(/&[a-z]+;/g,'').replace(/&#\d+;/g,'').trim(),
     source_url:   raw.source_url   || `https://anime-th.com/anime/${raw.slug}/`,
     video_url:    null,
     episodes_list: [], // filled after episodes.json loads
@@ -1702,68 +1714,75 @@ let activeEpisodes = [];
 /* ═══════════════════════════════════════════════
    INIT — fetch real data then render
 ═══════════════════════════════════════════════ */
+// ═══ SUPABASE CONFIG ═══
+const SUPA_URL = 'https://pzrzdljwglybljthbffl.supabase.co';
+const SUPA_KEY = 'sb_publishable_gfxpc9ELz0sP_Bnuvv1AUA_5k_Wb7Vq';
+
+async function supaFetch(path) {
+  const res = await fetch(SUPA_URL + path, {
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json',
+    }
+  });
+  if (!res.ok) throw new Error('Supabase ' + res.status);
+  return res.json();
+}
+
 async function loadData() {
-  // Show loading skeletons
-  setHTML('airingGrid',   '<p style="color:var(--text3);padding:1rem;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em">ກຳລັງໂຫລດ...</p>');
+  setHTML('airingGrid', '<p style="color:var(--text3);padding:1rem;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em">กำลังโหลด...</p>');
   setHTML('completeGrid', '');
 
+  let animeRaw = [];
+
+  // ── Try Supabase first ──
   try {
-    // Fetch anime list
-    const animeRes = await fetch('/src/data/anime.json');
-    if (!animeRes.ok) throw new Error('anime.json not found');
-    const animeRaw = await animeRes.json();
-
-    // Fetch episode data
-    let episodesRaw = [];
-    try {
-      const epRes = await fetch('/src/data/episodes.json');
-      if (epRes.ok) episodesRaw = await epRes.json();
-    } catch(e) {}
-
-    // Build episodes map: slug → episodes array
-    episodesRaw.forEach(entry => {
-      EPISODES_MAP[entry.anime_slug] = (entry.episodes || []).map((ep, i) => ({
-        id:  ep.id,
-        n:   String(ep.number || i+1).padStart(2,'0'),
-        sub: ep.has_sub !== false,
-        th:  ep.has_dub || false,
-        url: ep.video_url || null,
-      }));
-    });
-
-    // Normalize into UI format
-    ANIME = animeRaw.map((raw, idx) => {
-      const a = normalizeAnime(raw, idx);
-      // Use episodes from episodes.json if available
-      // Otherwise generate episode buttons from episode_count
-      const mappedEps = EPISODES_MAP[raw.slug] || [];
-      if (mappedEps.length > 0) {
-        a.episodes_list = mappedEps;
-      } else if (raw.episode_count && raw.episode_count > 0) {
-        // Generate placeholder episode list from count
-        a.episodes_list = Array.from({length: raw.episode_count}, (_, i) => ({
-          id: null,
-          n: String(i + 1).padStart(2, '0'),
-          sub: true,
-          th: false,
-          url: null,
-        }));
-      } else {
-        a.episodes_list = [{n:'01',sub:true,th:false,url:null}];
-      }
-      // Set video_url from first episode if available
-      if (a.episodes_list[0]?.url) a.video_url = a.episodes_list[0].url;
-      a.episodes = a.episodes_list.length || raw.episode_count || 0;
-      return a;
-    });
-
-    console.log(`✅ Loaded ${ANIME.length} anime from anime.json`);
-
+    animeRaw = await sbFetch(`anime?site_id=eq.${SITE_ID}&select=slug,title_th,title_en,cover_url,description,genres,year,status,episode_count,source_url,scraped_at&order=scraped_at.desc&limit=5000`);
+    console.log(`✅ Loaded ${animeRaw.length} anime from Supabase`);
   } catch(err) {
-    // Fallback to built-in demo data if JSON not found
-    console.warn('⚠️ Could not load anime.json — using demo data:', err.message);
-    ANIME = buildDemoAnime();
+    console.warn('⚠️ Supabase failed, trying anime.json:', err.message);
+    try {
+      const r = await fetch('/src/data/anime.json');
+      if (r.ok) animeRaw = await r.json();
+      console.log(`✅ Loaded ${animeRaw.length} anime from anime.json`);
+    } catch(e) { animeRaw = []; }
   }
+
+  // ── Load episodes from local JSON as fallback ──
+  try {
+    const epRes = await fetch('/src/data/episodes.json');
+    if (epRes.ok) {
+      const episodesRaw = await epRes.json();
+      episodesRaw.forEach(entry => {
+        EPISODES_MAP[entry.anime_slug] = (entry.episodes || []).map((ep, i) => ({
+          id: ep.id, n: String(ep.number||i+1).padStart(2,'0'),
+          sub: ep.has_sub !== false, th: ep.has_dub||false, url: ep.video_url||null,
+        }));
+      });
+    }
+  } catch(e) {}
+
+  // Normalize — Supabase uses 'description', local JSON uses 'desc'
+  ANIME = animeRaw.map((raw, idx) => {
+    const normalized = { ...raw, desc: raw.description || raw.desc || '' };
+    const a = normalizeAnime(normalized, idx);
+    const mappedEps = EPISODES_MAP[raw.slug] || [];
+    if (mappedEps.length > 0) {
+      a.episodes_list = mappedEps;
+    } else if (raw.episode_count > 0) {
+      a.episodes_list = Array.from({length: raw.episode_count}, (_, i) => ({
+        id: null, n: String(i+1).padStart(2,'00'), sub: true, th: false, url: null,
+      }));
+    } else {
+      a.episodes_list = [{n:'01',sub:true,th:false,url:null}];
+    }
+    if (a.episodes_list[0]?.url) a.video_url = a.episodes_list[0].url;
+    a.episodes = a.episodes_list.length || raw.episode_count || 0;
+    return a;
+  });
+
+  console.log(`✅ Rendered ${ANIME.length} anime`);
 
   // Apply saved language (default Thai)
   currentLang = localStorage.getItem('bj88_lang') || 'th';
@@ -1773,8 +1792,42 @@ async function loadData() {
   initHeroCycle();
   renderListing();
   renderSidebars();
-  renderAdSlots();
+
+  // ── Load banners from Supabase ──
+  try {
+    const bannerData = await sbFetch(`banners?site_id=eq.${SITE_ID}&enabled=eq.true&select=*&order=slot_id,sort_order`);
+    if (bannerData?.length > 0) {
+      renderSupaBanners(bannerData);
+    } else {
+      renderAdSlots(); // fallback to localStorage
+    }
+  } catch(err) {
+    renderAdSlots(); // fallback to localStorage
+  }
+
   applyI18N();
+}
+
+async function loadBannersFromSupabase() {
+  try {
+    const data = await supaFetch('/rest/v1/banners?select=*&enabled=eq.true&order=slot_id,sort_order');
+    if (!data?.length) return;
+    // Group by slot_id and store in localStorage format for renderAdSlots
+    const slots = {};
+    data.forEach(b => {
+      if (!slots[b.slot_id]) slots[b.slot_id] = { enabled: true, banners: [] };
+      slots[b.slot_id].banners.push({
+        imgUrl:   b.img_url   || '',
+        clickUrl: b.click_url || '',
+        code:     b.html_code || '',
+        type:     b.html_code ? 'code' : 'image',
+      });
+    });
+    localStorage.setItem('bj88_adslots', JSON.stringify(slots));
+    console.log(`✅ Loaded banners from Supabase: ${data.length} banners`);
+  } catch(e) {
+    console.warn('Banners from Supabase failed, using localStorage:', e.message);
+  }
 }
 
 // Demo fallback (only used if anime.json missing)
@@ -2329,6 +2382,45 @@ const SLOT_DOM = {
   'watch-sidebar':     'slot-watch-sidebar',
   'halfpage':          'slot-halfpage',
 };
+
+// Render banners from Supabase data (cross-device, persistent)
+function renderSupaBanners(bannerData) {
+  // Group by slot_id
+  const bySlot = {};
+  bannerData.forEach(b => {
+    if (!bySlot[b.slot_id]) bySlot[b.slot_id] = [];
+    bySlot[b.slot_id].push(b);
+  });
+
+  Object.entries(SLOT_DOM).forEach(([slotId, domId]) => {
+    const container = el(domId);
+    if (!container) return;
+    const items = bySlot[slotId] || [];
+    if (!items.length) return;
+
+    const rendered = items.map(item => {
+      if (item.type === 'code' && item.html_code) {
+        return `<div class="ad-stack-item">${item.html_code}</div>`;
+      } else if (item.img_url) {
+        const wrap = item.click_url
+          ? `<a href="${item.click_url}" target="_blank" rel="noopener sponsored" style="display:block;width:100%">`
+          : '<div style="display:block;width:100%">';
+        const wrapEnd = item.click_url ? '</a>' : '</div>';
+        return `<div class="ad-stack-item">${wrap}<img src="${item.img_url}" alt="Advertisement" loading="lazy" style="width:100%;height:auto;display:block"/>${wrapEnd}</div>`;
+      }
+      return '';
+    }).filter(Boolean).join('');
+
+    if (rendered) {
+      container.innerHTML = rendered;
+      container.classList.add('has-ads');
+      const ph = container.querySelector('.ad-stack-placeholder');
+      if (ph) ph.remove();
+      const bar = container.closest('.ad-bar');
+      if (bar) bar.classList.add('ad-bar-active');
+    }
+  });
+}
 
 function renderAdSlots() {
   let allSlots = {};
