@@ -1102,36 +1102,79 @@ function updateSlotToggle(slotId) {
   // Will be saved on saveAllSlots
 }
 
-function saveAllSlots() {
+async function saveAllSlots() {
   let allSlots = {};
   try { allSlots = JSON.parse(localStorage.getItem('bj88_adslots') || '{}'); } catch(e) {}
+
+  const toSave = []; // rows to send to Supabase
 
   SLOT_DEFS.forEach(def => {
     const toggleEl = document.getElementById('toggle-' + def.id);
     const enabled = toggleEl ? toggleEl.checked : false;
-    if (!allSlots[def.id]) allSlots[def.id] = { enabled: false, banners: [] };
+    if (!allSlots[def.id]) allSlots[def.id] = { enabled, banners: [] };
     allSlots[def.id].enabled = enabled;
 
-    // Read all banner fields
     const banners = allSlots[def.id].banners || [];
     banners.forEach((b, i) => {
       const imgEl   = document.getElementById(`img-${def.id}-${i}`);
       const clickEl = document.getElementById(`click-${def.id}-${i}`);
       const codeEl  = document.getElementById(`code-${def.id}-${i}`);
-      if (imgEl)   b.imgUrl   = imgEl.value.trim();
-      if (clickEl) b.clickUrl = clickEl.value.trim();
-      if (codeEl)  b.code     = codeEl.value.trim();
+      if (imgEl)   b.imgUrl = b.img_url = imgEl.value.trim();
+      if (clickEl) b.clickUrl = b.click_url = clickEl.value.trim();
+      if (codeEl)  b.code = b.html_code = codeEl.value.trim();
       b.type = b.code ? 'code' : 'image';
+
+      // Only add to Supabase if has content
+      if (b.img_url || b.html_code) {
+        toSave.push({
+          site_id:    SB_SITE_ID,
+          slot_id:    def.id,
+          img_url:    b.img_url || null,
+          click_url:  b.click_url || null,
+          html_code:  b.html_code || null,
+          type:       b.type,
+          enabled:    enabled,
+          sort_order: i,
+        });
+      }
     });
     allSlots[def.id].banners = banners;
   });
 
+  // Save to localStorage as backup
   localStorage.setItem('bj88_adslots', JSON.stringify(allSlots));
-  updateSlotStats();
-  buildSlotStatus();
-  buildSlotGrid();
-  updateSiteMap();
-  alert('✅ บันทึกแล้ว! แบนเนอร์จะแสดงบนเว็บทันที (refresh หน้าเว็บหลัก)');
+
+  // Save to Supabase
+  try {
+    // Delete all existing banners for this site
+    const delRes = await fetch(`${SUPABASE_URL}/rest/v1/banners?site_id=eq.${SB_SITE_ID}`, {
+      method: 'DELETE', headers: SB_H
+    });
+    console.log('Deleted old banners:', delRes.status);
+
+    // Insert new ones
+    if (toSave.length > 0) {
+      const insRes = await fetch(`${SUPABASE_URL}/rest/v1/banners`, {
+        method: 'POST',
+        headers: { ...SB_H, 'Prefer': 'return=minimal' },
+        body: JSON.stringify(toSave)
+      });
+      console.log('Inserted banners:', insRes.status, toSave.length);
+      if (!insRes.ok) {
+        const err = await insRes.text();
+        throw new Error(`Insert failed: ${err}`);
+      }
+    }
+
+    updateSlotStats();
+    buildSlotStatus();
+    buildSlotGrid();
+    updateSiteMap();
+    alert(`✅ บันทึก ${toSave.length} แบนเนอร์ไปยัง Supabase แล้ว!\nแสดงบนทุกอุปกรณ์ทันที`);
+  } catch(err) {
+    console.error('Supabase save error:', err);
+    alert(`⚠️ Supabase save failed: ${err.message}\nบันทึกใน localStorage แล้ว — แสดงเฉพาะ browser นี้`);
+  }
 }
 
 function goToSlot(slotId) {
