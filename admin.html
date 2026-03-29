@@ -615,6 +615,99 @@ body{font-family:var(--f-body);background:var(--bg);color:var(--text);min-height
         </div>
       </div>
 
+      <!-- MOBILE LAYOUT -->
+      <div class="panel" style="margin-top:1.5rem">
+        <div class="panel-head">
+          <span class="panel-title">📱 มือถือ (Mobile Layout)</span>
+          <span style="font-family:var(--f-mono);font-size:0.58rem;color:var(--text3)">iOS Safari / Android Chrome</span>
+        </div>
+        <div class="panel-body">
+          <div style="max-width:320px;margin:0 auto">
+            <div class="sm-browser" style="border-radius:16px;overflow:hidden">
+              <div class="sm-browser-bar" style="background:#1a1a2e;justify-content:center;padding:8px">
+                <div style="width:60px;height:4px;background:#333;border-radius:2px"></div>
+              </div>
+              <div class="sm-page" style="padding:4px">
+
+                <!-- Mobile header bar -->
+                <div style="height:44px;background:#161616;border-radius:2px;display:flex;align-items:center;padding:0 10px;gap:8px;margin-bottom:4px">
+                  <div style="width:28px;height:28px;background:#1e1e1e;border-radius:4px;border:1px solid #8a7040"></div>
+                  <div style="width:80px;height:8px;background:#2a2a2a;border-radius:1px"></div>
+                  <div style="margin-left:auto;display:flex;gap:4px">
+                    <div style="width:28px;height:18px;background:#1e1e1e;border-radius:2px;border:1px solid #333"></div>
+                    <div style="width:18px;height:18px;background:#1e1e1e;border-radius:2px"></div>
+                  </div>
+                </div>
+
+                <!-- Mobile Leaderboard Top -->
+                <div id="sm-mob-leaderboard-top" class="sm-slot empty" style="height:36px;margin-bottom:4px;border-radius:2px"
+                     onclick="goToSlot('leaderboard-top')" title="Leaderboard Top">
+                  <span class="sm-label" style="font-size:0.45rem">Leaderboard Top — เต็มความกว้างจอ</span>
+                </div>
+
+                <!-- Mobile Hero -->
+                <div style="height:160px;background:linear-gradient(135deg,#1a0808,#080818);border-radius:2px;margin-bottom:4px;position:relative;overflow:hidden">
+                  <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.85) 100%)"></div>
+                  <div style="position:absolute;bottom:10px;left:10px">
+                    <div style="width:80px;height:8px;background:#fff;border-radius:1px;margin-bottom:4px"></div>
+                    <div style="width:50px;height:5px;background:#d4a843;border-radius:1px;margin-bottom:8px"></div>
+                    <div style="display:flex;gap:4px">
+                      <div style="width:40px;height:20px;background:#c0392b;border-radius:2px"></div>
+                      <div style="width:35px;height:20px;background:#1e1e1e;border-radius:2px;border:1px solid #d4a843"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mobile filter bar -->
+                <div style="background:#1e1e1e;border-radius:2px;padding:6px;margin-bottom:4px;display:flex;gap:3px;flex-wrap:wrap">
+                  <div style="width:40px;height:18px;background:#c0392b;border-radius:2px"></div>
+                  <div style="width:50px;height:18px;background:#262626;border-radius:2px"></div>
+                  <div style="width:40px;height:18px;background:#262626;border-radius:2px"></div>
+                  <div style="width:45px;height:18px;background:#262626;border-radius:2px"></div>
+                </div>
+
+                <!-- Mobile anime grid 2-col -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:4px">
+                  <div style="height:70px;background:#1e1e1e;border-radius:2px;border:1px solid #2a2a2a"></div>
+                  <div style="height:70px;background:#1e1e1e;border-radius:2px;border:1px solid #2a2a2a"></div>
+                  <div style="height:70px;background:#1e1e1e;border-radius:2px;border:1px solid #2a2a2a"></div>
+                  <div style="height:70px;background:#1e1e1e;border-radius:2px;border:1px solid #2a2a2a"></div>
+                </div>
+
+                <!-- Mobile In-Feed -->
+                <div id="sm-mob-infeed" class="sm-slot empty" style="height:28px;margin-bottom:4px;border-radius:2px"
+                     onclick="goToSlot('infeed')" title="In-Feed">
+                  <span class="sm-label" style="font-size:0.45rem">In-Feed Ad</span>
+                </div>
+
+                <!-- More cards -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:4px">
+                  <div style="height:70px;background:#1e1e1e;border-radius:2px;border:1px solid #2a2a2a"></div>
+                  <div style="height:70px;background:#1e1e1e;border-radius:2px;border:1px solid #2a2a2a"></div>
+                </div>
+
+                <!-- Mobile Footer Leaderboard -->
+                <div id="sm-mob-leaderboard-footer" class="sm-slot empty" style="height:36px;margin-bottom:4px;border-radius:2px"
+                     onclick="goToSlot('leaderboard-footer')" title="Footer Leaderboard">
+                  <span class="sm-label" style="font-size:0.45rem">Footer Leaderboard</span>
+                </div>
+
+                <!-- Mobile Footer -->
+                <div style="height:40px;background:#161616;border-radius:2px;display:flex;align-items:center;justify-content:center">
+                  <div style="width:60px;height:6px;background:#2a2a2a;border-radius:1px"></div>
+                </div>
+
+              </div>
+            </div>
+            <p style="font-size:0.6rem;color:#c8a878;text-align:center;margin-top:8px">
+              📱 Sidebar ซ่อนบนมือถือ — แสดงเฉพาะ Leaderboard + In-Feed<br>
+              คลิก slot เพื่อแก้ไข
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- WATCH PAGE -->
       <div class="panel" style="margin-top:1.5rem">
         <div class="panel-head"><span class="panel-title">หน้าดูวิดีโอ (Watch Page)</span></div>
         <div class="panel-body">
@@ -979,8 +1072,16 @@ function buildSlotStatus() {
     return `<tr>
       <td><strong style="color:var(--text)">${def.name}</strong><br><span style="font-size:0.7rem;color:var(--text3)">${def.pos}</span></td>
       <td><span style="font-family:var(--f-mono);font-size:0.72rem;color:#e8d5b0">${def.rec}</span></td>
-      <td style="text-align:center"><span class="badge ${count>0?'badge-gold':'badge-gray'}">${count} / ${def.max}</span></td>
-      <td><span class="badge ${active?'badge-green':'badge-gray'}">${active?'ใช้งาน':'ว่าง'}</span></td>
+      <td style="text-align:center">
+        <span class="badge ${count>0?'badge-gold':'badge-gray'}">${count} / ${def.max}</span>
+      </td>
+      <td>
+        <span style="display:inline-flex;align-items:center;gap:5px">
+          <span style="width:9px;height:9px;border-radius:50%;background:${active?'#27ae60':'#484848'};
+            box-shadow:${active?'0 0 6px #27ae60':''};flex-shrink:0;display:inline-block"></span>
+          <span class="badge ${active?'badge-green':'badge-gray'}">${active?'✅ ใช้งาน':'⭕ ว่าง'}</span>
+        </span>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -1197,6 +1298,12 @@ function updateSiteMap() {
   const GOLD_BORDER = '#8a7040';
 
   const highCPM = ['below-player','halfpage'];
+  // Update mobile sitemap mirrors too
+  const mobileMap = {
+    'leaderboard-top':    'sm-mob-leaderboard-top',
+    'leaderboard-footer': 'sm-mob-leaderboard-footer',
+    'infeed':             'sm-mob-infeed',
+  };
   Object.keys(allSlots).forEach(slotId => {
     const s = allSlots[slotId];
     const el = document.getElementById('sm-' + slotId);
@@ -1216,6 +1323,17 @@ function updateSiteMap() {
       el.style.borderStyle = 'dashed';
       el.classList.add('empty');
       el.classList.remove('active');
+    }
+    // Mirror to mobile sitemap
+    const mobEl = document.getElementById(mobileMap[slotId]);
+    if (mobEl) {
+      const s = allSlots[slotId];
+      const active = s?.enabled && s?.banners?.length > 0;
+      mobEl.style.background = active ? 'rgba(39,174,96,0.25)' : '';
+      mobEl.style.borderColor = active ? '#27ae60' : '';
+      mobEl.style.borderStyle = active ? 'solid' : 'dashed';
+      mobEl.classList.toggle('empty', !active);
+      mobEl.classList.toggle('active', active);
     }
   });
 }
