@@ -2,7 +2,7 @@ name: Weekly Data Sync
 
 on:
   schedule:
-    - cron: '0 20 * * 0'  # Sunday 3am Bangkok (UTC+7) = Sunday 8pm UTC
+    - cron: '0 20 * * *'  # Daily 3am Bangkok (UTC+7) = 8pm UTC — revert to '0 20 * * 0' (Sunday only) once 4359 anime complete
   workflow_dispatch:       # Manual trigger from Actions tab
 
 jobs:
