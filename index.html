@@ -202,7 +202,7 @@ header::before{
 .ad-stack-item{position:relative;width:100%;overflow:hidden}
 .ad-stack-item img{
   width:100%;height:auto;display:block;border:none;
-  object-fit:cover;min-width:100%;
+  object-fit:cover;
 }
 .ad-stack-item a{display:block;width:100%}
 .ad-stack-placeholder{
@@ -466,11 +466,11 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 .ad-bar.ad-bar-active{
   background:var(--surface);
   border-bottom:1px solid var(--border);
-  padding:0;
+  padding:4px 0;
 }
 .ad-bar .ad-stack{
+  max-width:1280px;
   width:100%;
-  max-width:100%;
 }
 
 /* ═══════════════════════════════════════════════
@@ -1251,7 +1251,7 @@ footer::before{
      TOP LEADERBOARD AD (stacks up to 10)
 ══════════════════════════════════════ -->
 <div class="ad-bar">
-  <div id="slot-leaderboard-top" class="ad-stack ad-728-h" style="width:100%">
+  <div id="slot-leaderboard-top" class="ad-stack ad-728-h" style="width:100%;max-width:1280px;margin:0 auto">
     <div class="ad-stack-placeholder ad-728-h"><p>728 × 90 — Leaderboard Top</p></div>
   </div>
 </div>
@@ -1571,7 +1571,7 @@ footer::before{
   <div class="footer-wrap">
     <!-- FOOTER LEADERBOARD AD (stacks up to 10) -->
     <div style="display:flex;justify-content:center;margin-bottom:2rem">
-      <div id="slot-leaderboard-footer" class="ad-stack ad-728-h" style="width:100%">
+      <div id="slot-leaderboard-footer" class="ad-stack ad-728-h" style="width:100%;max-width:1280px;margin:0 auto">
         <div class="ad-stack-placeholder ad-728-h"><p>728 × 90 — Footer Leaderboard · up to 10</p></div>
       </div>
     </div>
