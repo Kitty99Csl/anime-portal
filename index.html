@@ -202,7 +202,7 @@ header::before{
 .ad-stack-item{position:relative;width:100%;overflow:hidden}
 .ad-stack-item img{
   width:100%;height:auto;display:block;border:none;
-  object-fit:cover;
+  object-fit:cover;min-width:100%;
 }
 .ad-stack-item a{display:block;width:100%}
 .ad-stack-placeholder{
@@ -463,15 +463,14 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
   padding:0;
   width:100%;
 }
-/* JS adds .ad-bar-active when banners present */
 .ad-bar.ad-bar-active{
   background:var(--surface);
   border-bottom:1px solid var(--border);
-  padding:4px 0;
+  padding:0;
 }
 .ad-bar .ad-stack{
-  max-width:1280px;
   width:100%;
+  max-width:100%;
 }
 
 /* ═══════════════════════════════════════════════
@@ -1252,7 +1251,7 @@ footer::before{
      TOP LEADERBOARD AD (stacks up to 10)
 ══════════════════════════════════════ -->
 <div class="ad-bar">
-  <div id="slot-leaderboard-top" class="ad-stack ad-728-h" style="width:100%;max-width:1280px;margin:0 auto">
+  <div id="slot-leaderboard-top" class="ad-stack ad-728-h" style="width:100%">
     <div class="ad-stack-placeholder ad-728-h"><p>728 × 90 — Leaderboard Top</p></div>
   </div>
 </div>
@@ -1368,12 +1367,7 @@ footer::before{
         <button class="filter-btn" onclick="setFilter('complete',this)" data-i18n="filter_complete">จบแล้ว</button>
         <button class="filter-btn" onclick="setFilter('upcoming',this)" data-i18n="filter_upcoming">เร็วๆ นี้</button>
         <div class="filter-sep"></div>
-        <select class="filter-select" id="genreFilter" onchange="applyFilters()">
-          <option value="">ทุกประเภท</option>
-          <option>แอคชัน</option><option>โรแมนติก</option><option>ตลก</option>
-          <option>แฟนตาซี</option><option>ผจญภัย</option><option>สยองขวัญ</option>
-          <option>สไลซ์ออฟไลฟ์</option><option>ดราม่า</option><option>ซูเปอร์ฮีโร่</option>
-        </select>
+        <!-- genre filter hidden -->
         <select class="filter-select" id="yearFilter" onchange="applyFilters()">
           <option value="">ทุกปี</option>
           <option>2026</option><option>2025</option><option>2024</option><option>2023</option>
@@ -1577,7 +1571,7 @@ footer::before{
   <div class="footer-wrap">
     <!-- FOOTER LEADERBOARD AD (stacks up to 10) -->
     <div style="display:flex;justify-content:center;margin-bottom:2rem">
-      <div id="slot-leaderboard-footer" class="ad-stack ad-728-h" style="width:100%;max-width:1280px;margin:0 auto">
+      <div id="slot-leaderboard-footer" class="ad-stack ad-728-h" style="width:100%">
         <div class="ad-stack-placeholder ad-728-h"><p>728 × 90 — Footer Leaderboard · up to 10</p></div>
       </div>
     </div>
@@ -2024,8 +2018,9 @@ function jumpHero(i) {
 }
 
 function initHeroCycle() {
-  // Pick up to 5 airing anime with covers for hero
-  const airingWithImg = ANIME.filter(a => a.status === 'airing' && a.img).slice(0, 5);
+  // Pick best hero: 2024+ airing with covers, fallback to any airing
+  const recent = ANIME.filter(a => a.status === 'airing' && a.img && (a.year >= 2024 || !a.year)).slice(0, 8);
+  const airingWithImg = recent.length >= 2 ? recent : ANIME.filter(a => a.status === 'airing' && a.img).slice(0, 5);
   const HEROES = airingWithImg.length >= 2 ? airingWithImg.map(a => a.id) : [0,1,2,3].filter(i => ANIME[i]);
   const dotsEl  = el('heroDots');
   if (!dotsEl) return;
