@@ -1,136 +1,172 @@
 # HANDOFF — AniWatch-BJ88
-**Last updated:** 2026-03-28
+**Last updated:** 2026-03-30
 **Paste this at the start of every new Claude session.**
 
 ---
 
 ## Project in one sentence
-Thai/Lao anime portal at **anime.bj88la.net** — indexes anime from anime-th.com, displays with luxury black/red/gold UI, monetized via AdSense banners.
+Thai anime portal at **anime.bj88la.net** — indexes 4359 anime from anime-th.com, luxury black/red/gold UI, monetized via AdSense + direct banners. Data in Supabase PostgreSQL.
 
 ---
 
 ## Live URLs
-- Site: https://anime.bj88la.net
-- Admin: https://anime.bj88la.net/admin.html (pw: `bj88anime`)
-- GitHub: https://github.com/Kitty99CsI/anime-portal ← **capital I, not lowercase l**
-- Actions: https://github.com/Kitty99CsI/anime-portal/actions
+| Purpose | URL |
+|---------|-----|
+| Main site | https://anime.bj88la.net |
+| Admin panel | https://anime.bj88la.net/admin.html (pw: `bj88anime`) |
+| GitHub | https://github.com/Kitty99CsI/anime-portal ← capital I not lowercase l |
+| Actions | https://github.com/Kitty99CsI/anime-portal/actions |
+| Sitemap | https://anime.bj88la.net/public/sitemap.xml |
 
 ---
 
-## Current State (as of 2026-03-28)
+## Credentials
+```
+Supabase URL:  https://pzrzdljwglybljthbffl.supabase.co
+Supabase anon: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6cnpkbGp3Z2x5YmxqdGhiZmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NzczNjUsImV4cCI6MjA5MDI1MzM2NX0.HzAKYcSQ_kjlKrf-HQSwVdwi_-J8aBnP6HinMDjfkTA
+GA4:           G-D2H8CHS41Z
+AdSense:       pub-6565202571679235 (pending approval)
+Admin pw:      bj88anime
+CF Worker:     anime-portal.kitokvk.workers.dev
+```
+
+---
+
+## Current State (2026-03-30)
 
 ### ✅ Working
-- Site live with Thai UI
+- Site live — Thai UI, cards, hero, search, filters, pagination
 - Cloudflare auto-deploys on every GitHub push
-- Weekly scraper cron (Sunday 3am Bangkok)
-- 9 ad slots managed via admin (no rebuild needed)
-- AdSense submitted (pending approval)
-- GA4 live
+- Supabase DB: 218 anime (growing daily via scraper)
+- Banners cross-device — saved in Supabase, show on iOS/Android/PC
+- Scraper v4 self-healing — NEW/STALE/GOOD classification
+- Daily cron: 3am Bangkok (until 4359 anime complete)
+- Admin panel: dashboard, banner manager, site map preview (desktop + mobile)
+- GA4 live, AdSense submitted
 
-### ⚠️ In Progress
-- 150 anime in database but `episode_count: 0` and `genres: []`
-- Scraper v4 deployed — run workflow once to fix all stale data
-- After scraper runs: all 150 anime get correct episodes + genres
+### ⚠️ Pending (needs action)
+1. **Supabase SQL** — run once in SQL Editor:
+   `create policy "anon insert crawl" on crawl_log for insert with check (true);`
+2. **Google Search Console** — submit `https://anime.bj88la.net/public/sitemap.xml`
+3. **Scraper** — runs daily auto, ~27 more runs to reach 4359 anime
+4. **Cron** — change back to weekly (`0 20 * * 0`) when library complete
+5. **AdSense** — paste auto-ads when approved (passive wait)
 
-### 🔜 Next Actions
-1. GitHub Actions → Weekly Data Sync → **Run workflow**
-2. Wait ~12 min → check site shows episode counts
-3. Run 2-3 more times over coming days to build library
-4. When AdSense approved → paste auto-ads in admin panel
-5. Submit `sitemap.xml` to Google Search Console
+### 📊 Numbers
+```
+Anime in Supabase:  218 / 4359
+Monthly cost:       $0
+Revenue:            $0 (AdSense pending)
+```
+
+---
+
+## Tech Stack
+```
+Frontend:  index.html — single-file SPA, vanilla JS, no framework, ~2500 lines
+Hosting:   Cloudflare Workers (static) — auto-deploy from GitHub push
+Database:  Supabase PostgreSQL (free tier, 500MB limit)
+Images:    TMDB CDN (cover_url hotlink) — no file storage needed
+Banners:   External image URLs stored in Supabase banners table
+Scraper:   Node.js 20, no dependencies, GitHub Actions cron
+```
 
 ---
 
 ## File Structure
 ```
 anime-portal/
-├── index.html              ← Main site (SPA)
-├── admin.html              ← Admin panel
-├── policy.html             ← Privacy policy
+├── index.html                  ← Main site SPA
+├── admin.html                  ← Admin panel
+├── policy.html                 ← Privacy policy
 ├── .github/workflows/
-│   └── weekly-sync.yml     ← Scraper cron
+│   └── weekly-sync.yml         ← Daily cron (3am BKK) — change to weekly when done
 ├── scripts/
-│   ├── scraper.js          ← Scraper v4 (self-healing)
+│   ├── scraper.js              ← v4 self-healing, writes to Supabase + JSON backup
 │   └── generate-sitemap.js
 ├── src/data/
-│   ├── anime.json          ← 150 anime (growing weekly)
-│   └── episodes.json       ← Episode data
-└── public/
-    └── sitemap.xml
+│   ├── anime.json              ← Local backup
+│   └── episodes.json           ← Local backup
+├── public/
+│   └── sitemap.xml             ← Auto-generated each scraper run
+└── docs/
+    ├── HANDOFF.md              ← This file
+    ├── STRUCTURE.md            ← Architecture reference
+    ├── CHANGELOG.md            ← Full change history
+    └── schema.sql              ← Supabase table definitions
 ```
 
 ---
 
-## Scraper v4 — How it works
-**Never need to clear anime.json manually.** Each run:
-- Scans all 3 category pages on anime-th.com (~5 min)
-- Classifies: NEW (never seen) / STALE (bad data) / GOOD (skip)
-- Processes max 150 per run → ~12 min
-- Self-heals bad data automatically
-- Weekly cron adds ~150 new anime per week
-
-**To run manually:**
-GitHub → Actions → Weekly Data Sync → Run workflow
+## Supabase Tables
+```
+sites       → id, domain, name, active
+anime       → id, site_id, slug, title_th, title_en, cover_url,
+              description, genres[], year, status, episode_count,
+              post_id, season_id, source_url, scraped_at
+episodes    → id, anime_id, number, title, has_sub, has_dub
+banners     → id, site_id, slot_id, img_url, click_url, html_code, type, enabled, sort_order
+admins      → id, site_id, username, password, role
+crawl_log   → id, site_id, run_at, added, fixed, total, duration_s, status
+```
+Full schema: `docs/schema.sql`
 
 ---
 
-## Ad System
-- 9 slots configured in admin panel
-- Config stored in browser `localStorage('bj88_adslots')`
-- Upload banner URL → enable slot → saves instantly, no rebuild
-- Supports any image size (1280×220, 728×90, 300×250 etc)
-- Empty slots are invisible to visitors
+## Scraper v4
+```
+Each run: max 150 anime, ~20 min
+NEW   → never in Supabase → scrape + insert
+STALE → episode_count=0 OR genres=[] → re-scrape + update
+GOOD  → complete data → skip
+
+To run: GitHub → Actions → Weekly Data Sync → Run workflow
+```
+
+---
+
+## Ad Slots (9 total)
+```
+leaderboard-top/footer   1280×220  max 10  mobile ✅
+infeed, below-player ⭐  728×90    max 5   mobile ✅
+watch-header             728×90    max 5   mobile ✅
+sidebar-1/2, halfpage ⭐ 300×250+  max 5   desktop only ❌
+```
+Banners in Supabase → cross-device, survives every deploy.
 
 ---
 
 ## Design System
-Luxury black/red/gold. Thai default language.
-- Fonts: Cinzel (display), Sarabun (body), Share Tech Mono (mono)
-- Colors: `--bg:#0c0c0c` `--red:#c0392b` `--gold:#d4a843` `--text:#f8f5ee`
-
----
-
-## Known Issues / Watch Out
-1. **GitHub username**: `Kitty99CsI` — the last 3 chars are `C`, `s`, `I` (capital I).
-   In most fonts `I` and `l` look identical. Wrong URL = 403.
-2. **Cloudflare cache**: after GitHub push, Cloudflare may serve old version for a few
-   minutes. If site doesn't update, go to Cloudflare → Workers & Pages → Trigger deploy.
-3. **scraper.js episode_count=0**: fixed in v4 — reads JSON-LD `"numberOfEpisodes"`.
-   Old data in anime.json will be auto-fixed on next scraper run.
-4. **genres=[]**: fixed in v4 — reads JSON-LD `"genre"` array.
-5. **`- Anime TH` in titles**: stripped automatically by `normalizeAnime()` in index.html.
-6. **HTML entities in desc**: decoded automatically in `normalizeAnime()`.
-
----
-
-## Phase Roadmap Summary
 ```
-Phase 1 (NOW)    → Site live, scraper running, AdSense pending     $0/mo
-Phase 1.5        → AdSense approved → revenue starts               $0/mo
-Phase 2 (mo 2-3) → Supabase DB if data needs manual editing        $0/mo
-Phase 3+         → NOT PLANNED (per owner decision)
+Fonts:   Cinzel (display), Sarabun (Thai body), Share Tech Mono
+Colors:  --bg:#0c0c0c  --surface:#161616  --red:#c0392b
+         --gold:#d4a843  --text:#f8f5ee
 ```
 
 ---
 
-## How to start a session
-Paste this file + tell Claude what you want to do:
-
+## Known Gotchas
 ```
-"I'm continuing AniWatch-BJ88.
-Site: https://anime.bj88la.net
-GitHub: https://github.com/Kitty99CsI/anime-portal (capital I)
-Admin: https://anime.bj88la.net/admin.html (pw: bj88anime)
-Full context in attached HANDOFF.md
-
-Today I want to: [your task]"
+1. GitHub: Kitty99CsI — last char capital I, not lowercase l (403 if wrong)
+2. Cloudflare cache: Trigger deploy manually if site not updating
+3. Cron: currently daily — revert to weekly (0 20 * * 0) when 4359 anime done
+4. crawl_log RLS: needs INSERT policy (see Pending above)
 ```
 
 ---
 
-## Session History Summary
+## How to Start a New Session
+Paste this file + say:
+```
+"Continuing AniWatch-BJ88. Today I want to: [task]"
+```
+
+---
+
+## Session History
 | Date | Key Work |
 |------|----------|
-| 2026-03-26 | Initial setup, site live, scraper v1 (62 anime, wrong URL) |
-| 2026-03-27 | Scraper v3 (category pages, 4359 slugs found), GitHub Actions fixed |
-| 2026-03-28 | Scraper v4 (self-healing), index.html full Thai rebuild, admin rebuilt, mobile fixed, docs created |
+| 2026-03-26 | Initial setup, site live, scraper v1 |
+| 2026-03-27 | Scraper v3 (4359 slugs), GitHub Actions fixed |
+| 2026-03-28 | Scraper v4 + Supabase, index.html rebuilt, admin rebuilt, banners cross-device |
+| 2026-03-30 | Daily cron, docs updated, Facebook bot scoped as separate project |
