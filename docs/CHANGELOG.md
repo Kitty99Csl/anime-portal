@@ -2,6 +2,18 @@
 
 All notable changes to this project. Format: `## YYYY-MM-DD` → sections: Added / Fixed / Changed / Deployed
 
+2026-03-30
+Changed
+
+Scraper cron: weekly → daily (0 20 * * *) to build library faster
+Revert to weekly (0 20 * * 0) when 4359 anime complete
+Banner: tested full-width option, reverted to max-width:1280px (team preference)
+Hero: now cycles 2024+ airing anime preferentially (better visuals)
+Genre filter: removed dropdown (simplification per owner)
+"- Anime TH" suffix: stripped in normalizeAnime() display layer
+Docs: full update to reflect current state
+
+
 ---
 
 ## 2026-03-28
