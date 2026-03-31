@@ -2,13 +2,13 @@ name: Daily Facebook Post
 
 on:
   schedule:
-    # 8:00 AM Bangkok time = 01:00 UTC
+    # 8:00 AM Bangkok (ICT) = 01:00 UTC
     - cron: '0 1 * * *'
   workflow_dispatch:
-    # Allow manual trigger from GitHub Actions tab
+    # Allows manual trigger from GitHub Actions tab for testing
 
 jobs:
-  post:
+  generate-caption:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -16,16 +16,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Run Facebook poster
+      - name: Generate Lao caption and save to Supabase
         env:
-          SUPABASE_URL:  ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY:  ${{ secrets.SUPABASE_KEY }}
-          GEMINI_KEY:    ${{ secrets.GEMINI_KEY }}
-          FB_PAGE_ID:    ${{ secrets.FB_PAGE_ID }}
-          FB_TOKEN:      ${{ secrets.FB_TOKEN }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+          GEMINI_KEY:   ${{ secrets.GEMINI_KEY }}
         run: node scripts/fb-poster.js
