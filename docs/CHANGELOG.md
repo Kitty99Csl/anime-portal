@@ -101,3 +101,35 @@
 alter table anime add column if not exists fb_posted_at timestamptz default null;
 create policy "anon insert crawl" on crawl_log for insert with check (true);
 ```
+
+---
+
+## 2026-03-31 (Final Session)
+
+### Added — Watch Player (watch.b88l.net)
+- `watch.html` — complete watch player page, separate domain
+- Mobile: full-screen iframe `calc(100svh - 52px)` — shows full anime-th.com UI
+- Desktop: player left + episode list right (340px sidebar)
+- Episode navigation: `?ep=N` query param → anime-th.com loads correct episode
+- Episode change: auto-loads player (no tap required)
+- Banners: loads from Supabase same as main site
+- Cloudflare Pages project: `watch-b88` → `watch.b88l.net`
+
+### Fixed — index.html
+- Duplicate `const btnWatch` declaration → crashed all JS → no anime showing
+- Watch URL corrected: `watch.b88l.net/watch.html` (was missing `/watch.html`)
+- Mobile: opens watch in same tab (`_self`) — Desktop: new tab (`_blank`)
+- Hash routing: `#slug` → `watch.b88l.net/watch.html?slug=...`
+
+### Added — Facebook Auto-Poster integration
+- Make.com scenario live — 1 anime/day at 08:00 AM Bangkok
+- `anime.fb_posted_at` column added to Supabase
+- Gemini 2.5 Flash generates Lao captions
+- Facebook page: AniWatch-BJ88 (ID: 61578401947046)
+
+### Fixed — Scraper
+- TMDB images strictly preferred over WordPress fallback URLs
+
+### Updated — Docs
+- HANDOFF.md: full rewrite with watch player, FB poster, all current state
+- CHANGELOG.md: complete history
