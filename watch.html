@@ -53,10 +53,25 @@ header::before{content:'';display:block;height:2px;background:linear-gradient(90
 }
 
 /* PLAYER */
-.player-wrap{position:relative;width:100%;background:#000;padding-bottom:56.25%;overflow:hidden}
-@media(max-width:899px){.player-wrap{padding-bottom:62%}}
-.player-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;background:#000}
-.player-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:#000;cursor:pointer}
+.player-wrap{position:relative;width:100%;background:#000;overflow:hidden}
+
+/* Desktop: 16:9 ratio */
+@media(min-width:900px){
+  .player-wrap{padding-bottom:56.25%}
+  .player-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:none;background:#000}
+}
+
+/* Mobile: tall enough to show full anime-th.com page including episode selector */
+@media(max-width:899px){
+  .player-wrap{height:calc(100svh - 52px);min-height:600px;max-height:900px}
+  .player-wrap iframe{
+    position:absolute;inset:0;width:100%;height:100%;
+    border:none;background:#000;
+    /* Scale down anime-th.com to fit — shows more content */
+    transform-origin:top left;
+  }
+}
+.player-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;background:#000;cursor:pointer;min-height:200px}
 .play-icon{width:64px;height:64px;border-radius:50%;background:rgba(192,57,43,0.85);display:flex;align-items:center;justify-content:center;transition:transform 0.2s,background 0.2s}
 .player-placeholder:hover .play-icon,.player-placeholder:active .play-icon{background:var(--red);transform:scale(1.08)}
 .player-placeholder p{font-size:0.78rem;color:var(--text3);font-family:var(--f-mono);letter-spacing:0.1em}
@@ -333,13 +348,15 @@ function selectEp(num, play) {
   history.replaceState({}, '', u);
 
   const wrap = el('playerWrap');
-  const old = wrap.querySelector('iframe');
-  if (old) old.remove();
-  el('playerPlaceholder').style.display = 'flex';
+  const oldIframe = wrap.querySelector('iframe');
+  if (oldIframe) oldIframe.remove();
 
   if (play) {
+    // Always auto-load player when episode selected
     if (window.innerWidth < 900) wrap.scrollIntoView({behavior:'smooth',block:'start'});
     loadPlayer();
+  } else {
+    el('playerPlaceholder').style.display = 'flex';
   }
 }
 
@@ -350,7 +367,18 @@ function loadPlayer() {
 
   const slug = anime.slug;
   const ep = episodes.find(e => e.number === curEp);
-  const src = (ep?.video_url) ? ep.video_url : `${SRC}/anime/${slug}/`;
+
+  // Build episode-specific URL for anime-th.com
+  // Try query param format first: /anime/slug/?ep=N
+  let src;
+  if (ep?.video_url) {
+    src = ep.video_url;
+  } else if (curEp > 1) {
+    // Navigate to specific episode via query param
+    src = `${SRC}/anime/${slug}/?ep=${curEp}`;
+  } else {
+    src = `${SRC}/anime/${slug}/`;
+  }
 
   const iframe = document.createElement('iframe');
   iframe.src = src;
