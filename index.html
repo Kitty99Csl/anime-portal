@@ -1388,7 +1388,7 @@ footer::before{
         <div class="section-accent"></div>
         <span class="section-title" id="airingTitle" data-i18n="section_airing">กำลังออกอากาศ</span>
         <span class="section-count" id="airingCount">0</span>
-        <a href="#" class="section-see-all" data-i18n="see_all">ดูทั้งหมด →</a>
+        <a href="#" class="section-see-all" data-i18n="see_all" onclick="filterStatus('airing');return false">ดูทั้งหมด →</a>
       </div>
       <div class="anime-grid" id="airingGrid"></div>
 
@@ -1402,7 +1402,7 @@ footer::before{
         <div class="section-accent"></div>
         <span class="section-title" id="completeTitle" data-i18n="section_complete">จบแล้ว</span>
         <span class="section-count" id="completeCount">0</span>
-        <a href="#" class="section-see-all" data-i18n="see_all">ดูทั้งหมด →</a>
+        <a href="#" class="section-see-all" data-i18n="see_all" onclick="filterStatus('complete');return false">ดูทั้งหมด →</a>
       </div>
       <div class="anime-grid" id="completeGrid"></div>
 
@@ -1825,7 +1825,7 @@ async function loadData() {
 
 async function loadBannersFromSupabase() {
   try {
-    const data = await supaFetch('/rest/v1/banners?select=*&enabled=eq.true&order=slot_id,sort_order');
+    const data = await sbFetch(`banners?site_id=eq.${SITE_ID}&enabled=eq.true&select=*&order=slot_id,sort_order`);
     if (!data?.length) return;
     // Group by slot_id and store in localStorage format for renderAdSlots
     const slots = {};
@@ -2512,20 +2512,7 @@ function renderAdSlots() {
 
 // Load banners immediately — independent of anime data
 // This ensures banners show even before anime grid loads
-async function loadBanners() {
-  try {
-    const bannerData = await sbFetch(`banners?site_id=eq.${SITE_ID}&enabled=eq.true&select=*&order=slot_id,sort_order`);
-    if (bannerData?.length > 0) {
-      renderSupaBanners(bannerData);
-      console.log(`✅ ${bannerData.length} banners loaded`);
-      return;
-    }
-  } catch(err) {
-    console.warn('Banner Supabase fetch failed:', err.message);
-  }
-  // Fallback to localStorage
-  renderAdSlots();
-}
+
 
 // Start both in parallel
 loadBanners();
