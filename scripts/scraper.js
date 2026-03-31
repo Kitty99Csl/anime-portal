@@ -253,9 +253,10 @@ async function scrapeAnimeDetail(slug) {
   const title = (html.match(/<meta property="og:title" content="([^"]+)"/)?.[1]) ||
                 (html.match(/<h1[^>]*>([^<]+)<\/h1>/)?.[1]) || slug;
 
-  // Cover — prefer TMDB
-  const cover = html.match(/https:\/\/image\.tmdb\.org\/t\/p\/[^"'\s]+/)?.[0] ||
-                html.match(/<meta property="og:image" content="([^"]+)"/)?.[1] || null;
+  // Cover — always prefer TMDB CDN over WordPress fallback
+  const tmdbUrl  = html.match(/https:\/\/image\.tmdb\.org\/t\/p\/[^"'\s]+/)?.[0] || null;
+  const wpUrl    = html.match(/<meta property="og:image" content="([^"]+)"/)?.[1] || null;
+  const cover    = tmdbUrl || (wpUrl && !wpUrl.includes('anime-th.com/wp-content') ? wpUrl : null) || wpUrl || null;
 
   // Description
   const desc = (html.match(/<meta property="og:description" content="([^"]+)"/)?.[1] || '').slice(0, 300);
