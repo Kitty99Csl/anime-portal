@@ -1,87 +1,86 @@
-// fb-poster.js — AniWatch BJ88 Facebook Auto-Poster
-// Runs via GitHub Actions daily at 8am Bangkok time
-// Uses: Supabase (anime data) → Gemini 2.5 Flash (Lao writing) → Facebook Graph API
+// fb-poster.js — AniWatch BJ88
+// GitHub Actions runs this daily at 8:00 AM Bangkok time
+// Job: fetch random anime → generate Lao caption via Gemini → save to Supabase
+// Make.com then reads from Supabase and posts to Facebook
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_URL = 'https://pzrzdljwglybljthbffl.supabase.co';
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const GEMINI_KEY   = process.env.GEMINI_KEY;
-const FB_PAGE_ID   = process.env.FB_PAGE_ID;
-const FB_TOKEN     = process.env.FB_TOKEN;
 
-const SITE_URL = 'https://anime.bj88la.net';
 const GEMINI_MODEL = 'gemini-2.5-flash';
+const SITE_URL     = 'https://anime.bj88la.net';
 
-// ─── 1. Fetch one random unposted anime from Supabase ─────────────────────────
+// ─── 1. Fetch one random unposted anime ───────────────────────────────────────
 async function fetchAnime() {
-  const url =
-    `${SUPABASE_URL}/rest/v1/anime` +
-    `?site_id=eq.1` +
-    `&fb_posted_at=is.null` +
-    `&cover_url=not.is.null` +
-    `&status=neq.upcoming` +
-    `&select=id,title_en,title_th,cover_url,description,genres,episode_count,status,year,slug` +
-    `&order=random()` +
-    `&limit=1`;
+  const params = new URLSearchParams({
+    site_id:      'eq.1',
+    fb_posted_at: 'is.null',
+    fb_caption:   'is.null',
+    'cover_url':  'not.is.null',
+    status:       'neq.upcoming',
+    select:       'id,title_en,title_th,cover_url,description,genres,episode_count,status,year,slug',
+    order:        'random()',
+    limit:        '1',
+  });
 
-  const res = await fetch(url, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/anime?${params}`, {
     headers: {
-      apikey: SUPABASE_KEY,
+      apikey:        SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`,
     },
   });
 
-  if (!res.ok) throw new Error(`Supabase fetch failed: ${res.status} ${await res.text()}`);
-  const data = await res.json();
-  if (!data.length) throw new Error('No unposted anime found — all anime have been posted!');
-  return data[0];
+  if (!res.ok) throw new Error(`Supabase fetch failed: ${res.status} — ${await res.text()}`);
+  const rows = await res.json();
+  if (!rows.length) throw new Error('No unposted anime left!');
+  return rows[0];
 }
 
-// ─── 2. Generate Lao post caption via Gemini ──────────────────────────────────
+// ─── 2. Generate Lao caption via Gemini ───────────────────────────────────────
 async function generateCaption(anime) {
-  const status = anime.status === 'airing'
-    ? 'ກຳລັງອອກອາກາດ'
-    : anime.status === 'complete'
-    ? 'ຈົບແລ້ວ'
-    : 'ໃກ້ຈະອອກ';
+  const statusLao =
+    anime.status === 'airing'   ? 'ກຳລັງອອກອາກາດ' :
+    anime.status === 'complete' ? 'ຈົບແລ້ວ'        : 'ໃກ້ຈະອອກ';
 
   const genres = Array.isArray(anime.genres)
     ? anime.genres.join(', ')
-    : anime.genres;
+    : (anime.genres || 'Action');
 
-  const prompt = `ເຈົ້າແມ່ນຜູ້ຂຽນໂພສ Facebook ສຳລັບເວັບໄຊດ໌ AniWatch BJ88 (anime.bj88la.net) ທີ່ໃຫ້ຄົນລາວເບິ່ງອານິເມ.
+  const prompt =
+`ເຈົ້າແມ່ນຜູ້ຂຽນໂພສ Facebook ສຳລັບເວັບໄຊດ໌ AniWatch BJ88 (anime.bj88la.net) ທີ່ໃຫ້ຄົນລາວເບິ່ງອານິເມ.
 
-ໜ້າວຽກຂອງເຈົ້າ: ຂຽນໂພສ Facebook ເປັນພາສາລາວ 100% ສຳລັບອານິເມຊຸດນີ້.
+ໜ້າວຽກ: ຂຽນໂພສ Facebook ເປັນພາສາລາວ 100% ສຳລັບອານິເມຊຸດນີ້.
 
-ຂໍ້ມູນອານິເມ:
+ຂໍ້ມູນ:
 - ຊື່: ${anime.title_en}
 - ປີ: ${anime.year}
 - ຈຳນວນຕອນ: ${anime.episode_count} ຕອນ
 - ປະເພດ: ${genres}
-- ສະຖານະ: ${status}
-- ເນື້ອເລື່ອງ (ອ້າງອີງ): ${anime.description}
+- ສະຖານະ: ${statusLao}
+- ເນື້ອເລື່ອງ (ອ້າງອີງ): ${anime.description || 'ບໍ່ມີຂໍ້ມູນ'}
 
-ໂຄງສ້າງໂພສ:
-1. ປະໂຫຍກເປີດ — ດຶງດູດຄວາມສົນໃຈ, ກ່າວຊື່ອານິເມ
-2. ເນື້ອໃນ — 2 ປະໂຫຍກ ອະທິບາຍວ່ານີ້ດີຫຍັງ ໃຊ້ຄວາມຮູ້ຂອງເຈົ້າກ່ຽວກັບອານິເມຊຸດນີ້
-3. Call to action — ສັ້ນ, ອົບອຸ່ນ
-4. ຄຳຖາມ — 1 ຄຳຖາມງ່າຍໆ ເພື່ອກະຕຸ້ນ comment
-5. Hashtag — 5 ໂຕ ຢູ່ໃນແຖວດຽວ (ລາວ + ອັງກິດ)
+ໂຄງສ້າງ:
+1. ປະໂຫຍກເປີດ — ດຶງດູດ, ກ່າວຊື່ອານິເມ
+2. ເນື້ອໃນ — 2 ປະໂຫຍກ ກ່ຽວກັບຄວາມດີຂອງເລື່ອງ (ໃຊ້ຄວາມຮູ້ຂອງເຈົ້າ)
+3. Call to action — ສັ້ນ ອົບອຸ່ນ
+4. ຄຳຖາມ — 1 ຄຳຖາມ ກະຕຸ້ນ comment
+5. Hashtag — 5 ໂຕ ໃນແຖວດຽວ (ລາວ + English)
 6. ລິ້ງ: ▶ ${SITE_URL}/#${anime.slug}
 
-ກົດຫ້າມເດັດຂາດ:
-- ຫ້າມໃຊ້ພາສາໄທ — ຂຽນລາວລ້ວນ
-- ຫ້າມໃຊ້ຕົວໜາ ຫຼື bullet point
-- ຫ້າມໃຊ້ label ເຊັ່ນ "Hook:" "CTA:" "ລິ້ງ:"
-- ຫ້າມໃຊ້ English ນອກຈາກໃນ hashtag ແລະ URL
-- ຂະໜາດ: 80-120 ຄຳ
-- emoji: 2-3 ໂຕ ຢູ່ໃນທຳມະຊາດ ບໍ່ໃຫ້ຂຶ້ນຕົ້ນທຸກປະໂຫຍກ
+ກົດເດັດຂາດ:
+- ຂຽນລາວລ້ວນ — ຫ້າມໃຊ້ພາສາໄທ
+- ຫ້າມໃຊ້ຕົວໜາ ຫຼື bullet
+- ຫ້າມໃສ່ label (Hook: / CTA: / ລິ້ງ:)
+- English ໃຊ້ໄດ້ພຽງໃນ hashtag ແລະ URL
+- ຄວາມຍາວ: 80-120 ຄຳ
+- emoji: 2-3 ໂຕ ທຳມະຊາດ
 
-ໂທນ: ອົບອຸ່ນ, ເໝືອນໝູ່ຮັກອານິເມ ລົມກັນ — ບໍ່ໃຊ່ໂຄສະນາ`;
+ໂທນ: ອົບອຸ່ນ ເໝືອນໝູ່ຮັກອານິເມ — ບໍ່ໃຊ່ໂຄສະນາ`;
 
   const res = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_KEY}`,
     {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents: [{ parts: [{ text: prompt }] }],
@@ -90,81 +89,55 @@ async function generateCaption(anime) {
     }
   );
 
-  if (!res.ok) throw new Error(`Gemini failed: ${res.status} ${await res.text()}`);
+  if (!res.ok) throw new Error(`Gemini error: ${res.status} — ${await res.text()}`);
   const data = await res.json();
   const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
   if (!text) throw new Error('Gemini returned empty content');
   return text;
 }
 
-// ─── 3. Post to Facebook with image ───────────────────────────────────────────
-async function postToFacebook(anime, caption) {
-  const body = new URLSearchParams({
-    url:          anime.cover_url,
-    message:      caption,
-    access_token: FB_TOKEN,
-  });
-
+// ─── 3. Save caption + cover_url to Supabase ──────────────────────────────────
+async function saveCaption(anime, caption) {
   const res = await fetch(
-    `https://graph.facebook.com/v19.0/${FB_PAGE_ID}/photos`,
-    { method: 'POST', body }
-  );
-
-  const data = await res.json();
-  if (!res.ok || data.error) {
-    throw new Error(`Facebook post failed: ${JSON.stringify(data.error || data)}`);
-  }
-  return data.id;
-}
-
-// ─── 4. Mark anime as posted in Supabase ──────────────────────────────────────
-async function markPosted(animeId) {
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/anime?id=eq.${animeId}`,
+    `${SUPABASE_URL}/rest/v1/anime?id=eq.${anime.id}`,
     {
-      method: 'PATCH',
+      method:  'PATCH',
       headers: {
         apikey:         SUPABASE_KEY,
         Authorization:  `Bearer ${SUPABASE_KEY}`,
         'Content-Type': 'application/json',
         Prefer:         'return=minimal',
       },
-      body: JSON.stringify({ fb_posted_at: new Date().toISOString() }),
+      body: JSON.stringify({ fb_caption: caption }),
     }
   );
-  if (!res.ok) throw new Error(`Supabase update failed: ${res.status}`);
+  if (!res.ok) throw new Error(`Supabase save failed: ${res.status} — ${await res.text()}`);
 }
 
 // ─── Main ──────────────────────────────────────────────────────────────────────
 async function main() {
-  console.log('=== AniWatch BJ88 Facebook Auto-Poster ===');
-  console.log(`Time: ${new Date().toISOString()}`);
+  console.log('=== AniWatch BJ88 — Gemini Caption Generator ===');
+  console.log(`Time: ${new Date().toISOString()}\n`);
 
-  // Validate env vars
-  const required = { SUPABASE_URL, SUPABASE_KEY, GEMINI_KEY, FB_PAGE_ID, FB_TOKEN };
-  for (const [key, val] of Object.entries(required)) {
-    if (!val) throw new Error(`Missing environment variable: ${key}`);
-  }
+  if (!SUPABASE_KEY) throw new Error('Missing env: SUPABASE_KEY');
+  if (!GEMINI_KEY)   throw new Error('Missing env: GEMINI_KEY');
 
-  console.log('\n[1/4] Fetching random unposted anime...');
+  console.log('[1/3] Fetching random unposted anime...');
   const anime = await fetchAnime();
-  console.log(`  → Selected: ${anime.title_en} (id: ${anime.id})`);
-  console.log(`  → Cover: ${anime.cover_url}`);
+  console.log(`  → ${anime.title_en} (id: ${anime.id})`);
+  console.log(`  → cover_url: ${anime.cover_url}\n`);
 
-  console.log('\n[2/4] Generating Lao caption via Gemini 2.5 Flash...');
+  console.log('[2/3] Generating Lao caption via Gemini 2.5 Flash...');
   const caption = await generateCaption(anime);
-  console.log('  → Caption preview:');
-  console.log('  ' + caption.split('\n').join('\n  '));
+  console.log('  → Caption generated:\n');
+  console.log(caption);
+  console.log('');
 
-  console.log('\n[3/4] Posting to Facebook...');
-  const postId = await postToFacebook(anime, caption);
-  console.log(`  → Posted! Facebook post ID: ${postId}`);
+  console.log('[3/3] Saving to Supabase...');
+  await saveCaption(anime, caption);
+  console.log(`  → fb_caption saved for anime id ${anime.id}\n`);
 
-  console.log('\n[4/4] Marking anime as posted in Supabase...');
-  await markPosted(anime.id);
-  console.log(`  → anime.fb_posted_at updated for id ${anime.id}`);
-
-  console.log('\n✅ Done! Post published successfully.');
+  console.log('✅ Done — Make.com will pick this up and post to Facebook.');
 }
 
 main().catch(err => {
