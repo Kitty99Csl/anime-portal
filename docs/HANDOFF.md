@@ -170,3 +170,22 @@ Paste this file + say:
 | 2026-03-27 | Scraper v3 (4359 slugs), GitHub Actions fixed |
 | 2026-03-28 | Scraper v4 + Supabase, index.html rebuilt, admin rebuilt, banners cross-device |
 | 2026-03-30 | Daily cron, docs updated, Facebook bot scoped as separate project |
+
+---
+
+## Facebook Auto-Poster (Make.com)
+
+```
+Status:       LIVE as of March 2026
+Posts:        1 anime/day at 08:00 AM Bangkok (Make.com cron)
+Managed in:   Make.com — separate from this repo
+DB column:    anime.fb_posted_at (timestamptz) — DO NOT REMOVE
+Facebook page: AniWatch-BJ88 (Page ID: 61578401947046)
+AI model:     Gemini 2.5 Flash (Google AI Studio)
+```
+
+Flow: Schedule → Supabase GET (fb_posted_at=is.null) → Gemini caption → Facebook POST → Supabase PATCH (fb_posted_at=now)
+
+**Fixes already applied:**
+- Hash routing: `anime.bj88la.net/#violet-evergarden` → opens correct anime watch page ✅
+- TMDB image preference: scraper always picks TMDB over WordPress fallback ✅
