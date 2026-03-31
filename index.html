@@ -1727,6 +1727,31 @@ async function supaFetch(path) {
   return res.json();
 }
 
+// Handle URL hash routing — opens anime directly from #slug
+// Used by Facebook auto-poster links: anime.bj88la.net/#violet-evergarden
+function handleHashRoute() {
+  const hash = window.location.hash; // e.g. "#violet-evergarden"
+  if (!hash || hash === '#') return;
+
+  const slug = hash.replace('#', '').trim().toLowerCase();
+  if (!slug) return;
+
+  // Find anime by slug
+  const idx = ANIME.findIndex(a => a.slug === slug);
+  if (idx === -1) {
+    console.warn(`Hash route: slug "${slug}" not found`);
+    return;
+  }
+
+  // Open watch domain directly
+  window.open(`https://watch.bj88l.net/watch.html?slug=${slug}&ep=1`, '_self');
+}
+
+// Also listen for hash changes (for internal navigation)
+window.addEventListener('hashchange', () => {
+  if (ANIME.length > 0) handleHashRoute();
+});
+
 async function loadData() {
   setHTML('airingGrid', '<p style="color:var(--text3);padding:1rem;font-family:var(--f-mono);font-size:0.72rem;letter-spacing:0.1em">กำลังโหลด...</p>');
   setHTML('completeGrid', '');
@@ -1789,6 +1814,11 @@ async function loadData() {
   initHeroCycle();
   renderListing();
   renderSidebars();
+
+  // ── HASH ROUTING ──
+  // Handle links like https://anime.bj88la.net/#long-riders
+  // Facebook auto-poster and external links use this format
+  handleHashRoute();
 
   applyI18N();
 }
@@ -1998,9 +2028,12 @@ function renderHero(idx) {
   const btnWatch = el('heroBtnWatch');
   const btnInfo  = el('heroBtnInfo');
   const btnSrc   = el('heroBtnSource');
-  if (btnWatch) { btnWatch.onclick = e => { e.preventDefault(); openWatch(a.id); }; btnWatch.textContent = '▶ ดูเลย EP.1'; }
+  if (btnWatch) { btnWatch.href = `https://watch.bj88l.net?slug=${a.slug}&ep=1`; btnWatch.onclick = null; btnWatch.target = '_blank'; btnWatch.textContent = '▶ ดูเลย EP.1'; }
   if (btnInfo)  { btnInfo.onclick  = e => { e.preventDefault(); openWatch(a.id); }; btnInfo.textContent  = 'รายละเอียด'; }
   if (btnSrc)   btnSrc.href = a.source_url;
+  // Update watch button to go to watch domain
+  const btnWatch = el('heroBtnWatch');
+  if (btnWatch) btnWatch.href = `https://watch.bj88l.net/watch.html?slug=${a.slug}&ep=1`;
   const subLabel = a.slug?.includes('-th') || a.slug?.includes('th') ? 'พากย์ไทย' : 'ซับไทย';
   const statusLabel = {airing:'ออกอากาศ', complete:'จบแล้ว', upcoming:'เร็วๆ นี้'}[a.status] || '';
   setHTML('heroTags', [
@@ -2046,6 +2079,9 @@ function initHeroCycle() {
 function openWatch(id) {
   const a = ANIME[id];
   if (!a) return;
+  // Open on watch domain
+  window.open(`https://watch.bj88l.net/watch.html?slug=${a.slug}&ep=1`, '_blank');
+  return;
 
   showPage('watch');
   activeAnimeId  = id;
@@ -2085,7 +2121,7 @@ function openWatch(id) {
   if (activeEpisodes[0]) {
     loadEpisode(0);
   } else {
-    setHTML('playerRatio', `<a class="redirect-player" href="${a.source_url||'#'}" target="_blank" rel="noopener"><div class="redirect-play-ring"><svg width="32" height="32" viewBox="0 0 24 24" fill="white" style="margin-left:4px"><polygon points="5,3 19,12 5,21"/></svg></div><div class="redirect-ep-label">EP.01</div></a>`);
+    setHTML('playerRatio', `<a class="redirect-player" href="https://watch.bj88l.net/watch.html?slug=${a.slug}&ep=1" target="_blank" rel="noopener"><div class="redirect-play-ring"><svg width="32" height="32" viewBox="0 0 24 24" fill="white" style="margin-left:4px"><polygon points="5,3 19,12 5,21"/></svg></div><div class="redirect-ep-label">EP.01</div></a>`);
     setText('playerTitle', a.title_th);
     setText('playerSrc',   '—');
   }
@@ -2121,9 +2157,9 @@ function loadEpisode(idx) {
   setText('playerTitle', `${a.title_th} — EP.${ep.n}`);
   setText('playerLiveLabel', `EP.${ep.n}`);
   setText('playerSrc', 'anime-th.com');
-  const watchUrl = a.source_url || `https://anime-th.com/anime/${a.slug}/`;
+  const watchUrl = `https://watch.bj88l.net?slug=${a.slug}&ep=1`;
   setHTML('playerRatio', `
-    <a class="redirect-player" href="${watchUrl}" target="_blank" rel="noopener">
+    <a class="redirect-player" href="https://watch.bj88l.net?slug=${a.slug}&ep=1" target="_blank" rel="noopener">
       <div class="redirect-play-ring">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="white" style="margin-left:4px">
           <polygon points="5,3 19,12 5,21"/>
