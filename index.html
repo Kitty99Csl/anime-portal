@@ -2028,12 +2028,9 @@ function renderHero(idx) {
   const btnWatch = el('heroBtnWatch');
   const btnInfo  = el('heroBtnInfo');
   const btnSrc   = el('heroBtnSource');
-  if (btnWatch) { btnWatch.href = `https://watch.b88l.net?slug=${a.slug}&ep=1`; btnWatch.onclick = null; btnWatch.target = '_blank'; btnWatch.textContent = '▶ ดูเลย EP.1'; }
+  if (btnWatch) { btnWatch.href = `https://watch.b88l.net/watch.html?slug=${a.slug}&ep=1`; btnWatch.onclick = null; btnWatch.target = '_blank'; btnWatch.textContent = '▶ ดูเลย EP.1'; }
   if (btnInfo)  { btnInfo.onclick  = e => { e.preventDefault(); openWatch(a.id); }; btnInfo.textContent  = 'รายละเอียด'; }
   if (btnSrc)   btnSrc.href = a.source_url;
-  // Update watch button to go to watch domain
-  const btnWatch = el('heroBtnWatch');
-  if (btnWatch) btnWatch.href = `https://watch.b88l.net/watch.html?slug=${a.slug}&ep=1`;
   const subLabel = a.slug?.includes('-th') || a.slug?.includes('th') ? 'พากย์ไทย' : 'ซับไทย';
   const statusLabel = {airing:'ออกอากาศ', complete:'จบแล้ว', upcoming:'เร็วๆ นี้'}[a.status] || '';
   setHTML('heroTags', [
@@ -2079,8 +2076,9 @@ function initHeroCycle() {
 function openWatch(id) {
   const a = ANIME[id];
   if (!a) return;
-  // Open on watch domain
-  window.open(`https://watch.b88l.net/watch.html?slug=${a.slug}&ep=1`, '_blank');
+  // Mobile: same tab, Desktop: new tab
+  const isMobile = window.innerWidth < 900;
+  window.open(`https://watch.b88l.net/watch.html?slug=${a.slug}&ep=1`, isMobile ? '_self' : '_blank');
   return;
 
   showPage('watch');
