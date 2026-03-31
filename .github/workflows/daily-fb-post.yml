@@ -1,0 +1,31 @@
+name: Daily Facebook Post
+
+on:
+  schedule:
+    # 8:00 AM Bangkok time = 01:00 UTC
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+    # Allow manual trigger from GitHub Actions tab
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Facebook poster
+        env:
+          SUPABASE_URL:  ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY:  ${{ secrets.SUPABASE_KEY }}
+          GEMINI_KEY:    ${{ secrets.GEMINI_KEY }}
+          FB_PAGE_ID:    ${{ secrets.FB_PAGE_ID }}
+          FB_TOKEN:      ${{ secrets.FB_TOKEN }}
+        run: node scripts/fb-poster.js
