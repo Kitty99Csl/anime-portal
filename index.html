@@ -1672,10 +1672,39 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const SITE_ID = 1;
 const SB_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` };
 
-async function sbFetch(path) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers: SB_HEADERS });
+async function sbFetch(path, rangeEnd = 999) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: {
+      ...SB_HEADERS,
+      'Range': `0-${rangeEnd}`,           // override Supabase 1000 row default
+      'Prefer': 'count=none',              // skip count query for speed
+    }
+  });
   if (!res.ok) throw new Error(`Supabase ${res.status}`);
   return res.json();
+}
+
+// Fetch ALL anime with pagination (handles 5000+ rows)
+async function sbFetchAll(path) {
+  const pageSize = 1000;
+  let all = [];
+  let from = 0;
+  while (true) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      headers: {
+        ...SB_HEADERS,
+        'Range': `${from}-${from + pageSize - 1}`,
+        'Prefer': 'count=none',
+      }
+    });
+    if (!res.ok) break;
+    const batch = await res.json();
+    if (!batch?.length) break;
+    all = all.concat(batch);
+    if (batch.length < pageSize) break; // last page
+    from += pageSize;
+  }
+  return all;
 }
 
 // ANIME is populated from Supabase (with anime.json fallback)
@@ -1763,7 +1792,7 @@ async function loadData() {
 
   // ── Try Supabase first ──
   try {
-    animeRaw = await sbFetch(`anime?site_id=eq.${SITE_ID}&select=slug,title_th,title_en,cover_url,description,genres,year,status,episode_count,source_url,scraped_at&order=scraped_at.desc&limit=5000`);
+    animeRaw = await sbFetchAll(`anime?site_id=eq.${SITE_ID}&select=slug,title_th,title_en,cover_url,description,genres,year,status,episode_count,source_url,scraped_at&order=scraped_at.desc`);
     console.log(`✅ Loaded ${animeRaw.length} anime from Supabase`);
   } catch(err) {
     console.warn('⚠️ Supabase failed, trying anime.json:', err.message);
