@@ -19,7 +19,6 @@ async function fetchAnime() {
     'cover_url':  'not.is.null',
     status:       'neq.upcoming',
     select:       'id,title_en,title_th,cover_url,description,genres,episode_count,status,year,slug',
-    order:        'random()',
     limit:        '1',
   });
 
