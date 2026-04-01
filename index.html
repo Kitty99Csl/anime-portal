@@ -1298,7 +1298,7 @@ footer::before{
       <button class="lang-btn" onclick="setLang('en',this)">EN</button>
     </div>
 
-    <button class="menu-btn" id="menuBtn" onclick="toggleMobileNav()">
+    <button class="menu-btn" id="menuBtn" onclick="toggleMobileNav(event)">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 12h18M3 6h18M3 18h18"/>
       </svg>
@@ -1704,6 +1704,7 @@ function normalizeAnime(raw, idx) {
    STATE — single source of truth
 ═══════════════════════════════════════════════ */
 const state = { page:1, perPage:24, filter:'all', search:'', genre:'', year:'', heroIdx:0, heroTimer:null };
+let mobileNavOpen = false;
 
 let activeAnimeId  = 0;
 let activeEpisodes = [];
@@ -2253,7 +2254,8 @@ function setActive(link) {
 }
 
 // FIX: use CSS class instead of inline styles — works with media query
-function toggleMobileNav() {
+function toggleMobileNav(e) {
+  if (e) e.stopPropagation(); // prevent click bubbling to document close handler
   const nav = el('mainNav');
   if (!nav) return;
   nav.classList.toggle('open');
@@ -2301,9 +2303,12 @@ function toggleMobileNav() {
 document.addEventListener('click', e => {
   const nav = el('mainNav');
   if (!nav) return;
-  if (nav.classList.contains('open') && !nav.contains(e.target) && e.target.className !== 'menu-btn') {
+  // Use closest() to handle clicks on SVG children inside menu button
+  if (nav.classList.contains('open') && !nav.contains(e.target) && !e.target.closest('#menuBtn')) {
     nav.classList.remove('open');
     mobileNavOpen = false;
+    const btn = el('menuBtn');
+    if (btn) btn.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>';
   }
 });
 
