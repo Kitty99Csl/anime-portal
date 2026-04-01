@@ -1362,13 +1362,15 @@ footer::before{
     <div class="main-col">
 
       <!-- FILTER BAR -->
-      <div class="filter-bar">
+      <div class="filter-bar" id="filterBar">
         <button class="filter-btn active" onclick="setFilter('all',this)" data-i18n="filter_all">ทั้งหมด</button>
         <button class="filter-btn" onclick="setFilter('airing',this)" data-i18n="filter_airing">ออกอากาศ</button>
         <button class="filter-btn" onclick="setFilter('complete',this)" data-i18n="filter_complete">จบแล้ว</button>
         <button class="filter-btn" onclick="setFilter('upcoming',this)" data-i18n="filter_upcoming">เร็วๆ นี้</button>
         <div class="filter-sep"></div>
-        <!-- genre filter hidden -->
+        <select class="filter-select" id="genreFilter" onchange="applyFilters()">
+          <option value="">ทุกประเภท</option>
+        </select>
         <select class="filter-select" id="yearFilter" onchange="applyFilters()">
           <option value="">ทุกปี</option>
           <option>2026</option><option>2025</option><option>2024</option><option>2023</option>
@@ -1908,24 +1910,78 @@ function getFiltered() {
   });
 }
 
-function renderListing() {
-  const all     = getFiltered();
-  const airing  = all.filter(a => a.status === 'airing');
+function renderListing(scrollToResults) {
+  const all      = getFiltered();
+  const airing   = all.filter(a => a.status === 'airing');
   const complete = all.filter(a => a.status !== 'airing');
-  const start   = (state.page - 1) * state.perPage;
-  const pageA   = airing.slice(start, start + state.perPage);
-  const pageC   = complete.slice(start, start + state.perPage);
-  const total   = all.length; // total ALL anime for pagination
-  const pages   = Math.max(1, Math.ceil(total / state.perPage));
-  const s = total === 0 ? 0 : start + 1;
-  const e = Math.min(start + state.perPage, total);
+  const upcoming = all.filter(a => a.status === 'upcoming');
+  const start    = (state.page - 1) * state.perPage;
+  const pageA    = airing.slice(start, start + state.perPage);
+  const pageC    = complete.slice(start, start + state.perPage);
+  const total    = all.length;
+  const pages    = Math.max(1, Math.ceil(total / state.perPage));
+  const s        = total === 0 ? 0 : start + 1;
+  const e        = Math.min(start + state.perPage, total);
 
-  setHTML('airingGrid',   pageA.length ? pageA.map(renderCard).join('') : (airing.length === 0 ? '' : '<p style="color:var(--text3);padding:1rem;font-size:0.82rem">ไม่พบรายการ</p>'));
+  // Empty state — friendly not-found message
+  const notFoundHTML = `
+    <div style="grid-column:1/-1;padding:3rem 1rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem">
+      <div style="font-size:3rem;opacity:0.3">🎌</div>
+      <div style="font-family:var(--f-display);font-size:1rem;font-weight:700;color:var(--text3);letter-spacing:0.08em">ไม่พบอนิเมะ</div>
+      <div style="font-size:0.82rem;color:var(--text3)">ลองเปลี่ยนคำค้นหาหรือตัวกรอง</div>
+      <button onclick="clearAllFilters()" style="background:var(--red);color:white;border:none;padding:0.55rem 1.5rem;border-radius:1px;cursor:pointer;font-family:var(--f-body);font-size:0.82rem;font-weight:700;margin-top:0.5rem">ล้างตัวกรอง</button>
+    </div>`;
+
+  if (total === 0) {
+    setHTML('airingGrid',   notFoundHTML);
+    setHTML('completeGrid', '');
+    setText('airingCount',   '0');
+    setText('completeCount', '0');
+    setText('resultCount',   'ไม่พบรายการ');
+    renderPagination(1);
+    // Hide section headers when no results
+    const airingHead = el('airingTitle');
+    if (airingHead) airingHead.closest('.section-head')?.style && (airingHead.closest('.section-head').style.display = 'none');
+    return;
+  }
+
+  // Restore section headers
+  const airingHead = el('airingTitle');
+  if (airingHead) airingHead.closest('.section-head')?.style && (airingHead.closest('.section-head').style.display = '');
+
+  setHTML('airingGrid',   pageA.length ? pageA.map(renderCard).join('') : (airing.length === 0 ? '' : ''));
   setHTML('completeGrid', pageC.length ? pageC.map(renderCard).join('') : '');
   setText('airingCount',   String(airing.length));
   setText('completeCount', String(complete.length));
-  setText('resultCount',   total ? `แสดง ${s}–${e} จาก ${total}` : 'ไม่พบรายการ');
+  setText('resultCount',   `แสดง ${s}–${e} จาก ${total}`);
   renderPagination(pages);
+
+  // Scroll to results after filter/search (not on initial load)
+  if (scrollToResults) {
+    const filterBar = el('filterBar') || document.querySelector('.filter-bar');
+    if (filterBar) {
+      setTimeout(() => filterBar.scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+    }
+  }
+}
+
+// Clear all filters back to default
+function clearAllFilters() {
+  state.filter = 'all';
+  state.search = '';
+  state.year   = '';
+  state.genre  = '';
+  state.page   = 1;
+  const inp = el('searchInput');
+  if (inp) inp.value = '';
+  const yf = el('yearFilter');
+  if (yf) yf.value = '';
+  const gf = el('genreFilter');
+  if (gf) gf.value = '';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  const allBtn = document.querySelector('.filter-btn');
+  if (allBtn) allBtn.classList.add('active');
+  renderListing(false);
 }
 
 function renderCard(a) {
@@ -2194,19 +2250,26 @@ function setFilter(f, btn) {
   state.page   = 1;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  renderListing();
+  renderListing(true); // scroll to results
 }
 // Called from nav links — also navigates to listing page
 function filterStatus(s) {
   state.filter = s;
   state.page   = 1;
+  // Update active filter button
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim() === ({airing:'ออกอากาศ',complete:'จบแล้ว',upcoming:'เร็วๆ นี้',all:'ทั้งหมด'}[s] || ''));
+  });
   showPage('listing');
-  renderListing();
+  renderListing(true); // scroll to results
 }
 function buildFilters() {
-  // Auto-populate genre and year dropdowns from actual data
   const genres = [...new Set(ANIME.flatMap(a => a.genres))].filter(Boolean).sort();
-  const years  = [...new Set(ANIME.map(a => a.year))].filter(Boolean).sort((a,b) => b-a);
+  // Only include years that actually have anime + cap at current real year
+  const currentYear = new Date().getFullYear();
+  const years = [...new Set(ANIME.map(a => a.year))]
+    .filter(y => y && y >= 1990 && y <= currentYear + 1) // no future/garbage years
+    .sort((a,b) => b - a);
   const gf = el('genreFilter');
   const yf = el('yearFilter');
   if (gf) {
@@ -2224,13 +2287,13 @@ function applyFilters() {
   state.genre = gf ? gf.value : '';
   state.year  = yf ? yf.value : '';
   state.page  = 1;
-  renderListing();
+  renderListing(true); // scroll to results
 }
 function handleSearch() {
   const inp = el('searchInput');
   state.search = inp ? inp.value.trim() : '';
   state.page   = 1;
-  renderListing();
+  renderListing(state.search.length > 0); // only scroll if actually searching
 }
 function setPerPage(n, btn) {
   state.perPage = n;
