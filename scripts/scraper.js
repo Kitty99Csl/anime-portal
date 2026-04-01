@@ -307,12 +307,30 @@ async function scrapeAnimeDetail(slug) {
   // Year
   const year = parseInt(html.match(/\b(202[0-9]|203\d|201[0-9])\b/)?.[0] || '2025');
 
-  // Status
-  const body = html.slice(0, 20000).toLowerCase();
-  const status = (body.includes('จบแล้ว') || body.includes('จบสมบูรณ์') || slug.includes('-end'))
-    ? 'complete'
-    : (body.includes('เร็วๆ นี้') || body.includes('upcoming'))
-    ? 'upcoming'
+  // Status — multi-signal detection
+  const body = html.toLowerCase(); // search full page not just first 20k
+  
+  const completeSignals = [
+    'จบแล้ว', 'จบสมบูรณ์', 'ครบแล้ว', 'จบสมบูรณ์แล้ว',
+    'status-complete', 'complete', 'จบ</span>', 'จบ </span>',
+    '"status":"complete"', 'status: complete',
+  ];
+  const upcomingSignals = [
+    'เร็วๆ นี้', 'upcoming', 'coming soon', 'เร็วๆนี้',
+    'status-upcoming', '"status":"upcoming"',
+  ];
+
+  const isComplete = completeSignals.some(s => body.includes(s)) || slug.endsWith('-end');
+  const isUpcoming = !isComplete && upcomingSignals.some(s => body.includes(s));
+
+  // Heuristic: if has 12+ episodes AND year < current year → likely complete
+  const currentYear = new Date().getFullYear();
+  const likelyComplete = !isComplete && !isUpcoming 
+    && epCount >= 12 
+    && year < currentYear;
+
+  const status = isComplete || likelyComplete ? 'complete'
+    : isUpcoming ? 'upcoming'
     : 'airing';
 
   return {
