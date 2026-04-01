@@ -395,6 +395,10 @@ body{font-family:var(--f-body);background:var(--bg);color:var(--text);min-height
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">ระบบ</div>
+      <div class="nav-item" onclick="showSection('analytics',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Analytics
+      </div>
       <div class="nav-item" onclick="showSection('crawl',this)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
         Scraper / Crawl
@@ -800,6 +804,90 @@ body{font-family:var(--f-body);background:var(--bg);color:var(--text);min-height
       </div>
     </div>
 
+    <!-- ANALYTICS -->
+    <div id="sec-analytics" class="page-section">
+      <div class="page-header">
+        <div class="page-title">ANALYTICS</div>
+        <div class="page-subtitle">ข้อมูลการเข้าชมเว็บไซต์ผ่าน Google Analytics 4</div>
+      </div>
+
+      <!-- Quick stats cards linking to GA4 -->
+      <div class="stat-grid" style="margin-bottom:1.5rem">
+        <div class="stat-card" style="cursor:pointer" onclick="window.open('https://analytics.google.com','_blank')">
+          <div class="stat-val" style="font-size:1.5rem">📈</div>
+          <div class="stat-lbl">Dashboard</div>
+          <div class="stat-sub">คลิกเพื่อเปิด GA4</div>
+        </div>
+        <div class="stat-card" style="cursor:pointer" onclick="window.open('https://analytics.google.com','_blank')">
+          <div class="stat-val" style="font-size:1.5rem">🔴</div>
+          <div class="stat-lbl">Realtime</div>
+          <div class="stat-sub">ผู้ใช้ออนไลน์ตอนนี้</div>
+        </div>
+        <div class="stat-card" style="cursor:pointer" onclick="window.open('https://analytics.google.com','_blank')">
+          <div class="stat-val" style="font-size:1.5rem">🌍</div>
+          <div class="stat-lbl">Demographics</div>
+          <div class="stat-sub">ประเทศ อุปกรณ์ ภาษา</div>
+        </div>
+        <div class="stat-card" style="cursor:pointer" onclick="window.open('https://analytics.google.com','_blank')">
+          <div class="stat-val" style="font-size:1.5rem">🔗</div>
+          <div class="stat-lbl">Acquisition</div>
+          <div class="stat-sub">แหล่งที่มา Facebook/Google</div>
+        </div>
+      </div>
+
+      <!-- GA4 quick links panel -->
+      <div class="panel" style="margin-bottom:1.5rem">
+        <div class="panel-head"><span class="panel-title">ลิงก์ด่วน GA4</span></div>
+        <div class="panel-body">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem">
+            <a href="https://analytics.google.com" target="_blank" class="quick-link" style="flex-direction:column;align-items:flex-start;gap:4px;padding:1rem">
+              <span style="font-size:1.2rem">📈</span>
+              <span style="font-weight:700;color:var(--text)">Overview</span>
+              <span style="font-size:0.72rem;color:var(--text3)">ภาพรวมทั้งหมด</span>
+            </a>
+            <a href="https://analytics.google.com/analytics/web/#/realtime" target="_blank" class="quick-link" style="flex-direction:column;align-items:flex-start;gap:4px;padding:1rem">
+              <span style="font-size:1.2rem">🔴</span>
+              <span style="font-weight:700;color:var(--text)">Realtime</span>
+              <span style="font-size:0.72rem;color:var(--text3)">ผู้ใช้ออนไลน์ตอนนี้</span>
+            </a>
+            <a href="https://analytics.google.com/analytics/web/#/acquisition" target="_blank" class="quick-link" style="flex-direction:column;align-items:flex-start;gap:4px;padding:1rem">
+              <span style="font-size:1.2rem">🔗</span>
+              <span style="font-weight:700;color:var(--text)">Acquisition</span>
+              <span style="font-size:0.72rem;color:var(--text3)">แหล่งที่มา Facebook/Google</span>
+            </a>
+            <a href="https://analytics.google.com/analytics/web/#/engagement" target="_blank" class="quick-link" style="flex-direction:column;align-items:flex-start;gap:4px;padding:1rem">
+              <span style="font-size:1.2rem">⏱️</span>
+              <span style="font-weight:700;color:var(--text)">Engagement</span>
+              <span style="font-size:0.72rem;color:var(--text3)">หน้าไหนดูนานที่สุด</span>
+            </a>
+            <a href="https://analytics.google.com/analytics/web/#/demographics" target="_blank" class="quick-link" style="flex-direction:column;align-items:flex-start;gap:4px;padding:1rem">
+              <span style="font-size:1.2rem">🌍</span>
+              <span style="font-weight:700;color:var(--text)">Demographics</span>
+              <span style="font-size:0.72rem;color:var(--text3)">ประเทศ อุปกรณ์ ภาษา</span>
+            </a>
+            <a href="https://analytics.google.com/analytics/web/#/technology" target="_blank" class="quick-link" style="flex-direction:column;align-items:flex-start;gap:4px;padding:1rem">
+              <span style="font-size:1.2rem">📱</span>
+              <span style="font-weight:700;color:var(--text)">Technology</span>
+              <span style="font-size:0.72rem;color:var(--text3)">Mobile vs Desktop browser</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info panel -->
+      <div class="panel" style="border-left:3px solid var(--gold)">
+        <div class="panel-body" style="padding:1rem 1.25rem">
+          <div style="font-size:0.82rem;color:#e0d0a0;line-height:1.8">
+            <strong style="color:var(--gold)">GA4 Property ID:</strong> G-D2H8CHS41Z<br>
+            <strong style="color:var(--gold)">Tracking:</strong> Page views, sessions, bounce rate, events ทั้งหมดตั้งแต่วันแรก<br>
+            <strong style="color:var(--gold)">Peak traffic:</strong> ดู Realtime ช่วง 08:00-10:00 หลัง Facebook auto-post<br>
+            <strong style="color:var(--gold)">Top source:</strong> Facebook → anime.bj88la.net/#slug → watch.b88l.net
+          </div>
+        </div>
+      </div>
+
+    </div>
+
     <!-- CRAWL -->
     <div id="sec-crawl" class="page-section">
       <div class="page-header">
@@ -916,6 +1004,9 @@ body{font-family:var(--f-body);background:var(--bg);color:var(--text);min-height
 </div>
 
 <script>
+// ═══ GA4 ═══
+const GA4_PROPERTY = ''; // Set your GA4 numeric property ID here if needed
+
 // ═══ SUPABASE ═══
 const SUPABASE_URL = 'https://pzrzdljwglybljthbffl.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6cnpkbGp3Z2x5YmxqdGhiZmZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ2NzczNjUsImV4cCI6MjA5MDI1MzM2NX0.HzAKYcSQ_kjlKrf-HQSwVdwi_-J8aBnP6HinMDjfkTA';
