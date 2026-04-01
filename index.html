@@ -442,16 +442,7 @@ nav a:hover::after,nav a.active::after{left:8%;right:8%}
 .btn-source:hover{color:var(--text2);border-color:var(--border2)}
 
 /* Hero dots */
-.hero-dots{
-  position:absolute;bottom:1.5rem;left:3rem;
-  display:flex;gap:6px;z-index:3;
-}
-.hero-dot{
-  width:20px;height:2px;border-radius:1px;
-  background:var(--text3);cursor:pointer;
-  transition:background 0.2s,width 0.2s;
-}
-.hero-dot.active{background:var(--gold);width:32px}
+/* hero dots removed */
 
 /* ═══════════════════════════════════════════════
    TOP AD BAR
@@ -1310,52 +1301,9 @@ footer::before{
 <!-- ══════════════════════════════════════
      PAGE: LISTING
 ══════════════════════════════════════ -->
-<div class="page active" id="page-listing">
+<div class="page active" id="page-listing" style="padding-top:0.5rem">
 
-  <!-- HERO -->
-  <div class="hero" id="heroSection">
-    <div class="hero-bg"></div>
-    <div class="hero-ornament"></div>
 
-    <div class="hero-poster-zone" id="heroPosterZone">
-      <img id="heroPosterImg"
-           src="https://anime-th.com/wp-content/uploads/2026/01/jqkDWnBDltFCjAdhxCqUWg9GXFB.jpg"
-           class="hero-poster-img" alt="hero"
-           onerror="this.style.opacity='0'"
-           onload="this.classList.add('loaded')"/>
-    </div>
-    <div class="hero-gradient"></div>
-
-    <div class="hero-content">
-      <div class="hero-badge">
-        <div class="hero-badge-dot"></div>
-        <span id="heroBadge">กำลังออกอากาศ</span>
-      </div>
-      <h1 class="hero-title-th" id="heroTitleTh">คิมเมะคลีนนิ่ง</h1>
-      <div class="hero-title-en" id="heroTitleEn">Kirei ni Shitemoraemasu ka — Season 1</div>
-      <div class="hero-divider"></div>
-      <div class="hero-tags" id="heroTags">
-        <span class="hero-tag gold">ซับไทย</span>
-        <span class="hero-tag">12 ตอน</span>
-        <span class="hero-tag">2026</span>
-        <span class="hero-tag red">• ออกอากาศ</span>
-      </div>
-      <p class="hero-desc" id="heroDesc">
-        นักทำความสะอาดมืออาชีพผู้มากความสามารถ กับลูกค้าที่บ้านยุ่งเหยิงที่สุดในชีวิต
-        เรื่องราวความรักที่เริ่มต้นจากการทำความสะอาดจนถึงหัวใจ
-      </p>
-      <div class="hero-actions">
-        <a class="btn-watch" href="#" id="heroBtnWatch" onclick="openWatch(0);return false">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-          ดูเลย EP.1
-        </a>
-        <a class="btn-info" href="#" id="heroBtnInfo" onclick="openWatch(0);return false">รายละเอียด</a>
-        <a class="btn-source" id="heroBtnSource" href="https://anime-th.com/anime/kirei-ni-shitemoraemasu-ka/" target="_blank" rel="noopener">↗ ต้นฉบับ</a>
-      </div>
-    </div>
-
-    <div class="hero-dots" id="heroDots"></div>
-  </div>
 
   <!-- MAIN LAYOUT -->
   <div class="page-wrap">
@@ -1687,22 +1635,30 @@ async function sbFetch(path, rangeEnd = 999) {
 // Fetch ALL anime with pagination (handles 5000+ rows)
 async function sbFetchAll(path) {
   const pageSize = 1000;
+  const seenSlugs = new Set(); // deduplicate
   let all = [];
   let from = 0;
   while (true) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
       headers: {
-        ...SB_HEADERS,
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Range-Unit': 'items',
         'Range': `${from}-${from + pageSize - 1}`,
         'Prefer': 'count=none',
       }
     });
-    if (!res.ok) break;
+    if (!res.ok) { console.warn(`sbFetchAll ${res.status} at ${from}`); break; }
     const batch = await res.json();
-    if (!batch?.length) break;
-    all = all.concat(batch);
-    if (batch.length < pageSize) break; // last page
+    if (!Array.isArray(batch) || !batch.length) break;
+    // Deduplicate by slug
+    const newItems = batch.filter(a => a.slug && !seenSlugs.has(a.slug));
+    newItems.forEach(a => seenSlugs.add(a.slug));
+    all = all.concat(newItems);
+    console.log(`sbFetchAll: ${all.length} unique rows`);
+    if (batch.length < pageSize) break; // reached last page
     from += pageSize;
+    if (from > 9000) break; // safety cap
   }
   return all;
 }
@@ -1744,20 +1700,7 @@ let activeEpisodes = [];
    INIT — fetch real data then render
 ═══════════════════════════════════════════════ */
 // ═══ SUPABASE CONFIG ═══
-const SUPA_URL = 'https://pzrzdljwglybljthbffl.supabase.co';
-const SUPA_KEY = 'sb_publishable_gfxpc9ELz0sP_Bnuvv1AUA_5k_Wb7Vq';
-
-async function supaFetch(path) {
-  const res = await fetch(SUPA_URL + path, {
-    headers: {
-      'apikey': SUPA_KEY,
-      'Authorization': 'Bearer ' + SUPA_KEY,
-      'Content-Type': 'application/json',
-    }
-  });
-  if (!res.ok) throw new Error('Supabase ' + res.status);
-  return res.json();
-}
+// supaFetch removed — use sbFetch/sbFetchAll instead
 
 // Handle URL hash routing — opens anime directly from #slug
 // Used by Facebook auto-poster links: anime.bj88la.net/#violet-evergarden
@@ -1842,8 +1785,6 @@ async function loadData() {
   currentLang = localStorage.getItem('bj88_lang') || 'th';
 
   buildFilters();
-  renderHero(0);
-  initHeroCycle();
   renderListing();
   renderSidebars();
 
@@ -2138,16 +2079,12 @@ function initHeroCycle() {
   const recent = ANIME.filter(a => a.status === 'airing' && a.img && (a.year >= 2024 || !a.year)).slice(0, 8);
   const airingWithImg = recent.length >= 2 ? recent : ANIME.filter(a => a.status === 'airing' && a.img).slice(0, 5);
   const HEROES = airingWithImg.length >= 2 ? airingWithImg.map(a => a.id) : [0,1,2,3].filter(i => ANIME[i]);
-  const dotsEl  = el('heroDots');
-  if (!dotsEl) return;
-  dotsEl.innerHTML = HEROES.map((_, i) =>
-    `<div class="hero-dot${i===0?' active':''}" onclick="jumpHero(${i})"></div>`
-  ).join('');
+  if (!HEROES.length) return;
 
   function jump(i) {
     state.heroIdx = i;
     renderHero(HEROES[i]);
-    dotsEl.querySelectorAll('.hero-dot').forEach((d,j) => d.classList.toggle('active', j===i));
+
   }
   function next() { jump((state.heroIdx + 1) % HEROES.length); }
   state.heroTimer = setInterval(next, 6000);
