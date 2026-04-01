@@ -1103,13 +1103,21 @@ async function initAdmin() {
 // ═══ DASHBOARD ═══
 async function loadDashboard() {
   try {
-    // Get counts from Supabase
-    const [animeData, crawlData] = await Promise.all([
-      sbGet(`anime?site_id=eq.${SB_SITE_ID}&select=episode_count`),
+    // Use HEAD request with Prefer:count=exact to get true count (bypasses 1000 row limit)
+    const [countRes, epRes, crawlData] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/anime?site_id=eq.${SB_SITE_ID}&select=id`, {
+        headers: { ...SB_H, 'Prefer': 'count=exact', 'Range': '0-0' }
+      }),
+      fetch(`${SUPABASE_URL}/rest/v1/anime?site_id=eq.${SB_SITE_ID}&select=episode_count`, {
+        headers: { ...SB_H, 'Range': '0-4999', 'Prefer': 'count=none' }
+      }),
       sbGet(`crawl_log?site_id=eq.${SB_SITE_ID}&order=run_at.desc&limit=1`),
     ]);
-    const totalAnime = animeData.length;
-    const totalEp = animeData.reduce((s,a) => s + (a.episode_count||0), 0);
+    // Get exact count from Content-Range header: "0-0/1868"
+    const contentRange = countRes.headers.get('content-range') || '';
+    const totalAnime = parseInt(contentRange.split('/')[1]) || 0;
+    const epData = await epRes.json();
+    const totalEp = epData.reduce((s,a) => s + (a.episode_count||0), 0);
     document.getElementById('statAnime').textContent = totalAnime.toLocaleString();
     document.getElementById('statEpisodes').textContent = totalEp.toLocaleString();
     // Last run
