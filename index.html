@@ -1156,22 +1156,18 @@ footer::before{
     display:flex;align-items:center;font-size:1rem;font-weight:600;
     border-bottom:1px solid rgba(255,255,255,0.05);
   }
-  /* Search inside mobile nav */
-  nav.open::before{
-    content:'';display:block;
-    width:100%;height:44px;
-    background:var(--card);border:1px solid var(--border);border-radius:2px;
-    margin-bottom:0.5rem;
-  }
+  /* Mobile search in nav drawer */
   .mobile-search-row{
-    display:flex;align-items:center;gap:8px;
-    background:var(--card);border:1px solid var(--border);border-radius:2px;
-    padding:0.55rem 1rem;margin-bottom:0.5rem;
+    display:flex;align-items:center;gap:10px;
+    background:var(--card2);border:1px solid var(--border2);border-radius:2px;
+    padding:0.7rem 1rem;margin-bottom:0.75rem;
   }
   .mobile-search-row input{
     background:none;border:none;outline:none;flex:1;
-    color:var(--text);font-family:var(--f-body);font-size:0.95rem;
+    color:var(--text);font-family:var(--f-body);font-size:1rem;
+    -webkit-appearance:none;
   }
+  .mobile-search-row svg{flex-shrink:0;opacity:0.6}
 
   /* ── MOBILE HERO ── */
   .hero{min-height:480px}
@@ -1183,9 +1179,12 @@ footer::before{
     opacity:0.5;
   }
   .hero-gradient{
-    background:
-      linear-gradient(180deg, transparent 0%, rgba(22,22,22,0.5) 55%, var(--surface) 90%),
-      linear-gradient(90deg, rgba(22,22,22,0.8) 0%, transparent 60%);
+    background:linear-gradient(180deg,
+      transparent 0%,
+      rgba(12,12,12,0.2) 35%,
+      rgba(12,12,12,0.7) 65%,
+      var(--bg) 100%
+    );
   }
   .hero-content{
     padding:1.5rem 1.25rem;max-width:100%;position:relative;z-index:3;
@@ -1205,7 +1204,9 @@ footer::before{
   .watch-wrap{grid-template-columns:1fr}
   .page-wrap{grid-template-columns:1fr;padding:1rem}
   .sidebar{display:none}
-  .filter-bar{gap:6px;padding:0.6rem 0.75rem}
+  .filter-bar{gap:6px;padding:0.6rem 0.75rem;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap}
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-select{flex-shrink:0}
   .filter-btn{padding:6px 10px;min-height:36px;font-size:0.75rem}
   .ep-btn{min-height:40px;padding:8px 10px}
   .pag-btn{min-width:40px;height:40px}
@@ -1592,7 +1593,7 @@ footer::before{
           </div>
         </a>
         <p style="margin-top:0.75rem" data-i18n="footer_desc">พอร์ทัลดูอนิเมะ อัปเดตทุกสัปดาห์ ครบทุกเรื่อง</p>
-        <div class="footer-disclaimer">⚠️ เว็บไซต์นี้ไม่ได้โฮสต์วิดีโอใดๆ — วิดีโอเชื่อมต่อไปยังแหล่งต้นฉบับ</div>
+        <div class="footer-disclaimer">อัปเดตทุกสัปดาห์ · ครบทุกเรื่อง · ดูได้ทุกที่</div>
       </div>
 
       <div class="footer-col">
@@ -1607,8 +1608,7 @@ footer::before{
         <a href="/policy.html">นโยบายความเป็นส่วนตัว</a>
         <a href="/policy.html#terms">เงื่อนไขการใช้งาน</a>
         <a href="/policy.html#dmca">DMCA / รายงาน</a>
-        <a href="/policy.html#contact">ติดต่อเรา</a>
-        <a href="/admin.html" style="color:var(--text3);margin-top:8px;font-size:0.72rem">⚙ Admin Panel</a>
+        <a href="https://bj88la.net" target="_blank" rel="noopener">ติดต่อเรา</a>
       </div>
     </div>
 
@@ -2263,7 +2263,32 @@ function toggleMobileNav() {
   if (mobileNavOpen && !searchRow) {
     searchRow = document.createElement('div');
     searchRow.className = 'mobile-search-row';
-    searchRow.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><input type="text" placeholder="ค้นหาอนิเมะ..." oninput="document.getElementById('searchInput').value=this.value;handleSearch()" style="background:none;border:none;outline:none;flex:1;color:var(--text);font-family:var(--f-body);font-size:0.95rem"/>`;
+    const mInput = document.createElement('input');
+    mInput.type = 'text';
+    mInput.placeholder = 'ค้นหาอนิเมะ...';
+    mInput.style.cssText = 'background:none;border:none;outline:none;flex:1;color:var(--text);font-family:var(--f-body);font-size:1rem;-webkit-appearance:none';
+    mInput.addEventListener('input', function() {
+      const main = document.getElementById('searchInput');
+      if (main) main.value = this.value;
+      handleSearch();
+    });
+    mInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        this.blur();
+        // Close nav after search on mobile
+        const nav = el('mainNav');
+        if (nav) { nav.classList.remove('open'); mobileNavOpen = false; }
+        const btn = el('menuBtn');
+        if (btn) btn.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>';
+      }
+    });
+    const mSvg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    mSvg.setAttribute('width','16');mSvg.setAttribute('height','16');
+    mSvg.setAttribute('viewBox','0 0 24 24');mSvg.setAttribute('fill','none');
+    mSvg.setAttribute('stroke','currentColor');mSvg.setAttribute('stroke-width','2');
+    mSvg.innerHTML = '<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>';
+    searchRow.appendChild(mSvg);
+    searchRow.appendChild(mInput);
     nav.insertBefore(searchRow, nav.firstChild);
   }
   // Update hamburger icon
